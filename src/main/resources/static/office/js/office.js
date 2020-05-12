@@ -1,23 +1,9 @@
 $(document).ready(function () {
 	// TODO: something to load side bar and nav
-    console.log("hits");
     var vm = this;
     vm.offices = [];
     
-//    getOffices("/offices");
-//    
-//    function getOffices(url){
-//    	$.ajax({
-//    		url: url
-//    	}).then(function(data) {
-//    		console.log(data);
-//    		vm.offices = data._embedded.offices;
-//    	}).fail(function(error){
-//    		//TODO: ALERT
-//    		console.log(error);
-//    	});
-//    }
-    
+    //TODO: does not handle nulls. maybe do a DTO
     $('#office-table').DataTable({
     	ajax: {
             url: "/offices",
@@ -25,7 +11,7 @@ $(document).ready(function () {
         },
         columns : [
         	{"data": "name"},
-        	{"data": "location"}
+        	{"data": "location.address1"}
         ]
     });
     
