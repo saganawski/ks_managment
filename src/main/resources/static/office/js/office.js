@@ -7,7 +7,7 @@ $(document).ready(function () {
     $('#office-table').DataTable({
     	ajax: {
             url: "/offices",
-            dataSrc: '_embedded.offices'
+            dataSrc: ''
         },
         columns : [
         	{"data": "name"},
