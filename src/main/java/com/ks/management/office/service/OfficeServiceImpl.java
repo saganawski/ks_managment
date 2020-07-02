@@ -16,6 +16,7 @@ public class OfficeServiceImpl implements OfficeService {
 	
 	@Override
 	public List<Office> getOffices() {
+		System.out.println("in impl");
 		return jpaOfficeRepo.findAll();
 	}
 
