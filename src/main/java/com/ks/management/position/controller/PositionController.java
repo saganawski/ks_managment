@@ -14,8 +14,7 @@ import com.ks.management.position.service.PositionService;
 @RestController
 @RequestMapping("/positions")
 public class PositionController {
-	
-	
+
 	@Autowired
 	private PositionService positionService;
 	

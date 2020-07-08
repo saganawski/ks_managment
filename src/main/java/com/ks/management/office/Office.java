@@ -1,21 +1,13 @@
 package com.ks.management.office;
 
-import java.util.Date;
-
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-
+import com.ks.management.employee.Employee;
 import com.ks.management.location.Location;
+import lombok.Data;
+
+import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 
 @Entity
@@ -47,6 +39,14 @@ public class Office {
 	@Column(name = "created_date", insertable = false, updatable = false)
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date createdDate;
+
+	@ManyToMany(fetch = FetchType.LAZY, cascade =  CascadeType.ALL)
+	@JoinTable(
+			name= "employee_office",
+			joinColumns = @JoinColumn(name="office_id"),
+			inverseJoinColumns = @JoinColumn(name="employee_id")
+	)
+	private List<Employee> Employees = new ArrayList<>();
 	
 	public Office() {}
 
@@ -92,6 +92,7 @@ public class Office {
 	public Integer getId() {
 		return id;
 	}
+
 
 	public Date getUpdatedDate() {
 		return updatedDate;

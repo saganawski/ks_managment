@@ -11,7 +11,9 @@ $(document).ready(function () {
         },
         columns : [
         	{"data": "name"},
-        	{"data": "location.address1"}
+        	{"data": "location.address1",
+        	    "defaultContent":""
+        	}
         ]
     });
     

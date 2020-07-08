@@ -1,26 +1,17 @@
 package com.ks.management.employee;
 
-import java.util.Date;
-import java.util.Set;
-
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-
+import com.ks.management.office.Office;
 import com.ks.management.position.Position;
+import lombok.Builder;
+import lombok.Data;
+
+import javax.persistence.*;
+import java.util.*;
 
 @Entity
 @Table(name="employee")
+@Data
+@Builder
 public class Employee {
 
 	@Id
@@ -43,7 +34,7 @@ public class Employee {
 	@Column(name="phone_number")
 	private String phoneNumber;
 	
-	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
 	@JoinColumn(name = "position_id")
 	private Position position;
 	
@@ -61,135 +52,18 @@ public class Employee {
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date createdDate;
 	
-	
-	@OneToMany(mappedBy = "employee")
-	Set<EmployeeOffice> empolyeeOffices;
-	
-	
-	protected Employee() {}
+	@ManyToMany(fetch = FetchType.LAZY, cascade =  CascadeType.ALL)
+	@JoinTable(
+			name= "employee_office",
+			joinColumns = @JoinColumn(name="employee_id"),
+			inverseJoinColumns = @JoinColumn(name="office_id")
+	)
+	private List<Office> offices = new ArrayList<>();
 
-
-	public Employee(String firstName, String lastName, String alias, String email, String phoneNumber,
-			Position position, Integer updatedBy, Integer createdBy, Set<EmployeeOffice> empolyeeOffices) {
-		this.firstName = firstName;
-		this.lastName = lastName;
-		this.alias = alias;
-		this.email = email;
-		this.phoneNumber = phoneNumber;
-		this.position = position;
-		this.updatedBy = updatedBy;
-		this.createdBy = createdBy;
-		this.empolyeeOffices = empolyeeOffices;
+	public void addOffice(Office office){
+		if(offices == null){
+			offices = new ArrayList<>();
+		}
+		offices.add(office);
 	}
-
-
-	public String getFirstName() {
-		return firstName;
-	}
-
-
-	public void setFirstName(String firstName) {
-		this.firstName = firstName;
-	}
-
-
-	public String getLastName() {
-		return lastName;
-	}
-
-
-	public void setLastName(String lastName) {
-		this.lastName = lastName;
-	}
-
-
-	public String getAlias() {
-		return alias;
-	}
-
-
-	public void setAlias(String alias) {
-		this.alias = alias;
-	}
-
-
-	public String getEmail() {
-		return email;
-	}
-
-
-	public void setEmail(String email) {
-		this.email = email;
-	}
-
-
-	public String getPhoneNumber() {
-		return phoneNumber;
-	}
-
-
-	public void setPhoneNumber(String phoneNumber) {
-		this.phoneNumber = phoneNumber;
-	}
-
-
-	public Position getPosition() {
-		return position;
-	}
-
-
-	public void setPosition(Position position) {
-		this.position = position;
-	}
-
-
-	public Integer getUpdatedBy() {
-		return updatedBy;
-	}
-
-
-	public void setUpdatedBy(Integer updatedBy) {
-		this.updatedBy = updatedBy;
-	}
-
-
-	public Integer getCreatedBy() {
-		return createdBy;
-	}
-
-
-	public void setCreatedBy(Integer createdBy) {
-		this.createdBy = createdBy;
-	}
-
-
-	public Set<EmployeeOffice> getEmpolyeeOffices() {
-		return empolyeeOffices;
-	}
-
-
-	public void setEmpolyeeOffices(Set<EmployeeOffice> empolyeeOffices) {
-		this.empolyeeOffices = empolyeeOffices;
-	}
-
-
-	public Integer getId() {
-		return id;
-	}
-
-
-	public Date getUpdatedDate() {
-		return updatedDate;
-	}
-
-
-	public Date getCreatedDate() {
-		return createdDate;
-	}
-	
-	
-	
-	
-	
-	
 }
