@@ -1,19 +1,20 @@
-package com.ks.management.office;
+package com.ks.management.position;
 
-import com.ks.management.employee.Employee;
-import com.ks.management.location.Location;
-import lombok.Data;
-
-import javax.persistence.*;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 @Entity
-@Table(name="office")
-public class Office {
-	
+@Table(name="position")
+public class Position {
+
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	@Column(name="id")
@@ -21,11 +22,10 @@ public class Office {
 	
 	@Column(name="name")
 	private String name;
-	
-	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-	@JoinColumn(name = "location_id")
-	private Location location;
 
+	@Column(name="code")
+	private String code;
+	
 	@Column(name = "updated_by")
 	private Integer updatedBy;
 
@@ -39,20 +39,12 @@ public class Office {
 	@Column(name = "created_date", insertable = false, updatable = false)
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date createdDate;
-
-	@ManyToMany(fetch = FetchType.LAZY, cascade =  CascadeType.ALL)
-	@JoinTable(
-			name= "employee_office",
-			joinColumns = @JoinColumn(name="office_id"),
-			inverseJoinColumns = @JoinColumn(name="employee_id")
-	)
-	private List<Employee> Employees = new ArrayList<>();
 	
-	public Office() {}
+	protected Position() {}
 
-	public Office(String name, Location location, Integer updatedBy, Integer createdBy) {
+	public Position(String name, String code, Integer updatedBy, Integer createdBy) {
 		this.name = name;
-		this.location = location;
+		this.code = code;
 		this.updatedBy = updatedBy;
 		this.createdBy = createdBy;
 	}
@@ -65,12 +57,12 @@ public class Office {
 		this.name = name;
 	}
 
-	public Location getLocation() {
-		return location;
+	public String getCode() {
+		return code;
 	}
 
-	public void setLocation(Location location) {
-		this.location = location;
+	public void setCode(String code) {
+		this.code = code;
 	}
 
 	public Integer getUpdatedBy() {
@@ -93,15 +85,13 @@ public class Office {
 		return id;
 	}
 
-
 	public Date getUpdatedDate() {
 		return updatedDate;
 	}
 
 	public Date getCreatedDate() {
 		return createdDate;
-	}
+	};
 	
 	
 }
-

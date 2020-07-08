@@ -7,11 +7,13 @@ $(document).ready(function () {
     $('#office-table').DataTable({
     	ajax: {
             url: "/offices",
-            dataSrc: '_embedded.offices'
+            dataSrc: ''
         },
         columns : [
         	{"data": "name"},
-        	{"data": "location.address1"}
+        	{"data": "location.address1",
+        	    "defaultContent":""
+        	}
         ]
     });
     

@@ -1,6 +1,9 @@
 $(document).ready(function () {
-    $('#sidebarCollapse').on('click', function () {
-        $('#sidebar').toggleClass('active');
+	//load not a function
+	$('#nav').load("_side-bar-nav.html");
+	
+    $('body').on('click', '#sidebarCollapse', function () {
+    	$('#sidebar').toggleClass('active');
     });
 
 });
