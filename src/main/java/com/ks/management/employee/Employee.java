@@ -2,14 +2,18 @@ package com.ks.management.employee;
 
 import com.ks.management.office.Office;
 import com.ks.management.position.Position;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.util.*;
 
 @Entity
 @Table(name="employee")
+@NoArgsConstructor
+@AllArgsConstructor
 @Data
 @Builder
 public class Employee {

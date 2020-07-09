@@ -7,6 +7,7 @@ import com.ks.management.office.Office;
 import com.ks.management.office.dao.JpaOfficeRepo;
 import com.ks.management.position.Position;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -46,6 +47,9 @@ public class EmployeeServiceImpl implements EmployeeService{
                 .email(email)
                 .phoneNumber(phoneNumber)
                 .position(position)
+//                TODO get active userId
+                .updatedBy(-1)
+                .createdBy(-1)
                 .build();
 
         for (Office office : offices){
@@ -53,4 +57,20 @@ public class EmployeeServiceImpl implements EmployeeService{
         }
         return repo.save(employee);
     }
+
+    @Override
+    public List<Employee> getAllEmployees() {
+        return repo.findAll();
+    }
+
+    @Override
+    public Employee getEmployee(Integer employeeId) {
+        try {
+            return repo.findById(employeeId).orElseThrow(ChangeSetPersister.NotFoundException::new);
+        } catch (ChangeSetPersister.NotFoundException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
 }

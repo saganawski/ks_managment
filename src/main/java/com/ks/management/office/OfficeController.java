@@ -17,7 +17,6 @@ public class OfficeController {
 	
 	@GetMapping()
 	public List<Office> getOffices(){
-		System.out.println("in controller");
 		return officeService.getOffices();
 	}
 }

@@ -20,7 +20,7 @@ $(document).ready(function () {
 	
 	getPositionsForDropDown();
 	function getPositionsForDropDown(){
-		$.ajax({
+    $.ajax({
 			type:"GET",
 			url: "/positions"
 		}).then(function(data){
@@ -28,9 +28,9 @@ $(document).ready(function () {
 		}).fail(function(err){
 			alert(err);
 		});
-		
+
 	}
-	
+
 	function setPositionOptions(positions){
 		for(position of positions){
 			$('#position').append("<option name='"+position.code+"'>"+ position.name +"</option>");
