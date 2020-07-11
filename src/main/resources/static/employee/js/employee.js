@@ -11,7 +11,8 @@ $(document).ready(function () {
             {"data" : "firstName"},
             {"data" : "lastName"},
             {"data" : "email"},
-            {"data" : "position.name"},
+            {"data" : "position.name",
+                "defaultContent":""},
             {   "targets": -1,
                 "data": function(data, type,row,meta){
                     return '<a class="btn btn-warning" href="/employee/employee-details.html?employeeId='+ data.id +'">Details</a>'
