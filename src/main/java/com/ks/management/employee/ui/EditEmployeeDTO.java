@@ -1,27 +1,39 @@
 package com.ks.management.employee.ui;
 
-import com.ks.management.office.Office;
-import com.ks.management.position.Position;
-
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class NewEmployeeDTO {
-
+public class EditEmployeeDTO {
+    private Integer id;
     private String firstName;
     private String lastName;
     private String alias;
     private String email;
     private String phoneNumber;
-    private Position position;
+    private String position;
     private Integer updatedBy;
     private Date updatedDate;
     private Integer createdBy;
     private Date createdDate;
-    private List<Integer> officeSelections = new ArrayList<>();
+    private List<Integer> officeSelection = new ArrayList<>();
 
-    public NewEmployeeDTO(String firstName, String lastName, String alias, String email, String phoneNumber, Position position, Integer updatedBy, Date updatedDate, Integer createdBy, Date createdDate, List<Integer> officeSelections) {
+    public EditEmployeeDTO() {
+    }
+
+    public EditEmployeeDTO(Integer id, String firstName, String lastName, String alias, String email, String phoneNumber, String position, List<Integer> officeSelection) {
+        this.id = id;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.alias = alias;
+        this.email = email;
+        this.phoneNumber = phoneNumber;
+        this.position = position;
+        this.officeSelection = officeSelection;
+    }
+
+    public EditEmployeeDTO(Integer id, String firstName, String lastName, String alias, String email, String phoneNumber, String position, Integer updatedBy, Date updatedDate, Integer createdBy, Date createdDate, List<Integer> officeSelection) {
+        this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
         this.alias = alias;
@@ -32,7 +44,15 @@ public class NewEmployeeDTO {
         this.updatedDate = updatedDate;
         this.createdBy = createdBy;
         this.createdDate = createdDate;
-        this.officeSelections = officeSelections;
+        this.officeSelection = officeSelection;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     public String getFirstName() {
@@ -75,11 +95,11 @@ public class NewEmployeeDTO {
         this.phoneNumber = phoneNumber;
     }
 
-    public Position getPosition() {
+    public String getPosition() {
         return position;
     }
 
-    public void setPosition(Position position) {
+    public void setPosition(String position) {
         this.position = position;
     }
 
@@ -115,11 +135,11 @@ public class NewEmployeeDTO {
         this.createdDate = createdDate;
     }
 
-    public List<Integer> getOfficeSelections() {
-        return officeSelections;
+    public List<Integer> getOfficeSelection() {
+        return officeSelection;
     }
 
-    public void setOfficeSelections(List<Integer> officeSelections) {
-        this.officeSelections = officeSelections;
+    public void setOfficeSelection(List<Integer> officeSelection) {
+        this.officeSelection = officeSelection;
     }
 }

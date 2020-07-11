@@ -43,6 +43,7 @@ $(document).ready(function () {
     	var selectedOffices = $('#officeSelect').val();
     	formJson.officeSelections = selectedOffices;
     	//Send To controller
+    	debugger;
     	setUpNewEmployee(formJson)
     	    .then(results => createNewEmployee(results))
     	    .catch((err) => console.error(err));
@@ -59,19 +60,22 @@ $(document).ready(function () {
 		return $.ajax({
 			type:"GET",
 			url: "/positions/" + name,
-			dataType: "json"
+/*			dataType: "json",
+			data: formJson*/
 		})
 	}
 	function createNewEmployee(formJson){
+
 	    	  	$.ajax({
             		type:"POST",
             		url: "/employees",
             		data: JSON.stringify(formJson),
-            		dataType: "json",
+//            		dataType: "json",
             		contentType: "application/json; charset=utf-8"
             	}).then(function(data){
             		console.log(data);
             		alert("success! You created a new employee");
+            		window.location.href = "/employee/employee.html";
             	}).fail(function(error){
             		console.log(error);
             		alert("fail" + error.responseJSON.error);

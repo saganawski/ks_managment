@@ -55,8 +55,9 @@ public class Employee {
 	@Column(name = "created_date", insertable = false, updatable = false)
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date createdDate;
-	
-	@ManyToMany(fetch = FetchType.LAZY, cascade =  CascadeType.ALL)
+
+	@ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE,
+			CascadeType.DETACH, CascadeType.REFRESH})
 	@JoinTable(
 			name= "employee_office",
 			joinColumns = @JoinColumn(name="employee_id"),

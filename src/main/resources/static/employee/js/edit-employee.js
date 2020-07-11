@@ -89,4 +89,60 @@ $(document).ready(function() {
                     setFieldValuesForEmployee(results);
                 })
         })
+
+    $('#editEmpolyee').on('click', function(event){
+        event.preventDefault();
+        let formJson = convertFormToJson($("form").serializeArray());
+        let selectedOffices = $('#officeSelect').val();
+        formJson.officeSelection = selectedOffices;
+
+        sendEmployeeToController(formJson);
+    });
+//    TODO: place in module
+    function convertFormToJson(form){
+        var json = {}
+        for(let j of form){
+            json[j.name] = j.value || null;
+        }
+        return json;
+    }
+
+    function sendEmployeeToController(formJson){
+        $.ajax({
+            type: "PUT",
+            url: "/employees/" + formJson.id,
+            data: JSON.stringify(formJson),
+            dataType: "json",
+            contentType: "application/json; charset=utf-8"
+        }).then(function(data){
+            console.log(data);
+            alert("success! You updated employee");
+            window.location.href = "/employee/employee.html";
+        }).fail(function(error){
+            console.log(error);
+            alert("ERROR!");
+        });
+    }
+
+    $('#deleteEmpolyee').on('click', function(event){
+        event.preventDefault();
+        let employeeId = $('#id').val();
+        if(confirm("Confirm You want to delete Employee!?")){
+            deleteEmployee(employeeId);
+        }
+    });
+
+    function deleteEmployee(employeeId){
+        $.ajax({
+            type: "DELETE",
+            url: "/employees/" + employeeId
+        }).then(function(response){
+            alert("Success! You deleted this employee.");
+            window.location.href = "/employee/employee.html";
+        }).fail(function(error){
+            console.log(error);
+            alert("Error: Could not delete employee.");
+        });
+    }
+
 });

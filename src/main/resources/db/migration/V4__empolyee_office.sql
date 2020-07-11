@@ -8,6 +8,6 @@ CREATE TABLE `employee_office` (
   PRIMARY KEY (`employee_id`,`office_id`),
   KEY `employee_id` (`employee_id`),
   KEY `office_id` (`office_id`),
-  CONSTRAINT `employee_office_ibfk_1` FOREIGN KEY (`employee_id`) REFERENCES `employee` (`id`),
-  CONSTRAINT `employee_office_ibfk_2` FOREIGN KEY (`office_id`) REFERENCES `office` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
+  CONSTRAINT `employee_office_ibfk_1` FOREIGN KEY (`employee_id`) REFERENCES `employee` (`id`) ON UPDATE NO ACTION ON DELETE NO ACTION,
+  CONSTRAINT `employee_office_ibfk_2` FOREIGN KEY (`office_id`) REFERENCES `office` (`id`) ON UPDATE NO ACTION ON DELETE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
