@@ -20,7 +20,7 @@ $(document).ready(function () {
 	
 	getPositionsForDropDown();
 	function getPositionsForDropDown(){
-		$.ajax({
+    $.ajax({
 			type:"GET",
 			url: "/positions"
 		}).then(function(data){
@@ -28,9 +28,9 @@ $(document).ready(function () {
 		}).fail(function(err){
 			alert(err);
 		});
-		
+
 	}
-	
+
 	function setPositionOptions(positions){
 		for(position of positions){
 			$('#position').append("<option name='"+position.code+"'>"+ position.name +"</option>");
@@ -59,19 +59,19 @@ $(document).ready(function () {
 		return $.ajax({
 			type:"GET",
 			url: "/positions/" + name,
-			dataType: "json"
 		})
 	}
 	function createNewEmployee(formJson){
+
 	    	  	$.ajax({
             		type:"POST",
             		url: "/employees",
             		data: JSON.stringify(formJson),
-            		dataType: "json",
             		contentType: "application/json; charset=utf-8"
             	}).then(function(data){
             		console.log(data);
             		alert("success! You created a new employee");
+            		window.location.href = "/employee/employee.html";
             	}).fail(function(error){
             		console.log(error);
             		alert("fail" + error.responseJSON.error);

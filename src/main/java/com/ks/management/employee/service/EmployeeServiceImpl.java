@@ -2,11 +2,14 @@ package com.ks.management.employee.service;
 
 import com.ks.management.employee.Employee;
 import com.ks.management.employee.dao.JpaEmployeeRepo;
+import com.ks.management.employee.ui.EditEmployeeDTO;
 import com.ks.management.employee.ui.NewEmployeeDTO;
 import com.ks.management.office.Office;
 import com.ks.management.office.dao.JpaOfficeRepo;
 import com.ks.management.position.Position;
+import com.ks.management.position.dao.JpaPositionRepo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,6 +24,9 @@ public class EmployeeServiceImpl implements EmployeeService{
 
     @Autowired
     private JpaOfficeRepo officeRepo;
+
+    @Autowired
+    private JpaPositionRepo positionRepo;
 
     @Override
     @NotNull
@@ -46,6 +52,9 @@ public class EmployeeServiceImpl implements EmployeeService{
                 .email(email)
                 .phoneNumber(phoneNumber)
                 .position(position)
+//                TODO get active userId
+                .updatedBy(-1)
+                .createdBy(-1)
                 .build();
 
         for (Office office : offices){
@@ -53,4 +62,62 @@ public class EmployeeServiceImpl implements EmployeeService{
         }
         return repo.save(employee);
     }
+
+    @Override
+    public List<Employee> getAllEmployees() {
+        return repo.findAll();
+    }
+
+    @Override
+    public Employee getEmployee(Integer employeeId) {
+        try {
+            return repo.findById(employeeId).orElseThrow(ChangeSetPersister.NotFoundException::new);
+        } catch (ChangeSetPersister.NotFoundException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @Override
+    public Employee updateEmployee(EditEmployeeDTO employeeDTO) {
+        final Set<Office> offices = new HashSet<>();
+        for (Integer officeId: employeeDTO.getOfficeSelection()){
+            final Office office = officeRepo.findById(officeId).orElse(null);
+            if(office != null){
+                offices.add(office);
+            }
+        }
+
+        final Position position = positionRepo.findByCode(employeeDTO.getPosition());
+        final String firstName = Optional.ofNullable(employeeDTO.getFirstName()).orElse("");
+        final String lastName = Optional.ofNullable(employeeDTO.getLastName()).orElse("");
+        final String aliasName = Optional.ofNullable(employeeDTO.getAlias()).orElse("");
+        final String email = Optional.ofNullable(employeeDTO.getEmail()).orElse("");
+        final String phoneNumber = Optional.ofNullable(employeeDTO.getPhoneNumber()).orElse("");
+        final Integer id = Optional.ofNullable(employeeDTO.getId()).orElse(-1);
+
+        final Employee employee = Employee.builder()
+                .id(id)
+                .firstName(firstName)
+                .lastName(lastName)
+                .alias(aliasName)
+                .email(email)
+                .phoneNumber(phoneNumber)
+                .position(position)
+//                TODO get active userId
+                .updatedBy(-1)
+                .build();
+
+        for (Office office : offices){
+            employee.addOffice(office);
+        }
+        
+        return repo.save(employee);
+    }
+
+    @Override
+    public void deleteEmployee(Integer employeeId) {
+        repo.deleteById(employeeId);
+    }
+
 }

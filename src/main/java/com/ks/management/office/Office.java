@@ -40,7 +40,8 @@ public class Office {
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date createdDate;
 
-	@ManyToMany(fetch = FetchType.LAZY, cascade =  CascadeType.ALL)
+	@ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE,
+			CascadeType.DETACH, CascadeType.REFRESH})
 	@JoinTable(
 			name= "employee_office",
 			joinColumns = @JoinColumn(name="office_id"),
@@ -92,8 +93,6 @@ public class Office {
 	public Integer getId() {
 		return id;
 	}
-
-
 	public Date getUpdatedDate() {
 		return updatedDate;
 	}

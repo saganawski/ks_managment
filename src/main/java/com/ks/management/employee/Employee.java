@@ -2,14 +2,18 @@ package com.ks.management.employee;
 
 import com.ks.management.office.Office;
 import com.ks.management.position.Position;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.util.*;
 
 @Entity
 @Table(name="employee")
+@NoArgsConstructor
+@AllArgsConstructor
 @Data
 @Builder
 public class Employee {
@@ -51,8 +55,9 @@ public class Employee {
 	@Column(name = "created_date", insertable = false, updatable = false)
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date createdDate;
-	
-	@ManyToMany(fetch = FetchType.LAZY, cascade =  CascadeType.ALL)
+
+	@ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE,
+			CascadeType.DETACH, CascadeType.REFRESH})
 	@JoinTable(
 			name= "employee_office",
 			joinColumns = @JoinColumn(name="employee_id"),
