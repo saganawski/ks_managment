@@ -43,7 +43,6 @@ $(document).ready(function () {
     	var selectedOffices = $('#officeSelect').val();
     	formJson.officeSelections = selectedOffices;
     	//Send To controller
-    	debugger;
     	setUpNewEmployee(formJson)
     	    .then(results => createNewEmployee(results))
     	    .catch((err) => console.error(err));
@@ -60,8 +59,6 @@ $(document).ready(function () {
 		return $.ajax({
 			type:"GET",
 			url: "/positions/" + name,
-/*			dataType: "json",
-			data: formJson*/
 		})
 	}
 	function createNewEmployee(formJson){
@@ -70,7 +67,6 @@ $(document).ready(function () {
             		type:"POST",
             		url: "/employees",
             		data: JSON.stringify(formJson),
-//            		dataType: "json",
             		contentType: "application/json; charset=utf-8"
             	}).then(function(data){
             		console.log(data);
