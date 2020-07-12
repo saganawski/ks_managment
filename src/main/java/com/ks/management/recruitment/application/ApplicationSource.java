@@ -1,4 +1,4 @@
-package com.ks.management.interview;
+package com.ks.management.recruitment.application;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,28 +9,21 @@ import javax.persistence.*;
 import java.util.Date;
 
 @Entity
-@Table(name="interviewee")
+@Table(name="application_source")
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-@Builder
-public class Interviewee {
+public class ApplicationSource {
     @Id
-    @GeneratedValue(strategy=GenerationType.IDENTITY)
+    @GeneratedValue(strategy= GenerationType.IDENTITY)
     @Column(name="id")
     private Integer id;
 
-    @Column(name="first_name")
-    private String firstName;
+    @Column(name="source")
+    private String source;
 
-    @Column(name="last_name")
-    private String lastName;
-
-    @Column(name="phone_number")
-    private String phoneNumber;
-
-    @Column(name="email")
-    private String email;
+    @Column(name="code")
+    private String code;
 
     @Column(name = "updated_by")
     private Integer updatedBy;
@@ -45,5 +38,4 @@ public class Interviewee {
     @Column(name = "created_date", insertable = false, updatable = false)
     @Temporal(TemporalType.TIMESTAMP)
     private Date createdDate;
-
 }
