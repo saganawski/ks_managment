@@ -1,19 +1,11 @@
 $(document).ready(function () {
 	// TODO: something to load side bar and nav
-	console.log("hits");
-	/*
-	Options
-	load content types
-	load source
-	load results
-	*/
-
 	/*
 	SET CONTACT OPTIONS
 	*/
 	getContactOptions()
 	    .then(function(data){
-	        setContactTypeOptions(data._embedded.applicationContactTypes);
+	        setContactTypeOptions(data);
 	    })
 	    .fail(function(err){
 	        console.log(err);
@@ -28,7 +20,8 @@ $(document).ready(function () {
 	}
     function setContactTypeOptions(types){
         for(type of types){
-            $('#contactType').append("<option name='"+type.code+"'>"+ type.type +"</option>");
+            delete type._links;
+            $('#applicationContactType').append("<option value='"+JSON.stringify(type)+"'>"+ type.type +"</option>");
         }
     }
     /*
@@ -40,7 +33,7 @@ $(document).ready(function () {
     */
     getApplicationSource()
         .then(function(data){
-            setSourceOptions(data._embedded.applicationSources);
+            setSourceOptions(data);
         })
         .fail(function(err){
             console.log(err);
@@ -54,7 +47,8 @@ $(document).ready(function () {
     }
     function setSourceOptions(sources){
         for(source of sources){
-            $('#applicationSource').append("<option name='"+source.code+"'>"+ source.source +"</option>");
+            delete source._links;
+            $('#applicationSource').append("<option value='"+JSON.stringify(source)+"'>"+ source.source +"</option>");
         }
     }
     /*
@@ -66,7 +60,7 @@ $(document).ready(function () {
 
     getResultOptions()
         .then(function(data){
-            setResultOptions(data._embedded.applicationResults);
+            setResultOptions(data);
         })
         .fail(function(err){
             console.log(err);
@@ -80,60 +74,45 @@ $(document).ready(function () {
     }
     function setResultOptions(results){
         for(result of results){
-            $('#result').append("<option name='"+result.code+"'>"+ result.result +"</option>");
+            delete result._links;
+            $('#applicationResult').append("<option value='"+JSON.stringify(result)+"'>"+ result.result +"</option>");
         }
     }
     /*
             ***************************************************************************************************
     */
-	/*
 
-	$('#newEmpolyee').on('click', function(event){
-		event.preventDefault();
-    	var formJson = convertFormToJson($("form").serializeArray());
-    	var selectedOffices = $('#officeSelect').val();
-    	formJson.officeSelections = selectedOffices;
-    	//Send To controller
-    	setUpNewEmployee(formJson)
-    	    .then(results => createNewEmployee(results))
-    	    .catch((err) => console.error(err));
-    	
-	});
-	
-	async function setUpNewEmployee(formJson){
-		let position = await getPositionByName(formJson.position);
-		formJson.position = position;
-		return formJson;
-	}
+    $('#newApplication').on('click', function(event){
+        event.preventDefault();
+        let jsonForm = convertFormToJson($("form").serializeArray());
+        let applicationResult = JSON.parse($('#applicationResult').val());
+        let applicationSource = JSON.parse($('#applicationSource').val());
+        let applicationContactType = JSON.parse($('#applicationContactType').val());
+        jsonForm.applicationResult = applicationResult;
+        jsonForm.applicationSource = applicationSource;
+        jsonForm.applicationContactType = applicationContactType;
 
-	function getPositionByName(name){
-		return $.ajax({
-			type:"GET",
-			url: "/positions/" + name,
-		})
-	}
-	function createNewEmployee(formJson){
+        $.ajax({
+            type: "POST",
+            url:"/applications",
+            data: JSON.stringify(jsonForm),
+            contentType: "application/json; charset=utf-8"
+        }).then(function(response){
+            alert("success! You created a new application");
+            window.location.href = "/recruitment/application/application.html";
+        }).fail(function(err){
+            console.log(err);
+            alert("Error: Could not make new application");
+        });
 
-	    	  	$.ajax({
-            		type:"POST",
-            		url: "/employees",
-            		data: JSON.stringify(formJson),
-            		contentType: "application/json; charset=utf-8"
-            	}).then(function(data){
-            		console.log(data);
-            		alert("success! You created a new employee");
-            		window.location.href = "/employee/employee.html";
-            	}).fail(function(error){
-            		console.log(error);
-            		alert("fail" + error.responseJSON.error);
-            	});
-	}
-	function convertFormToJson(form){
-    	var json = {}
-    	for(let j of form){
-    		json[j.name] = j.value || null;
-    	}
-    	return json;
-    }*/
-	
+    });
+
+    function convertFormToJson(form){
+        var json = {}
+        for(let j of form){
+            json[j.name] = j.value || null;
+        }
+        return json;
+    }
+
 });

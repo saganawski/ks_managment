@@ -69,7 +69,6 @@ $(document).ready(function () {
             		data: JSON.stringify(formJson),
             		contentType: "application/json; charset=utf-8"
             	}).then(function(data){
-            		console.log(data);
             		alert("success! You created a new employee");
             		window.location.href = "/employee/employee.html";
             	}).fail(function(error){

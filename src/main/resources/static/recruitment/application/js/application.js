@@ -2,7 +2,7 @@ $(document).ready(function(){
     $('#application-table').DataTable({
             ajax:{
                 "url": "/applications",
-                "dataSrc": "_embedded.applications"
+                dataSrc: ''
             },
             columns :[
                 {"data" : "firstName"},
@@ -12,12 +12,20 @@ $(document).ready(function(){
                 {"data" : "email",
                     "defaultContent":""},
                 {"data" : function(data, type,row,meta){
-                    return moment(data.dateReceived).format('YYYY-MM-DD h:mm:ss a');
+                    if(data.dateReceived != null){
+                        return moment.utc(data.dateReceived).format('YYYY-MM-DD');
+                    }else{
+                        return " ";
+                    }
                     },
                     "defaultContent":""
                 },
                 {"data" : function(data, type,row,meta){
-                    return moment(data.callBackDate).format('YYYY-MM-DD h:mm:ss a');
+                    if(data.callBackDate != null){
+                        return moment.utc(data.callBackDate).format('YYYY-MM-DD');
+                    }else{
+                        return " ";
+                    }
                     },
                     "defaultContent":""
                 },
@@ -27,7 +35,7 @@ $(document).ready(function(){
                 {"data" : "applicationResult.result",
                                     "defaultContent":""},
                 {"data" : function(data, type,row,meta){
-                    return moment(data.createdDate).format('YYYY-MM-DD h:mm:ss a');
+                    return moment.utc(data.createdDate).format('YYYY-MM-DD h:mm:ss a');
                     }
                 },
                 {   "targets": -1,
