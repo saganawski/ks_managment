@@ -1,49 +1,92 @@
 $(document).ready(function () {
 	// TODO: something to load side bar and nav
 	console.log("hits");
-
 	/*
 	Options
 	load content types
 	load source
 	load results
 	*/
-	/*$.ajax({
-		type:"GET",
-		url: "/offices"
-	}).then(function(data){
-		setOfficeOptions(data);
-	}).fail(function(error){
-		alert(error);
-	});
-	
-	function setOfficeOptions(offices){
-		var officeOptionsData = [];
-		for(office of offices){
-			option ={label:office.name, value:office.id, name:office.name };
-			officeOptionsData.push(option);
-		}
-		$('#officeSelect').multiselect('dataprovider', officeOptionsData);
-	}
-	
-	getPositionsForDropDown();
-	function getPositionsForDropDown(){
-    $.ajax({
-			type:"GET",
-			url: "/positions"
-		}).then(function(data){
-			setPositionOptions(data);
-		}).fail(function(err){
-			alert(err);
-		});
 
-	}
+	/*
+	SET CONTACT OPTIONS
+	*/
+	getContactOptions()
+	    .then(function(data){
+	        setContactTypeOptions(data._embedded.applicationContactTypes);
+	    })
+	    .fail(function(err){
+	        console.log(err);
+	        alert("problem getting contact types!");
+	    });
 
-	function setPositionOptions(positions){
-		for(position of positions){
-			$('#position').append("<option name='"+position.code+"'>"+ position.name +"</option>");
-		}
+	function getContactOptions(){
+	    return $.ajax({
+	        type:"GET",
+	        url: "/applicationContactTypes"
+	    });
 	}
+    function setContactTypeOptions(types){
+        for(type of types){
+            $('#contactType').append("<option name='"+type.code+"'>"+ type.type +"</option>");
+        }
+    }
+    /*
+    ***************************************************************************************************
+    */
+
+    /*
+    	SET SOURCE OPTIONS
+    */
+    getApplicationSource()
+        .then(function(data){
+            setSourceOptions(data._embedded.applicationSources);
+        })
+        .fail(function(err){
+            console.log(err);
+            alert("Error: could not get Application Source data!");
+        });
+    function getApplicationSource(){
+        return $.ajax({
+            type:"GET",
+            url:"/applicationSources"
+        });
+    }
+    function setSourceOptions(sources){
+        for(source of sources){
+            $('#applicationSource').append("<option name='"+source.code+"'>"+ source.source +"</option>");
+        }
+    }
+    /*
+        ***************************************************************************************************
+    */
+    /*
+    	SET RESULT OPTIONS
+    */
+
+    getResultOptions()
+        .then(function(data){
+            setResultOptions(data._embedded.applicationResults);
+        })
+        .fail(function(err){
+            console.log(err);
+            alert("Error: could not get Application Result data!");
+        });
+    function getResultOptions(){
+        return $.ajax({
+            type:"GET",
+            url:"/applicationResults"
+        });
+    }
+    function setResultOptions(results){
+        for(result of results){
+            $('#result').append("<option name='"+result.code+"'>"+ result.result +"</option>");
+        }
+    }
+    /*
+            ***************************************************************************************************
+    */
+	/*
 
 	$('#newEmpolyee').on('click', function(event){
 		event.preventDefault();
