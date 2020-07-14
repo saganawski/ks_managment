@@ -10,4 +10,10 @@ public interface ApplicationService {
     Application createApplication(Application application);
 
     List<ApplicationDto> findAll();
+
+    ApplicationDto findBydId(Integer applicationId);
+
+    Application updateApplication(Application application);
+
+    void deleteApplicationById(Integer applicationId);
 }

@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.xml.crypto.Data;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -20,6 +19,9 @@ public class ApplicationServiceImpl implements ApplicationService {
 
     @Override
     public Application createApplication(Application application) {
+        // TODO: created and updated user_id
+        application.setCreatedBy(-1);
+        application.setUpdatedBy(-1);
         return applicationJpa.save(application);
     }
 
@@ -61,5 +63,53 @@ public class ApplicationServiceImpl implements ApplicationService {
                             .build();
                 }).collect(Collectors.toList());
         return applicationDtos;
+    }
+
+    @Override
+    public ApplicationDto findBydId(Integer applicationId) {
+        final Application application = applicationJpa.findById(applicationId).orElse(new Application());
+        final Integer id = Optional.ofNullable(application.getId()).orElse(null);
+        final String firstName = Optional.ofNullable(application.getFirstName()).orElse("");
+        final String lastName = Optional.ofNullable(application.getLastName()).orElse("");
+        final String phoneNumber =Optional.ofNullable(application.getPhoneNumber()).orElse("");
+        final String email = Optional.ofNullable(application.getEmail()).orElse("");
+        final Date dateReceived = Optional.ofNullable(application.getDateReceived()).orElse(null);
+        final Date callBackDate = Optional.ofNullable(application.getCallBackDate()).orElse(null);
+        final Integer updatedBy = Optional.ofNullable(application.getUpdatedBy()).orElse(-1);
+        final Date updatedDate = Optional.ofNullable(application.getUpdatedDate()).orElse(null);
+        final Integer createdBy = Optional.ofNullable(application.getCreatedBy()).orElse(null);
+        final Date createdDate = Optional.ofNullable(application.getCreatedDate()).orElse(null);
+        final ApplicationContactType applicationContactType = Optional.ofNullable(application.getApplicationContactType()).orElse(null);
+        final ApplicationSource applicationSource = Optional.ofNullable(application.getApplicationSource()).orElse(null);
+        final ApplicationResult applicationResult = Optional.ofNullable(application.getApplicationResult()).orElse(null);
+
+        return ApplicationDto.builder()
+                .id(id)
+                .firstName(firstName)
+                .lastName(lastName)
+                .phoneNumber(phoneNumber)
+                .email(email)
+                .dateReceived(dateReceived)
+                .callBackDate(callBackDate)
+                .updatedBy(updatedBy)
+                .updatedDate(updatedDate)
+                .createdBy(createdBy)
+                .createdDate(createdDate)
+                .applicationContactType(applicationContactType)
+                .applicationSource(applicationSource)
+                .applicationResult(applicationResult)
+                .build();
+    }
+
+    @Override
+    public Application updateApplication(Application application) {
+        // TODO: set updateBy with userId
+        application.setUpdatedBy(-1);
+        return applicationJpa.save(application);
+    }
+
+    @Override
+    public void deleteApplicationById(Integer applicationId) {
+        applicationJpa.deleteById(applicationId);
     }
 }

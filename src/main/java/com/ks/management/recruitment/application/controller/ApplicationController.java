@@ -23,4 +23,21 @@ public class ApplicationController {
     public Application createApplication(@RequestBody Application application){
         return applicationService.createApplication(application);
     }
+    @GetMapping("/{applicationId}")
+    public ApplicationDto getApplication(@PathVariable("applicationId") Integer applicationId){
+        return applicationService.findBydId(applicationId);
+    }
+
+    @PutMapping("/{applicationId}")
+    public Application updateApplication(@PathVariable("applicationId") Integer applicationId, @RequestBody Application application){
+        if(applicationId != application.getId()){
+            throw new RuntimeException("Id in path does not match request body");
+        }
+        return  applicationService.updateApplication(application);
+    }
+
+    @DeleteMapping("/{applicationId}")
+    public void deleteApplicationById(@PathVariable("applicationId") Integer applicationId){
+        applicationService.deleteApplicationById(applicationId);
+    }
 }

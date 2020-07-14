@@ -43,17 +43,11 @@ $(document).ready(function(){
                 },
                 {   "targets": -1,
                     "data": function(data, type,row,meta){
-                        return '<a id="details" class="btn btn-warning" href="#">Details</a>'
-//                        return '<a class="btn btn-warning" href="/employee/employee-details.html?employeeId='+ data.id +'">Details</a>'
+                        return '<a class="btn btn-warning" href="/recruitment/application/application-edit.html?applicationId='+ data.id +'">Details</a>'
                     }
                 }
-            ]
-    });
-
-
-//TODO: add delegation
-    $('#details').on('click','body', function(event){
-    		event.preventDefault();
-    		alert("coming soon");
+            ],
+            dom:"Bfrtip",
+            buttons: ['copy','csv','pdf']
     });
 });
