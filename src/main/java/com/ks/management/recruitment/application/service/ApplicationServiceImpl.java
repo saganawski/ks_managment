@@ -1,6 +1,7 @@
 package com.ks.management.recruitment.application.service;
 
 import com.ks.management.office.Office;
+import com.ks.management.office.dao.JpaOfficeRepo;
 import com.ks.management.recruitment.application.*;
 import com.ks.management.recruitment.application.dao.ApplicationJpa;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +19,8 @@ import java.util.stream.Collectors;
 public class ApplicationServiceImpl implements ApplicationService {
     @Autowired
     private ApplicationJpa applicationJpa;
+    @Autowired
+    private JpaOfficeRepo jpaOfficeRepo;
 
     @Override
     public Application createApplication(Application application) {
@@ -108,6 +111,12 @@ public class ApplicationServiceImpl implements ApplicationService {
 
     @Override
     public Application updateApplication(Application application) {
+        Office office = null;
+        final Integer officeId = Optional.ofNullable(application.getOffice()).map(o -> o.getId()).orElse(-1);
+        if(officeId != -1){
+            office = jpaOfficeRepo.findById(officeId).orElse(null);
+        }
+        application.setOffice(office);
         // TODO: set updateBy with userId
         application.setUpdatedBy(-1);
         return applicationJpa.save(application);

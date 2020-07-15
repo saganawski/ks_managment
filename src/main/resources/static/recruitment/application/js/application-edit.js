@@ -139,8 +139,10 @@ $(document).ready(function () {
         if(application.callBackDate != null){
             $('#callBackDate').val(application.callBackDate.substr(0,10));
         }
-        delete application.office.location;
-        $('#office').val(JSON.stringify(application.office));
+        if(application.office != null ){
+            delete application.office.location;
+            $('#office').val(JSON.stringify(application.office));
+        }
         $('#applicationContactType').val(JSON.stringify(application.applicationContactType));
         $('#applicationSource').val(JSON.stringify(application.applicationSource));
         $('#applicationResult').val(JSON.stringify(application.applicationResult));
