@@ -82,15 +82,39 @@ $(document).ready(function () {
             ***************************************************************************************************
     */
 
+    getOfficeOptions()
+        .then(function(data){
+            setOfficeOptions(data);
+        })
+        .fail(function(err){
+            console.log(err);
+            alert("Error: Could not get Offices for drop down");
+        });
+    function getOfficeOptions(){
+        return $.ajax({
+            type:"GET",
+            url:"/offices"
+        });
+    };
+
+    function setOfficeOptions(offices){
+        for(office of offices){
+            delete office.location;
+            $('#office').append("<option value='"+JSON.stringify(office)+"'>"+ office.name +"</option>")
+        }
+    }
+
     $('#newApplication').on('click', function(event){
         event.preventDefault();
         let jsonForm = convertFormToJson($("form").serializeArray());
         let applicationResult = JSON.parse($('#applicationResult').val());
         let applicationSource = JSON.parse($('#applicationSource').val());
         let applicationContactType = JSON.parse($('#applicationContactType').val());
+        let office = JSON.parse($('#office').val());
         jsonForm.applicationResult = applicationResult;
         jsonForm.applicationSource = applicationSource;
         jsonForm.applicationContactType = applicationContactType;
+        jsonForm.office = office;
 
         $.ajax({
             type: "POST",

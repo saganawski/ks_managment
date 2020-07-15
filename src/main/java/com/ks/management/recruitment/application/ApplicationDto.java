@@ -1,6 +1,7 @@
 package com.ks.management.recruitment.application;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.ks.management.office.Office;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -26,6 +27,8 @@ public class ApplicationDto {
     private ApplicationSource applicationSource;
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private ApplicationResult applicationResult;
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+    private Office office;
     private Date updatedDate;
     private Integer createdBy;
     private Date createdDate;

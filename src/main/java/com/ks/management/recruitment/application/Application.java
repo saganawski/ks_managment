@@ -1,5 +1,6 @@
 package com.ks.management.recruitment.application;
 
+import com.ks.management.office.Office;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -37,6 +38,10 @@ public class Application {
 
     @Column(name="call_back_date")
     private Date callBackDate;
+
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
+    @JoinColumn(name = "office_id")
+    private Office office;
 
     @Column(name = "updated_by")
     private Integer updatedBy;

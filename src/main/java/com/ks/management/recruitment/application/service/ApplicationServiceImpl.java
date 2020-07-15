@@ -1,5 +1,6 @@
 package com.ks.management.recruitment.application.service;
 
+import com.ks.management.office.Office;
 import com.ks.management.recruitment.application.*;
 import com.ks.management.recruitment.application.dao.ApplicationJpa;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,7 +45,7 @@ public class ApplicationServiceImpl implements ApplicationService {
                     final ApplicationContactType applicationContactType = Optional.ofNullable(a.getApplicationContactType()).orElse(null);
                     final ApplicationSource applicationSource = Optional.ofNullable(a.getApplicationSource()).orElse(null);
                     final ApplicationResult applicationResult = Optional.ofNullable(a.getApplicationResult()).orElse(null);
-
+                    final Office office = Optional.ofNullable(a.getOffice()).orElse(null);
                     return ApplicationDto.builder()
                             .id(id)
                             .firstName(firstName)
@@ -60,6 +61,7 @@ public class ApplicationServiceImpl implements ApplicationService {
                             .applicationContactType(applicationContactType)
                             .applicationSource(applicationSource)
                             .applicationResult(applicationResult)
+                            .office(office)
                             .build();
                 }).collect(Collectors.toList());
         return applicationDtos;
