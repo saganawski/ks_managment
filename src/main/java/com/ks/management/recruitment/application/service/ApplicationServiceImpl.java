@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.swing.text.html.Option;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -84,6 +85,7 @@ public class ApplicationServiceImpl implements ApplicationService {
         final ApplicationContactType applicationContactType = Optional.ofNullable(application.getApplicationContactType()).orElse(null);
         final ApplicationSource applicationSource = Optional.ofNullable(application.getApplicationSource()).orElse(null);
         final ApplicationResult applicationResult = Optional.ofNullable(application.getApplicationResult()).orElse(null);
+        final Office office = Optional.ofNullable(application.getOffice()).orElse(null);
 
         return ApplicationDto.builder()
                 .id(id)
@@ -100,6 +102,7 @@ public class ApplicationServiceImpl implements ApplicationService {
                 .applicationContactType(applicationContactType)
                 .applicationSource(applicationSource)
                 .applicationResult(applicationResult)
+                .office(office)
                 .build();
     }
 

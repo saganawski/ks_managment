@@ -85,11 +85,31 @@ $(document).ready(function () {
         /*
                 ***************************************************************************************************
         */
+        getOfficeOptions()
+                .then(function(data){
+                    setOfficeOptions(data);
+                })
+                .fail(function(err){
+                    console.log(err);
+                    alert("Error: Could not get Offices for drop down");
+                });
+            function getOfficeOptions(){
+                return $.ajax({
+                    type:"GET",
+                    url:"/offices"
+                });
+            };
+
+            function setOfficeOptions(offices){
+                for(office of offices){
+                    delete office.location;
+                    $('#office').append("<option value='"+JSON.stringify(office)+"'>"+ office.name +"</option>")
+                }
+            }
         return resolve(true);
 	})
 
     const getApplicationData = new Promise(function(resolve,reject){
-
         let searchParams = new URLSearchParams(window.location.search);
         if(searchParams.has('applicationId')){
             let applicationId = searchParams.get('applicationId');
@@ -108,7 +128,6 @@ $(document).ready(function () {
     });
 
     function setApplicationFieldValues(application){
-
         $('#id').val(application.id);
         $('#firstName').val(application.firstName);
         $('#lastName').val(application.lastName);
@@ -120,6 +139,8 @@ $(document).ready(function () {
         if(application.callBackDate != null){
             $('#callBackDate').val(application.callBackDate.substr(0,10));
         }
+        delete application.office.location;
+        $('#office').val(JSON.stringify(application.office));
         $('#applicationContactType').val(JSON.stringify(application.applicationContactType));
         $('#applicationSource').val(JSON.stringify(application.applicationSource));
         $('#applicationResult').val(JSON.stringify(application.applicationResult));
@@ -142,9 +163,11 @@ $(document).ready(function () {
         let applicationResult = JSON.parse($('#applicationResult').val());
         let applicationSource = JSON.parse($('#applicationSource').val());
         let applicationContactType = JSON.parse($('#applicationContactType').val());
+        let office = JSON.parse($('#office').val());
         jsonForm.applicationResult = applicationResult;
         jsonForm.applicationSource = applicationSource;
         jsonForm.applicationContactType = applicationContactType;
+        jsonForm.office = office;
 
         $.ajax({
             type: "PUT",

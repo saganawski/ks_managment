@@ -56,22 +56,31 @@
 			<div class="form-group col-md-3">
 				<label>Contact Type</label>
 				<select id="applicationContactType" name="applicationContactType" class="custom-select">
-					<option selected>Choose Contact Type</option>
+					<option value="null" selected>Choose Contact Type</option>
 				</select>
 			</div>
 			<div class="form-group col-md-3">
 				<label>Application Source</label>
 				<select id="applicationSource" name="applicationSource" class="custom-select">
-					<option selected>Choose Source</option>
+					<option value="null" selected>Choose Source</option>
 				</select>
 			</div>
 			<div class="form-group col-md-3">
 				<label>Result</label>
 				<select id="applicationResult" name="applicationResult" class="custom-select">
-					<option selected>Choose Result</option>
+					<option value="null" selected>Choose Result</option>
 				</select>
 			</div>
 		</div>
+		<div class="form-row">
+			<div class="form-group col-sm-12 col-md-3 col-lg-3 ">
+				<label>Office</label>
+				<select id="office" name="office" class="custom-select">
+					<option value="null" selected>Choose Office </option>
+				</select>
+			</div>
+		</div>
+
     	<button id="editApplication" value="send" type="submit" class="btn btn-primary">Update changes</button>
     	<button id="deleteApplication" value="send" type="submit" class="btn btn-danger">Delete Application</button>
 	</form>
