@@ -115,6 +115,10 @@ $(document).ready(function () {
         jsonForm.applicationSource = applicationSource;
         jsonForm.applicationContactType = applicationContactType;
         jsonForm.office = office;
+        if(jsonForm.applicationNotes != null){
+            note = [{id:null,note:jsonForm.applicationNotes}];
+            jsonForm.applicationNotes = note;
+        }
 
         $.ajax({
             type: "POST",

@@ -156,7 +156,7 @@ $(document).ready(function () {
         setTimeout(function(){
             setApplicationFieldValues(results);
             $("div").removeClass("spinner-border");
-        },100);
+        },300);
     })
 
     $('#editApplication').on('click', function(event){

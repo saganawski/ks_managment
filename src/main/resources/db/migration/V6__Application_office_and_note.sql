@@ -8,9 +8,9 @@ CREATE TABLE application_note(
     updated_date datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     PRIMARY KEY (id),
     KEY application_id (application_id),
-        CONSTRAINT fk_application_id FOREIGN KEY (application_id) REFERENCES application (id) ON UPDATE NO ACTION ON DELETE NO ACTION
+        CONSTRAINT fk_application_id FOREIGN KEY (application_id) REFERENCES application (id) ON DELETE RESTRICT ON UPDATE RESTRICT
 );
 -- add office as foreign key to application
 ALTER TABLE application ADD COLUMN office_id INT(11) DEFAULT NULL AFTER application_result_id;
-ALTER TABLE application ADD FOREIGN KEY (office_id) REFERENCES office (id) ON UPDATE NO ACTION ON DELETE NO ACTION;
+ALTER TABLE application ADD FOREIGN KEY (office_id) REFERENCES office (id) ON DELETE RESTRICT ON UPDATE RESTRICT;
 

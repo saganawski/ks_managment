@@ -1,5 +1,7 @@
 package com.ks.management.recruitment.application;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.ks.management.office.Office;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -7,7 +9,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table(name="application")
@@ -58,6 +62,9 @@ public class Application {
     @JoinColumn(name="application_result_id")
     private ApplicationResult applicationResult;
 
+    @OneToMany(mappedBy = "application",fetch = FetchType.LAZY,cascade = CascadeType.ALL)
+    private List<ApplicationNote> applicationNotes = new ArrayList<>();
+
     @Column(name = "updated_date", insertable = false, updatable = false)
     @Temporal(TemporalType.TIMESTAMP)
     private Date updatedDate;
@@ -68,5 +75,16 @@ public class Application {
     @Column(name = "created_date", insertable = false, updatable = false)
     @Temporal(TemporalType.TIMESTAMP)
     private Date createdDate;
+
+    public void addNote(ApplicationNote note){
+        if(applicationNotes == null){
+            applicationNotes = new ArrayList<>();
+        }
+        applicationNotes.add(note);
+    }
+
+    public void removeNote(ApplicationNote note){
+        applicationNotes.remove(note);
+    }
 
 }

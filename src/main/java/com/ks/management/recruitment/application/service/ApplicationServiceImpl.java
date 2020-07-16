@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.swing.text.html.Option;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -24,10 +23,29 @@ public class ApplicationServiceImpl implements ApplicationService {
 
     @Override
     public Application createApplication(Application application) {
+        Boolean hasNote = application.getApplicationNotes() != null;
+        ApplicationNote note = null;
+        if(hasNote){
+            note = ApplicationNote.builder()
+                    .note(application.getApplicationNotes().get(0).getNote())
+                    //TODO get active user
+                    .createdBy(-1)
+                    .updatedBy(-1)
+                    .build();
+            application.removeNote(application.getApplicationNotes().get(0));
+        }
         // TODO: created and updated user_id
         application.setCreatedBy(-1);
         application.setUpdatedBy(-1);
-        return applicationJpa.save(application);
+        final Application savedApplication = applicationJpa.save(application);
+
+        if(hasNote){
+            note.setApplication(savedApplication);
+            savedApplication.addNote(note);
+            applicationJpa.save(savedApplication);
+        }
+
+        return savedApplication;
     }
 
     @Override
