@@ -8,10 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -111,6 +108,7 @@ public class ApplicationServiceImpl implements ApplicationService {
         final ApplicationSource applicationSource = Optional.ofNullable(application.getApplicationSource()).orElse(null);
         final ApplicationResult applicationResult = Optional.ofNullable(application.getApplicationResult()).orElse(null);
         final Office office = Optional.ofNullable(application.getOffice()).orElse(null);
+        final List<ApplicationNote> applicationNotes = Optional.ofNullable(application.getApplicationNotes()).orElse(Collections.emptyList());
 
         return ApplicationDto.builder()
                 .id(id)
@@ -128,20 +126,32 @@ public class ApplicationServiceImpl implements ApplicationService {
                 .applicationSource(applicationSource)
                 .applicationResult(applicationResult)
                 .office(office)
+                .applicationNotes(applicationNotes)
                 .build();
     }
 
     @Override
     public Application updateApplication(Application application) {
-        Office office = null;
-        final Integer officeId = Optional.ofNullable(application.getOffice()).map(o -> o.getId()).orElse(-1);
-        if(officeId != -1){
-            office = jpaOfficeRepo.findById(officeId).orElse(null);
-        }
-        application.setOffice(office);
+        applyNoteToAppIfPresent(application);
         // TODO: set updateBy with userId
         application.setUpdatedBy(-1);
+
         return applicationJpa.save(application);
+    }
+
+    private void applyNoteToAppIfPresent(Application application) {
+        if(application.getApplicationNotes() != null){
+            final ApplicationNote note = application.getApplicationNotes().stream()
+                    .filter(an -> an.getId() == null)
+                    .findFirst()
+                    .orElse(null);
+
+            if(note != null){
+                final int index = application.getApplicationNotes().indexOf(note);
+                application.getApplicationNotes().get(index).setApplication(application);
+            }
+
+        }
     }
 
     @Override

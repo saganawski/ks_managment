@@ -1,5 +1,6 @@
 $(document).ready(function () {
 	// TODO: something to load side bar and nav
+	// TODO: break up to sep promises use promise all?
 	const setSelectOptions = new Promise(function(resolve,reject){
         /*
         SET CONTACT OPTIONS
@@ -106,6 +107,7 @@ $(document).ready(function () {
                     $('#office').append("<option value='"+JSON.stringify(office)+"'>"+ office.name +"</option>")
                 }
             }
+
         return resolve(true);
 	})
 
@@ -146,6 +148,13 @@ $(document).ready(function () {
         $('#applicationContactType').val(JSON.stringify(application.applicationContactType));
         $('#applicationSource').val(JSON.stringify(application.applicationSource));
         $('#applicationResult').val(JSON.stringify(application.applicationResult));
+
+        for(note of application.applicationNotes){
+            let message = note.note;
+            let val = JSON.stringify(note);
+
+            $("<textarea name='applicationNotes' class='form-control' value='"+ val + "' readonly>"+ message + "</textarea>").prependTo('#note-body');
+        }
     }
 
 //TODO: clean this up  catch errors
@@ -170,6 +179,10 @@ $(document).ready(function () {
         jsonForm.applicationSource = applicationSource;
         jsonForm.applicationContactType = applicationContactType;
         jsonForm.office = office;
+        if(jsonForm.applicationNotes != null){
+            note = [{id:null,note:jsonForm.applicationNotes}];
+            jsonForm.applicationNotes = note;
+        }
 
         $.ajax({
             type: "PUT",
