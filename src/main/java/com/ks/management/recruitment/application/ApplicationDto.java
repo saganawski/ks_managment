@@ -8,6 +8,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.Date;
+import java.util.List;
+
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
@@ -29,6 +31,8 @@ public class ApplicationDto {
     private ApplicationResult applicationResult;
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private Office office;
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+    private List<ApplicationNote> applicationNotes;
     private Date updatedDate;
     private Integer createdBy;
     private Date createdDate;

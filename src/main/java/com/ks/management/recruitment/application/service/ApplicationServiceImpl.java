@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -68,6 +69,8 @@ public class ApplicationServiceImpl implements ApplicationService {
                     final ApplicationSource applicationSource = Optional.ofNullable(a.getApplicationSource()).orElse(null);
                     final ApplicationResult applicationResult = Optional.ofNullable(a.getApplicationResult()).orElse(null);
                     final Office office = Optional.ofNullable(a.getOffice()).orElse(null);
+                    final List<ApplicationNote> applicationNotes = Optional.ofNullable(a.getApplicationNotes()).orElse(Collections.emptyList());
+
                     return ApplicationDto.builder()
                             .id(id)
                             .firstName(firstName)
@@ -84,6 +87,7 @@ public class ApplicationServiceImpl implements ApplicationService {
                             .applicationSource(applicationSource)
                             .applicationResult(applicationResult)
                             .office(office)
+                            .applicationNotes(applicationNotes)
                             .build();
                 }).collect(Collectors.toList());
         return applicationDtos;
