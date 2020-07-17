@@ -40,7 +40,6 @@ CREATE TABLE interview (
   id int NOT NULL AUTO_INCREMENT,
   application_id int(11) NOT NULL,
   scheduled_time datetime DEFAULT NULL,
-  call_back_date datetime DEFAULT NULL,
   employee_id int(11) NOT NULL,
   interview_confirmation_type_id int(11) DEFAULT NULL,
   interview_result_id int(11) DEFAULT NULL,
