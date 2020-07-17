@@ -4,6 +4,7 @@ import com.ks.management.office.Office;
 import com.ks.management.office.dao.JpaOfficeRepo;
 import com.ks.management.recruitment.application.*;
 import com.ks.management.recruitment.application.dao.ApplicationJpa;
+import com.ks.management.recruitment.application.dao.JpaApplicationNote;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,6 +19,9 @@ public class ApplicationServiceImpl implements ApplicationService {
     private ApplicationJpa applicationJpa;
     @Autowired
     private JpaOfficeRepo jpaOfficeRepo;
+
+    @Autowired
+    private JpaApplicationNote jpaApplicationNote;
 
     @Override
     public Application createApplication(Application application) {
@@ -157,5 +161,10 @@ public class ApplicationServiceImpl implements ApplicationService {
     @Override
     public void deleteApplicationById(Integer applicationId) {
         applicationJpa.deleteById(applicationId);
+    }
+
+    @Override
+    public void deleteNoteForAppId(int applicationId, int noteId) {
+        jpaApplicationNote.deleteById(noteId);
     }
 }

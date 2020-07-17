@@ -16,4 +16,6 @@ public interface ApplicationService {
     Application updateApplication(Application application);
 
     void deleteApplicationById(Integer applicationId);
+
+    void deleteNoteForAppId(int applicationId, int noteId);
 }

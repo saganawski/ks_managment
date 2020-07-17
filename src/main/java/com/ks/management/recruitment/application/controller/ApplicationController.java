@@ -3,6 +3,7 @@ package com.ks.management.recruitment.application.controller;
 import com.ks.management.recruitment.application.Application;
 import com.ks.management.recruitment.application.ApplicationDto;
 import com.ks.management.recruitment.application.service.ApplicationService;
+import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -39,5 +40,10 @@ public class ApplicationController {
     @DeleteMapping("/{applicationId}")
     public void deleteApplicationById(@PathVariable("applicationId") Integer applicationId){
         applicationService.deleteApplicationById(applicationId);
+    }
+
+    @DeleteMapping("/{applicationId}/notes/{noteId}")
+    public void deleteNoteForApp(@PathVariable("applicationId") int applicationId, @PathVariable("noteId") int noteId){
+        applicationService.deleteNoteForAppId(applicationId,noteId) ;
     }
 }

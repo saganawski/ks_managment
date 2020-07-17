@@ -153,7 +153,7 @@ $(document).ready(function () {
             let message = note.note;
             let val = JSON.stringify(note);
 
-            $("<textarea name='applicationNotes' class='form-control' value='"+ val + "' readonly>"+ message + "</textarea>").prependTo('#note-body');
+            $("<textarea name='applicationNotes' class='form-control' value='"+ val + "' readonly>"+ message + "</textarea> <a href='/applications/"+ application.id+"/notes/"+note.id +"' class='delete-note btn btn-danger'>Delete Note</a>").prependTo('#note-body');
         }
     }
 
@@ -228,4 +228,17 @@ $(document).ready(function () {
             });
         }
 
+     $('#note-body').on("click","a.delete-note",function(event){
+        event.preventDefault();
+        let url = event.target.href;
+        $.ajax({
+            type:"DELETE",
+            url: url
+        }).then(function(response){
+            location.reload();
+        }).fail(function(error){
+            console.log(error);
+            alert("ERROR: Could NOT remove note!");
+        });
+     })
 });

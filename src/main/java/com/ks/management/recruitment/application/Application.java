@@ -62,6 +62,7 @@ public class Application {
     @JoinColumn(name="application_result_id")
     private ApplicationResult applicationResult;
 
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     @OneToMany(mappedBy = "application",fetch = FetchType.LAZY,cascade = CascadeType.ALL)
     private List<ApplicationNote> applicationNotes = new ArrayList<>();
 
