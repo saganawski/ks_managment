@@ -126,8 +126,10 @@ $(document).ready(function () {
             data: JSON.stringify(jsonForm),
             contentType: "application/json; charset=utf-8"
         }).then(function(response){
+            createInterviewIfScheduled(response);
             alert("success! You created a new application");
             window.location.href = "/recruitment/application/application.html";
+
         }).fail(function(err){
             console.log(err);
             alert("Error: Could not make new application");
@@ -141,6 +143,13 @@ $(document).ready(function () {
             json[j.name] = j.value || null;
         }
         return json;
+    }
+
+    function createInterviewIfScheduled(application){
+        let scheduleInterview = application.applicationResult.code == "SCHEDULED";
+        if(scheduleInterview){
+            window.location.href = "/recruitment/interview/interview-details.html";
+        }
     }
 
 });

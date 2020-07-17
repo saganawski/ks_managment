@@ -191,7 +191,10 @@ $(document).ready(function () {
             contentType: "application/json; charset=utf-8"
         }).then(function(response){
             alert("Success! You updated an application");
-            window.location.href = "/recruitment/application/application.html";
+            createInterviewIfScheduled(response);
+            if(response.applicationResult.code != "SCHEDULED"){
+                window.location.href = "/recruitment/application/application.html";
+            }
         }).fail(function(err){
             console.log(err);
             alert("Error: Could not make new application");
@@ -241,4 +244,24 @@ $(document).ready(function () {
             alert("ERROR: Could NOT remove note!");
         });
      })
+
+
+     function createInterviewIfScheduled(application){
+         let scheduleInterview = application.applicationResult.code == "SCHEDULED";
+         if(scheduleInterview){
+            let interview = {application: application};
+            $.ajax({
+                type:"POST",
+                url: "/interviews",
+                data: JSON.stringify(interview),
+                contentType: "application/json; charset=utf-8"
+            }).then(function(response){
+                debugger;
+                window.location.href = "/recruitment/interview/interview-details.html";
+            }).then(function(error){
+                console.log(error);
+                alert("ERROR: Something went wrong when creating a interview!");
+            });
+         }
+     }
 });

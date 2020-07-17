@@ -6,4 +6,6 @@ import java.util.List;
 
 public interface InterviewService {
     List<Interview> getAllInterviews();
+
+    Interview createInterview(Interview interview);
 }

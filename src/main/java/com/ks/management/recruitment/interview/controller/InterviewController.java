@@ -3,9 +3,7 @@ package com.ks.management.recruitment.interview.controller;
 import com.ks.management.recruitment.interview.Interview;
 import com.ks.management.recruitment.interview.service.InterviewService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -18,5 +16,11 @@ public class InterviewController {
     @GetMapping()
     public List<Interview> getInterviews(){
         return interviewService.getAllInterviews();
+    }
+
+    @PostMapping()
+    public Interview createInterview(@RequestBody Interview interview){
+        System.out.println("interview = " + interview);
+        return  interviewService.createInterview(interview);
     }
 }

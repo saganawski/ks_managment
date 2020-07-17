@@ -26,7 +26,7 @@ public class Interview {
     @Column(name="id")
     private Integer id;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name="application_id", referencedColumnName = "id")
     private Application application;
 

@@ -1,16 +1,26 @@
 $(document).ready(function(){
-    $('#interviewee-table').DataTable({
+    $('#interview-table').DataTable({
             ajax:{
-                "url": "/interviewees",
-                "dataSrc": "_embedded.interviewees"
+                "url": "/interviews",
+                "dataSrc": "interviews"
             },
             columns :[
-                {"data" : "firstName"},
-                {"data" : "lastName"},
+                {"data" : function(data,type,row,meta){
+                    let firstName = data.applicant.firstName;
+                    let lastName = data.applicant.lastName;
+                    let applicantName = lastName + " ," + firstName;
+                    return applicantName;
+                    },
+                    "defaultContent": ""},
+                {"data" : function(data,type,row,meta){
+                    return moment(data.scheduledTime).format('YYYY-MM-DD h:mm:ss a');
+                    },
+                    "defaultContent": ""},
+  /*
                 {"data" : "phoneNumber",
                     "defaultContent":""},
                 {"data" : "email",
-                    "defaultContent":""},
+                    "defaultContent":""},*/
                 {"data" : function(data, type,row,meta){
                     return moment(data.createdDate).format('YYYY-MM-DD h:mm:ss a');
                     }

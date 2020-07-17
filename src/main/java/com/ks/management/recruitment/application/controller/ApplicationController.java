@@ -31,7 +31,7 @@ public class ApplicationController {
 
     @PutMapping("/{applicationId}")
     public Application updateApplication(@PathVariable("applicationId") Integer applicationId, @RequestBody Application application){
-        if(applicationId != application.getId()){
+        if(!applicationId.equals(application.getId())){
             throw new RuntimeException("Id in path does not match request body");
         }
         return  applicationService.updateApplication(application);
