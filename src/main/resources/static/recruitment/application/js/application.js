@@ -36,7 +36,9 @@ $(document).ready(function(){
                     "defaultContent":""},
 
                 {"data" : "applicationResult.result",
-                                    "defaultContent":""},
+                    "defaultContent":""},
+                {"data" : "office.name",
+                    "defaultContent":""},
                 {"data" : function(data, type,row,meta){
                     return moment.utc(data.createdDate).format('YYYY-MM-DD h:mm:ss a');
                     }
