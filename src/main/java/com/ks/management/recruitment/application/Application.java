@@ -3,6 +3,7 @@ package com.ks.management.recruitment.application;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.ks.management.office.Office;
+import com.ks.management.recruitment.interview.Interview;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -87,5 +88,8 @@ public class Application {
     public void removeNote(ApplicationNote note){
         applicationNotes.remove(note);
     }
+
+    @OneToOne(mappedBy = "application")
+    private Interview interview;
 
 }

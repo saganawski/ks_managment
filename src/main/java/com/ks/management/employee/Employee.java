@@ -2,6 +2,7 @@ package com.ks.management.employee;
 
 import com.ks.management.office.Office;
 import com.ks.management.position.Position;
+import com.ks.management.recruitment.interview.Interview;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -71,4 +72,13 @@ public class Employee {
 		}
 		offices.add(office);
 	}
+
+	@ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE,
+			CascadeType.DETACH, CascadeType.REFRESH})
+	@JoinTable(
+			name= "interview_director",
+			joinColumns = @JoinColumn(name="employee_id"),
+			inverseJoinColumns = @JoinColumn(name="interview_id")
+	)
+	private List<Interview> interviews = new ArrayList<>();
 }
