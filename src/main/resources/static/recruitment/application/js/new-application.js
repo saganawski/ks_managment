@@ -126,9 +126,11 @@ $(document).ready(function () {
             data: JSON.stringify(jsonForm),
             contentType: "application/json; charset=utf-8"
         }).then(function(response){
-            createInterviewIfScheduled(response);
             alert("success! You created a new application");
-            window.location.href = "/recruitment/application/application.html";
+            createInterviewIfScheduled(response);
+            if(response.applicationResult.code != "SCHEDULED"){
+                window.location.href = "/recruitment/application/application.html";
+            }
 
         }).fail(function(err){
             console.log(err);
@@ -146,10 +148,21 @@ $(document).ready(function () {
     }
 
     function createInterviewIfScheduled(application){
-        let scheduleInterview = application.applicationResult.code == "SCHEDULED";
-        if(scheduleInterview){
-            window.location.href = "/recruitment/interview/interview-details.html";
+         let scheduleInterview = application.applicationResult.code == "SCHEDULED";
+         if(scheduleInterview){
+            let interview = {application: application};
+            $.ajax({
+                type:"POST",
+                url: "/interviews",
+                data: JSON.stringify(interview),
+                contentType: "application/json; charset=utf-8"
+            }).then(function(response){
+                window.location.href = "/recruitment/interview/interview-details.html" +"?interviewId=" + response.id;
+            }).then(function(error){
+                console.log(error);
+                alert("ERROR: Something went wrong when creating a interview!");
+            });
+         }
         }
-    }
 
 });

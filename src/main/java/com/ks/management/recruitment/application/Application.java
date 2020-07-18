@@ -1,9 +1,7 @@
 package com.ks.management.recruitment.application;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.ks.management.office.Office;
-import com.ks.management.recruitment.interview.Interview;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -46,6 +44,7 @@ public class Application {
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
     @JoinColumn(name = "office_id")
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private Office office;
 
     @Column(name = "updated_by")
@@ -53,14 +52,17 @@ public class Application {
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE})
     @JoinColumn(name="application_contact_type_id")
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private ApplicationContactType applicationContactType;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE})
     @JoinColumn(name="application_source_id")
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private ApplicationSource applicationSource;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE})
     @JoinColumn(name="application_result_id")
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private ApplicationResult applicationResult;
 
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
@@ -89,7 +91,7 @@ public class Application {
         applicationNotes.remove(note);
     }
 
-    @OneToOne(mappedBy = "application")
-    private Interview interview;
+ /*   @OneToOne(mappedBy = "application")
+    private Interview interview;*/
 
 }

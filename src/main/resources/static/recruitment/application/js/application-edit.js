@@ -256,8 +256,7 @@ $(document).ready(function () {
                 data: JSON.stringify(interview),
                 contentType: "application/json; charset=utf-8"
             }).then(function(response){
-                debugger;
-                window.location.href = "/recruitment/interview/interview-details.html";
+                window.location.href = "/recruitment/interview/interview-details.html" +"?interviewId=" + response.id;
             }).then(function(error){
                 console.log(error);
                 alert("ERROR: Something went wrong when creating a interview!");

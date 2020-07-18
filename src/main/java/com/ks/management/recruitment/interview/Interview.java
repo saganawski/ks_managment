@@ -9,6 +9,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -28,6 +29,7 @@ public class Interview {
 
     @OneToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name="application_id", referencedColumnName = "id")
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private Application application;
 
     @Column(name = "scheduled_time")
@@ -35,6 +37,7 @@ public class Interview {
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
     @JoinColumn(name = "employee_id")
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private Employee scheduler;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)

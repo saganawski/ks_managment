@@ -1,15 +1,17 @@
 package com.ks.management.employee;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.ks.management.office.Office;
 import com.ks.management.position.Position;
-import com.ks.management.recruitment.interview.Interview;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table(name="employee")
@@ -39,8 +41,9 @@ public class Employee {
 	@Column(name="phone_number")
 	private String phoneNumber;
 	
-	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
+	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
 	@JoinColumn(name = "position_id")
+	@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 	private Position position;
 	
 	@Column(name = "updated_by")
@@ -73,12 +76,12 @@ public class Employee {
 		offices.add(office);
 	}
 
-	@ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE,
+/*	@ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE,
 			CascadeType.DETACH, CascadeType.REFRESH})
 	@JoinTable(
 			name= "interview_director",
 			joinColumns = @JoinColumn(name="employee_id"),
 			inverseJoinColumns = @JoinColumn(name="interview_id")
 	)
-	private List<Interview> interviews = new ArrayList<>();
+	private List<Interview> interviews = new ArrayList<>();*/
 }

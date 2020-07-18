@@ -2,17 +2,20 @@ $(document).ready(function(){
     $('#interview-table').DataTable({
             ajax:{
                 "url": "/interviews",
-                "dataSrc": "interviews"
+                "dataSrc": ""
             },
             columns :[
                 {"data" : function(data,type,row,meta){
-                    let firstName = data.applicant.firstName;
-                    let lastName = data.applicant.lastName;
+                    let firstName = data.application.firstName;
+                    let lastName = data.application.lastName;
                     let applicantName = lastName + " ," + firstName;
                     return applicantName;
                     },
                     "defaultContent": ""},
                 {"data" : function(data,type,row,meta){
+                    if(data.scheduledTime == null){
+                        return " ";
+                    }
                     return moment(data.scheduledTime).format('YYYY-MM-DD h:mm:ss a');
                     },
                     "defaultContent": ""},
