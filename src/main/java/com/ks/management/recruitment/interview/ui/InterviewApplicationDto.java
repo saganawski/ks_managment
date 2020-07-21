@@ -2,6 +2,7 @@ package com.ks.management.recruitment.interview.ui;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.ks.management.employee.Employee;
+import com.ks.management.office.Office;
 import com.ks.management.recruitment.application.Application;
 import com.ks.management.recruitment.application.ui.ApplicationFormOptionsDto;
 import com.ks.management.recruitment.interview.InterviewConfirmationType;
@@ -55,6 +56,8 @@ public class InterviewApplicationDto {
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private Set<InterviewResult> interviewResultsOptions = new HashSet<>();
     private ApplicationFormOptionsDto applicationFormOptionsDto;
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+    private Set<Office> officeOptions = new HashSet<>();
 
 
 

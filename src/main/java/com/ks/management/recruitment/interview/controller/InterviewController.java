@@ -3,6 +3,7 @@ package com.ks.management.recruitment.interview.controller;
 import com.ks.management.recruitment.interview.Interview;
 import com.ks.management.recruitment.interview.service.InterviewService;
 import com.ks.management.recruitment.interview.ui.InterviewApplicationDto;
+import com.ks.management.recruitment.interview.ui.InterviewDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,8 +26,17 @@ public class InterviewController {
         return  interviewService.createInterview(interview);
     }
 
-    @GetMapping("{interviewId}/dto")
+    @GetMapping("/{interviewId}/dto")
     public InterviewApplicationDto getInterviewApplicationDto(@PathVariable("interviewId")int interviewId){
         return interviewService.findInterviewApplicationDto(interviewId);
+    }
+
+    @PutMapping("/{interviewId}")
+    public Interview updateInterview(@PathVariable("interviewId") Integer interviewId, @RequestBody InterviewDto interviewDto){
+        if(!interviewId.equals(interviewDto.getId())){
+            throw new RuntimeException("Id in path does not match request body");
+        }
+
+        return interviewService.updateInterview(interviewDto);
     }
 }

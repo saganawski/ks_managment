@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.ks.management.recruitment.application.Application;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
@@ -13,6 +14,7 @@ import java.util.Date;
 @Table(name="interview_note")
 @NoArgsConstructor
 @AllArgsConstructor
+@Data
 @Builder
 public class InterviewNote {
 

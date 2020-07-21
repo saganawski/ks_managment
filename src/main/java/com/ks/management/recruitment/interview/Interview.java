@@ -27,7 +27,7 @@ public class Interview {
     @Column(name="id")
     private Integer id;
 
-    @OneToOne(cascade = CascadeType.MERGE)
+    @OneToOne
     @JoinColumn(name="application_id", referencedColumnName = "id")
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private Application application;
@@ -69,6 +69,7 @@ public class Interview {
             joinColumns = @JoinColumn(name="interview_id"),
             inverseJoinColumns = @JoinColumn(name="employee_id")
     )
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private List<Employee> interviewers = new ArrayList<>();
 
     public void addInterviewer(Employee interviewer){

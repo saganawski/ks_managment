@@ -1,0 +1,37 @@
+.selectpicker{
+    background-color: #fff;
+}
+/*
+.side{
+    background-color: red;
+}
+.container{
+    display: grid;
+    grid-template-columns: repeat(12,1fr);
+    grid-template-rows: 150px 500px 500px;
+    grid-gap: 3px;
+}
+
+.side{
+    grid-row: 1 / -1;
+}
+
+.header{
+    background-color: blue;
+    grid-column: 2 / -1;
+
+}
+
+.interview{
+    grid-column: 2 / -1;
+    grid-row: 2 / 3;
+}
+
+.application{
+    grid-column: 2 / -1;
+    grid-row: 3 / 4;
+}
+form{
+    display:grid;
+    grid-template-columns: 200px 1fr;
+}*/

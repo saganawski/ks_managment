@@ -1,5 +1,9 @@
 package com.ks.management.position;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -13,6 +17,8 @@ import javax.persistence.TemporalType;
 
 @Entity
 @Table(name="position")
+@AllArgsConstructor
+@Data
 public class Position {
 
 	@Id

@@ -14,8 +14,14 @@
     <!--MultiSelect-->
     <link rel="stylesheet" href="/pluggins/multiselect/css/bootstrap-multiselect.css" type="text/css">
     <script type="text/javascript" src="/pluggins/multiselect/js/bootstrap-multiselect.js"></script>
+<!--    sweetAlert-->
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+<!--    date range picker-->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
 
     <script src="/recruitment/interview/js/interview-details.js"></script>
+    <link rel="stylesheet" href="/recruitment/interview/css/style.css">
 </head>
 <body>
     <div class="text-center">
@@ -23,126 +29,133 @@
             <span class="sr-only">Loading...</span>
         </div>
     </div>
-    <div class="interview">
-        <form>
-            <div class="form-group col-md-3 col-lg-9">
-                <label>ID</label>
-                <input type="text" id="interview-id"  class="form-control" name="id" readonly />
-            </div>
-            <div class="form-row">
-                <div class="form-group col-md-3">
-                    <label>Scheduled Time</label>
-                    <input type="date" id="scheduledTime" name="scheduledTime" class="form-control"/>
+    <div class="container">
+        <div class="interview">
+            <form id="interview-form">
+                <div class="form-group col-md-3 col-lg-9">
+                    <label>ID</label>
+                    <input type="text" id="interview-id"  class="form-control" name="id" readonly />
                 </div>
-                <div class="form-group col-md-3">
-                    <label>Confirmation</label>
-                    <select id="interviewConfirmationType" name="interviewConfirmationType" class="custom-select">
-                        <option value="null" selected>Choose Confirmation type</option>
-                    </select>
-                </div>
-                <div class="form-group col-md-3">
-                    <label>Interview Result</label>
-                    <select id="interviewResult" name="interviewResult" class="custom-select">
-                        <option value="null" selected>Choose Interview Result</option>
-                    </select>
-                </div>
-            </div>
-            <div class="form-row">
-                <div class="form-group col-md-3">
-                    <label>Scheduler</label>
-                    <select id="scheduler" name="scheduler" class="custom-select">
-                        <option value="null" selected>Choose Scheduler</option>
-                    </select>
-                </div>
-                <div class="form-group col-md-3">
-                    <label>Interview Directors</label>
-                    <select id="interviewDirectors" name="interviewers"  class="selectpicker" multiple data-live-search="true">
-                    </select>
-                </div>
-            </div>
-            <div class="form-row">
-                <div class="card col-lg-6">
-                    <div class="card-header">
-                        Notes
+                <div class="form-row">
+                    <div class="form-group col-md-3">
+                        <label>Scheduled Time</label>
+                        <input type="text" id="scheduledTime" name="scheduledTime" class="form-control"/>
                     </div>
-                    <div id="interview-note-body" class="card-body">
-                        <textarea id="new-note" name="interviewNotes"class="form-control" placeholder="Add a note"></textarea>
+                    <div class="form-group col-md-3">
+                        <label>Confirmation</label>
+                        <select id="interviewConfirmationType" name="interviewConfirmationType" class="custom-select">
+                            <option value="null" selected>Choose Confirmation type</option>
+                        </select>
+                    </div>
+                    <div class="form-group col-md-3">
+                        <label>Interview Result</label>
+                        <select id="interviewResult" name="interviewResult" class="custom-select">
+                            <option value="null" selected>Choose Interview Result</option>
+                        </select>
                     </div>
                 </div>
-            </div>
-        </form>
-    </div>
-    <div class="application">
-        <form>
-            <div class="form-group col-md-3 col-lg-9">
-                <label>ID</label>
-                <input type="text" id="id"  class="form-control" name="id" readonly />
-            </div>
-            <div class="form-row">
-                <div class="form-group col-md-3">
-                    <label>First Name</label>
-                    <input type="text" id="firstName" name="firstName" class="form-control" required/>
+                <div class="form-row">
+                    <div class="form-group col-md-3">
+                        <label>Scheduler</label>
+                        <select id="scheduler" name="scheduler" class="custom-select">
+                            <option value="null" selected>Choose Scheduler</option>
+                        </select>
+                    </div>
+                    <div class="form-group col-md-3">
+                        <label>Interview Directors</label>
+                        <select id="interviewDirectors" name="interviewers"  class="selectpicker" multiple data-live-search="true">
+                        </select>
+                    </div>
                 </div>
-                <div class="form-group col-md-3">
-                    <label>Last Name</label>
-                    <input type="text" id="lastName" name="lastName" class="form-control"/>
+                <div class="form-row">
+                    <div class="card col-lg-6">
+                        <div class="card-header">
+                            Notes
+                        </div>
+                        <div id="interview-note-body" class="card-body">
+                            <textarea id="new-note" name="interviewNotes"class="form-control" placeholder="Add a note"></textarea>
+                        </div>
+                    </div>
                 </div>
-                <div class="form-group col-md-3">
-                    <label>Phone Number</label>
-                    <input type="text" id="phoneNumber" name="phoneNumber" class="form-control"/>
+                <div>
+                    <button id="editInterview" value="send" type="submit" class="btn btn-primary">Update changes</button>
+                    <button id="deleteInterview" value="send" type="submit" class="btn btn-danger">Delete Interview</button>
                 </div>
-            </div>
+            </form>
+        </div>
+        <div class="application">
+<!--            <form>-->
+                <div class="form-group col-md-3 col-lg-9">
+                    <label>ID</label>
+                    <input type="text" id="id"  class="form-control" name="id" readonly />
+                </div>
+                <div class="form-row">
+                    <div class="form-group col-md-3">
+                        <label>First Name</label>
+                        <input type="text" id="firstName" name="firstName" class="form-control" required/>
+                    </div>
+                    <div class="form-group col-md-3">
+                        <label>Last Name</label>
+                        <input type="text" id="lastName" name="lastName" class="form-control"/>
+                    </div>
+                    <div class="form-group col-md-3">
+                        <label>Phone Number</label>
+                        <input type="text" id="phoneNumber" name="phoneNumber" class="form-control"/>
+                    </div>
+                </div>
 
-            <div class="form-row">
-                <div class="form-group col-md-3">
-                    <label>Email</label>
-                    <input type="email" id="email" name="email" class="form-control"/>
-                </div>
-                <div class="form-group col-md-3">
-                    <label>Date Received</label>
-                    <input type="date" id="dateReceived" name="dateReceived" class="form-control"/>
-                </div>
-                <div class="form-group col-md-3">
-                    <label>Call Back Date</label>
-                    <input type="date" id="callBackDate" name="callBackDate" class="form-control"/>
-                </div>
-            </div>
-            <div class="form-row">
-                <div class="form-group col-md-3">
-                    <label>Contact Type</label>
-                    <select id="applicationContactType" name="applicationContactType" class="custom-select">
-                        <option value="null" selected>Choose Contact Type</option>
-                    </select>
-                </div>
-                <div class="form-group col-md-3">
-                    <label>Application Source</label>
-                    <select id="applicationSource" name="applicationSource" class="custom-select">
-                        <option value="null" selected>Choose Source</option>
-                    </select>
-                </div>
-                <div class="form-group col-md-3">
-                    <label>Result</label>
-                    <select id="applicationResult" name="applicationResult" class="custom-select">
-                        <option value="null" selected>Choose Result</option>
-                    </select>
-                </div>
-            </div>
-            <div class="form-row">
-                <div class="form-group col-sm-12 col-md-3 col-lg-3 ">
-                    <label>Office</label>
-                    <select id="office" name="office" class="custom-select">
-                        <option value="null" selected>Choose Office </option>
-                    </select>
-                </div>
-                <div class="card col-lg-6">
-                    <div class="card-header">
-                        Application Notes
+                <div class="form-row">
+                    <div class="form-group col-md-3">
+                        <label>Email</label>
+                        <input type="email" id="email" name="email" class="form-control"/>
                     </div>
-                    <div id="application-note-body" class="card-body">
+                    <div class="form-group col-md-3">
+                        <label>Date Received</label>
+                        <input type="date" id="dateReceived" name="dateReceived" class="form-control"/>
+                    </div>
+                    <div class="form-group col-md-3">
+                        <label>Call Back Date</label>
+                        <input type="date" id="callBackDate" name="callBackDate" class="form-control"/>
                     </div>
                 </div>
-            </div>
-        </form>
+                <div class="form-row">
+                    <div class="form-group col-md-3">
+                        <label>Contact Type</label>
+                        <select id="applicationContactType" name="applicationContactType" class="custom-select">
+                            <option value="null" selected>Choose Contact Type</option>
+                        </select>
+                    </div>
+                    <div class="form-group col-md-3">
+                        <label>Application Source</label>
+                        <select id="applicationSource" name="applicationSource" class="custom-select">
+                            <option value="null" selected>Choose Source</option>
+                        </select>
+                    </div>
+                    <div class="form-group col-md-3">
+                        <label>Result</label>
+                        <select id="applicationResult" name="applicationResult" class="custom-select">
+                            <option value="null" selected>Choose Result</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group col-sm-12 col-md-3 col-lg-3 ">
+                        <label>Office</label>
+                        <select id="office" name="office" class="custom-select">
+                            <option value="null" selected>Choose Office </option>
+                        </select>
+                    </div>
+                    <div class="card col-lg-6">
+                        <div class="card-header">
+                            Application Notes
+                        </div>
+                        <div id="application-note-body" class="card-body">
+                        </div>
+                    </div>
+                </div>
+<!--            </form>-->
+        </div>
+
     </div>
 </body>
 </html>

@@ -3,6 +3,7 @@ package com.ks.management.employee;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.ks.management.office.Office;
 import com.ks.management.position.Position;
+import com.ks.management.recruitment.interview.Interview;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -67,6 +68,7 @@ public class Employee {
 			joinColumns = @JoinColumn(name="employee_id"),
 			inverseJoinColumns = @JoinColumn(name="office_id")
 	)
+	@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 	private List<Office> offices = new ArrayList<>();
 
 	public void addOffice(Office office){
@@ -76,7 +78,7 @@ public class Employee {
 		offices.add(office);
 	}
 
-/*	@ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE,
+	/*@ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE,
 			CascadeType.DETACH, CascadeType.REFRESH})
 	@JoinTable(
 			name= "interview_director",
