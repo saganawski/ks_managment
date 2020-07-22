@@ -35,7 +35,6 @@ $(document).ready(function(){
                 {   "targets": -1,
                     "data": function(data, type,row,meta){
                         return '<a class="btn btn-warning" href="/recruitment/interview/interview-details.html?interviewId= '+data.id + '">Details</a>'
-//                        return '<a class="btn btn-warning" href="/employee/employee-details.html?employeeId='+ data.id +'">Details</a>'
 
                     }
                 }
