@@ -17,4 +17,6 @@ public interface TrainingService {
     Training updateTraining(Training training);
 
     void deleteNote(int noteId);
+
+    void deleteTraining(int trainingId);
 }

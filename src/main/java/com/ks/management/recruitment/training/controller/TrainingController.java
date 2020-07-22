@@ -47,4 +47,9 @@ public class TrainingController {
         trainingService.deleteNote(noteId);
     }
 
+    @DeleteMapping("/{trainingId}")
+    public void deleteTraining(@PathVariable("trainingId")int trainingId){
+        trainingService.deleteTraining(trainingId);
+    }
+
 }

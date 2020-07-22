@@ -96,4 +96,9 @@ public class TrainingServiceImpl implements TrainingService{
     public void deleteNote(int noteId) {
         jpaTrainingNote.deleteById(noteId);
     }
+
+    @Override
+    public void deleteTraining(int trainingId) {
+        jpaTraining.deleteById(trainingId);
+    }
 }

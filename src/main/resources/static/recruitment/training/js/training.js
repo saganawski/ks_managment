@@ -1,12 +1,4 @@
 $(document).ready(function(){
-    console.log("hits");
-//    <th>Id</th>
-//                    <th>Trainee</th>
-//                    <th>Scheduled Time</th>
-//                    <th>Trainer</th>
-//                    <th>Created Date</th>
-//                    <th>Office Name</th>
-//                    <th>Actions</th>
     $('#trainer-table').DataTable({
             ajax:{
                 "url": "/trainings",

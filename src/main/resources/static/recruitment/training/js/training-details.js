@@ -21,7 +21,9 @@ $(document).ready(function(){
 
     function setFormData(training){
        $('#id').val(training.id);
-       $('#hasShow').val(training.hasShow.toString());
+       if(training.hasShow != null){
+            $('#hasShow').val(training.hasShow.toString());
+       }
        if(training.scheduledTime != null ){
            $('#scheduledTime').val(new Date(training.scheduledTime).toLocaleString());
        }
@@ -124,33 +126,33 @@ $(document).ready(function(){
             swal("ERROR", "Could NOT remove note!","error");
         });
      })
-//
-//     $('#deleteInterview').on('click', function(event){
-//         event.preventDefault();
-//         let interviewId = $('#interview-id').val();
-//         swal({
-//           title: "Are you sure?",
-//           text: "Once deleted, you will not be able to recover this record!",
-//           icon: "warning",
-//           buttons: true,
-//           dangerMode: true,
-//         })
-//         .then((willDelete) => {
-//            deleteInterview(interviewId);
-//         });
-//     });
-//
-//     function deleteInterview(interviewId){
-//         $.ajax({
-//             type: "DELETE",
-//             url: "/interviews/" + interviewId
-//         }).then(function(response){
-//             swal("Success!","You deleted this interview","success");
-//             window.location.href = "/recruitment/interview/interview.html";
-//         }).fail(function(error){
-//             console.log(error);
-//             swal("ERROR", "Could NOT remove interview!","error");
-//         });
-//     }
+
+     $('#deleteTraining').on('click', function(event){
+         event.preventDefault();
+         let trainingId = vm.trainingDto.id;
+         swal({
+           title: "Are you sure?",
+           text: "Once deleted, you will not be able to recover this record!",
+           icon: "warning",
+           buttons: true,
+           dangerMode: true,
+         })
+         .then((willDelete) => {
+            deleteTraining(trainingId);
+         });
+     });
+
+     function deleteTraining(trainingId){
+         $.ajax({
+             type: "DELETE",
+             url: "/trainings/" + trainingId
+         }).then(function(response){
+             swal("Success!","You deleted this training","success");
+             window.location.href = "/recruitment/training/training.html";
+         }).fail(function(error){
+             console.log(error);
+             swal("ERROR", "Could NOT remove training!","error");
+         });
+     }
 
 })
