@@ -3,6 +3,7 @@ package com.ks.management.recruitment.training;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.ks.management.employee.Employee;
 import com.ks.management.recruitment.application.Application;
+import com.ks.management.recruitment.interview.Interview;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -31,8 +32,8 @@ public class Training {
     private Application application;
 
     @OneToOne
-    @JoinColumn(name="training_id", referencedColumnName = "id")
-    private Training training;
+    @JoinColumn(name="interview_id", referencedColumnName = "id")
+    private Interview interview;
 
     @Column(name = "scheduled_time")
     private Date scheduledTime;
@@ -43,7 +44,7 @@ public class Training {
     private Employee trainer;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
-    @JoinColumn(name = "interview_confirmation_type_id")
+    @JoinColumn(name = "training_confirmation_type_id")
     private TrainingConfirmationType trainingConfirmationType;
 
     @Column(name = "has_show")
