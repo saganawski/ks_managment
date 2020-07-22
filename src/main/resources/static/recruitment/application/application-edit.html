@@ -13,6 +13,7 @@
 <script src="/recruitment/application/js/application-edit.js"></script>
 </head>
 <body>
+<div class="container">
 	<div class="text-center">
 		<div class="spinner-border" role="status">
 			<span class="sr-only">Loading...</span>
@@ -23,15 +24,15 @@
 			<label>ID</label>
 			<input type="text" id="id"  class="form-control" name="id" readonly />
 		</div>
-   		<div class="form-row">
-   			<div class="form-group col-md-3">
-    			<label>First Name</label>
-    			<input type="text" id="firstName" name="firstName" class="form-control" required/>
-   			</div>
-   			<div class="form-group col-md-3">
-    			<label>Last Name</label>
-    			<input type="text" id="lastName" name="lastName" class="form-control"/>
-   			</div>
+		<div class="form-row">
+			<div class="form-group col-md-3">
+				<label>First Name</label>
+				<input type="text" id="firstName" name="firstName" class="form-control" required/>
+			</div>
+			<div class="form-group col-md-3">
+				<label>Last Name</label>
+				<input type="text" id="lastName" name="lastName" class="form-control"/>
+			</div>
 			<div class="form-group col-md-3">
 				<label>Phone Number</label>
 				<input type="text" id="phoneNumber" name="phoneNumber" class="form-control"/>
@@ -43,15 +44,15 @@
 				<label>Email</label>
 				<input type="email" id="email" name="email" class="form-control"/>
 			</div>
-	   		<div class="form-group col-md-3">
-	   			<label>Date Received</label>
-	   			<input type="date" id="dateReceived" name="dateReceived" class="form-control"/>
-	   		</div>
 			<div class="form-group col-md-3">
-	   			<label>Call Back Date</label>
-	   			<input type="date" id="callBackDate" name="callBackDate" class="form-control"/>
-	   		</div>
-   		</div>
+				<label>Date Received</label>
+				<input type="date" id="dateReceived" name="dateReceived" class="form-control"/>
+			</div>
+			<div class="form-group col-md-3">
+				<label>Call Back Date</label>
+				<input type="date" id="callBackDate" name="callBackDate" class="form-control"/>
+			</div>
+		</div>
 		<div class="form-row">
 			<div class="form-group col-md-3">
 				<label>Contact Type</label>
@@ -92,6 +93,8 @@
 		<button id="editApplication" value="send" type="submit" class="btn btn-primary">Update changes</button>
 		<button id="deleteApplication" value="send" type="submit" class="btn btn-danger">Delete Application</button>
 	</form>
+
+</div>
 
 
 </body>
