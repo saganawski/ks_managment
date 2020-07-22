@@ -48,7 +48,7 @@ public class Training {
     private TrainingConfirmationType trainingConfirmationType;
 
     @Column(name = "has_show")
-    private Boolean has_show;
+    private Boolean hasShow;
 
     @Column(name = "updated_by")
     private Integer updatedBy;

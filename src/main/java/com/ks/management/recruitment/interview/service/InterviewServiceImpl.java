@@ -141,7 +141,6 @@ public class InterviewServiceImpl implements InterviewService {
             note.setInterview(interview);
             interview.addInterviewNote(note);
         }
-        // set note look appIMpl
         return jpaInterview.save(interview);
     }
 
