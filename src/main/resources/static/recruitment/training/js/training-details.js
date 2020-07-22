@@ -155,4 +155,14 @@ $(document).ready(function(){
          });
      }
 
+     $('#showApplication').on('click', function(event){
+        event.preventDefault();
+        window.location.href= "/recruitment/application/application-edit.html?applicationId=" + vm.trainingDto.application.id;
+     });
+
+     $('#showInterview').on('click', function(event){
+        event.preventDefault();
+        window.location.href= "/recruitment/interview/interview-details.html?interviewId=" + vm.trainingDto.interview.id;
+     });
+
 })
