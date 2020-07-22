@@ -5,6 +5,7 @@ $(document).ready(function(){
                 "dataSrc": ""
             },
             columns :[
+                {"data": "id" },
                 {"data" : function(data,type,row,meta){
                     let firstName = data.application.firstName;
                     let lastName = data.application.lastName;
@@ -19,28 +20,27 @@ $(document).ready(function(){
                     return moment(data.scheduledTime).format('YYYY-MM-DD h:mm:ss a');
                     },
                     "defaultContent": ""},
-  /*
-                {"data" : "phoneNumber",
+                {"data" : function(data,type,row,meta){
+                        if(data.interviewers == null){
+                            return " ";
+                        }
+                        let interviewersLastNames = data.interviewers.map(interviewer => interviewer.lastName);
+                        return interviewersLastNames;
+                    },
                     "defaultContent":""},
-                {"data" : "email",
-                    "defaultContent":""},*/
                 {"data" : function(data, type,row,meta){
                     return moment(data.createdDate).format('YYYY-MM-DD h:mm:ss a');
                     }
                 },
                 {   "targets": -1,
                     "data": function(data, type,row,meta){
-                        return '<a id="details" class="btn btn-warning" href="#">Details</a>'
+                        return '<a class="btn btn-warning" href="/recruitment/interview/interview-details.html?interviewId= '+data.id + '">Details</a>'
 //                        return '<a class="btn btn-warning" href="/employee/employee-details.html?employeeId='+ data.id +'">Details</a>'
+
                     }
                 }
             ]
     });
 
 
-//TODO: add delegation
-    $('#details').on('click','body', function(event){
-    		event.preventDefault();
-    		alert("coming soon");
-    });
 });
