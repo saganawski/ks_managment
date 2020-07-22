@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -25,5 +26,14 @@ public class TrainingServiceImpl implements TrainingService{
         training.setUpdatedBy(-1);
         training.setCreatedBy(-1);
         return jpaTraining.save(training);
+    }
+
+    @Override
+    public Training getTrainingById(int trainingId) {
+        final Optional<Training> training = jpaTraining.findById(trainingId);
+        if(!training.isPresent()){
+            throw new RuntimeException("Cant find training with ID:" + trainingId);
+        }
+        return training.get();
     }
 }

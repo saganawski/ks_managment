@@ -8,4 +8,6 @@ public interface TrainingService {
     List<Training> getAllTrainings();
 
     Training createTraining(Training training);
+
+    Training getTrainingById(int trainingId);
 }

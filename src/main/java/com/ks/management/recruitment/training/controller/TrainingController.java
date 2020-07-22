@@ -22,4 +22,10 @@ public class TrainingController {
     public Training createTraining(@RequestBody Training training){
         return trainingService.createTraining(training);
     }
+
+    @GetMapping("{trainingId}")
+    public Training getTraining(@PathVariable("trainingId") int trainingId){
+        return trainingService.getTrainingById(trainingId);
+    }
+
 }
