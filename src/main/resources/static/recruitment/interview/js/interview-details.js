@@ -29,13 +29,13 @@ $(document).ready(function(){
         setInterviewResultsOptions(interview.interviewResultsOptions, interview.interviewResult);
         setSchedulerOptions(interview.schedulersOptions, interview.scheduler);
         setInterviewersOptions(interview.interviewersOptions, interview.interviewers);
-//        $('#interviewDirectors').val(JSON.stringify(interview.interviewers));
 
         for(note of interview.interviewNotes){
             let message = note.note;
             let val = JSON.stringify(note);
 
-            $("<textarea name='interviewNotes' class='form-control' value='"+ val + "' readonly>"+ message + "</textarea> <a href='/interviews/"+ interview.id+"/notes/"+note.id +"' class='delete-note btn btn-danger'>Delete Note</a>").prependTo('#interview-note-body');
+            $("<textarea name='interviewNotes' class='form-control' value='"+ val + "' readonly>"+ message + "</textarea> <a href='/interviews/"+
+                interview.interviewId+"/notes/"+note.id +"' class='delete-note btn btn-danger'>Delete Note</a>").prependTo('#interview-note-body');
         }
 
         $("div").removeClass("spinner-border");
@@ -112,7 +112,8 @@ $(document).ready(function(){
             let message = note.note;
             let val = JSON.stringify(note);
 
-            $("<textarea name='applicationNotes' class='form-control' value='"+ val + "' readonly>"+ message + "</textarea> <a href='/applications/"+ application.id+"/notes/"+note.id +"' class='delete-note btn btn-danger'>Delete Note</a>").prependTo('#application-note-body');
+            $("<textarea name='applicationNotes' class='form-control' value='"+ val + "' readonly>"+ message + "</textarea> <a href='/applications/"+
+                application.id+"/notes/"+note.id +"' class='delete-note btn btn-danger'>Delete Note</a>").prependTo('#application-note-body');
         }
     }
 
@@ -214,5 +215,20 @@ $(document).ready(function(){
             }
             return json;
         }
+
+    $('#interview-note-body').on("click","a.delete-note",function(event){
+        event.preventDefault();
+        let url = event.target.href;
+        $.ajax({
+            type:"DELETE",
+            url: url
+        }).then(function(response){
+            swal("Success!","You deleted a note","success");
+            location.reload();
+        }).fail(function(error){
+            console.log(error);
+            swal("ERROR", "Could NOT remove note!","error");
+        });
+     })
 
 })

@@ -14,4 +14,6 @@ public interface InterviewService {
     InterviewApplicationDto findInterviewApplicationDto(int interviewId);
 
     Interview updateInterview(InterviewDto interviewDto);
+
+    void deleteNote(int noteId);
 }

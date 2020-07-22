@@ -17,6 +17,7 @@ import com.ks.management.recruitment.interview.InterviewNote;
 import com.ks.management.recruitment.interview.InterviewResult;
 import com.ks.management.recruitment.interview.dao.JpaInterview;
 import com.ks.management.recruitment.interview.dao.JpaInterviewConfirmationType;
+import com.ks.management.recruitment.interview.dao.JpaInterviewNote;
 import com.ks.management.recruitment.interview.dao.JpaInterviewResult;
 import com.ks.management.recruitment.interview.ui.InterviewApplicationDto;
 import com.ks.management.recruitment.interview.ui.InterviewDto;
@@ -32,7 +33,6 @@ import java.util.stream.Collectors;
 public class InterviewServiceImpl implements InterviewService {
     @Autowired
     private JpaInterview jpaInterview;
-
     @Autowired
     private JpaEmployeeRepo jpaEmployeeRepo;
     @Autowired
@@ -47,6 +47,8 @@ public class InterviewServiceImpl implements InterviewService {
     private ApplicationResultJpaDao applicationResultJpaDao;
     @Autowired
     private JpaOfficeRepo jpaOfficeRepo;
+    @Autowired
+    private JpaInterviewNote jpaInterviewNote;
 
     @Override
     public List<Interview> getAllInterviews() {
@@ -140,5 +142,10 @@ public class InterviewServiceImpl implements InterviewService {
         }
         // set note look appIMpl
         return jpaInterview.save(interview);
+    }
+
+    @Override
+    public void deleteNote(int noteId) {
+        jpaInterviewNote.deleteById(noteId);
     }
 }
