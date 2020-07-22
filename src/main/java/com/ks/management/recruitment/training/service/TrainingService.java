@@ -6,4 +6,6 @@ import java.util.List;
 
 public interface TrainingService {
     List<Training> getAllTrainings();
+
+    Training createTraining(Training training);
 }

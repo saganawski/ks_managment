@@ -3,9 +3,7 @@ package com.ks.management.recruitment.training.controller;
 import com.ks.management.recruitment.training.Training;
 import com.ks.management.recruitment.training.service.TrainingService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -18,5 +16,10 @@ public class TrainingController {
     @GetMapping()
     public List<Training> getTrainings(){
         return trainingService.getAllTrainings();
+    }
+
+    @PostMapping()
+    public Training createTraining(@RequestBody Training training){
+        return trainingService.createTraining(training);
     }
 }

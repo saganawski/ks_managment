@@ -22,7 +22,6 @@ public class InterviewController {
 
     @PostMapping()
     public Interview createInterview(@RequestBody Interview interview){
-        System.out.println("interview = " + interview);
         return  interviewService.createInterview(interview);
     }
 

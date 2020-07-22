@@ -22,7 +22,7 @@ CREATE TABLE training (
   application_id int(11) NOT NULL,
   interview_id int(11) NOT NULL,
   scheduled_time datetime DEFAULT NULL,
-  employee_id int(11) NOT NULL,
+  employee_id int(11) DEFAULT NULL,
   training_confirmation_type_id int(11) DEFAULT NULL,
   has_show tinyint(1) DEFAULT NULL,
   created_by int DEFAULT '-1',

@@ -18,4 +18,12 @@ public class TrainingServiceImpl implements TrainingService{
     public List<Training> getAllTrainings() {
         return jpaTraining.findAll();
     }
+
+    @Override
+    public Training createTraining(Training training) {
+        //TODO: get active user
+        training.setUpdatedBy(-1);
+        training.setCreatedBy(-1);
+        return jpaTraining.save(training);
+    }
 }

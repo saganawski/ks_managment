@@ -257,7 +257,7 @@ $(document).ready(function () {
                 contentType: "application/json; charset=utf-8"
             }).then(function(response){
                 window.location.href = "/recruitment/interview/interview-details.html" +"?interviewId=" + response.id;
-            }).then(function(error){
+            }).fail(function(error){
                 console.log(error);
                 alert("ERROR: Something went wrong when creating a interview!");
             });
