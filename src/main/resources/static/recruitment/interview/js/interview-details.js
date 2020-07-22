@@ -197,10 +197,7 @@ $(document).ready(function(){
             contentType: "application/json; charset=utf-8"
         }).then(function(response){
             swal("Success!","You updated an interview","success");
-//            createInterviewIfScheduled(response);
-//            if(response.applicationResult.code != "SCHEDULED"){
-//                window.location.href = "/recruitment/application/application.html";
-//            }
+            location.reload();
         }).fail(function(err){
             console.log(err);
             swal("Error:", "Failure to update interview!","error");
@@ -230,5 +227,33 @@ $(document).ready(function(){
             swal("ERROR", "Could NOT remove note!","error");
         });
      })
+
+     $('#deleteInterview').on('click', function(event){
+         event.preventDefault();
+         let interviewId = $('#interview-id').val();
+         swal({
+           title: "Are you sure?",
+           text: "Once deleted, you will not be able to recover this record!",
+           icon: "warning",
+           buttons: true,
+           dangerMode: true,
+         })
+         .then((willDelete) => {
+            deleteInterview(interviewId);
+         });
+     });
+
+     function deleteInterview(interviewId){
+         $.ajax({
+             type: "DELETE",
+             url: "/interviews/" + interviewId
+         }).then(function(response){
+             swal("Success!","You deleted this interview","success");
+             window.location.href = "/recruitment/interview/interview.html";
+         }).fail(function(error){
+             console.log(error);
+             swal("ERROR", "Could NOT remove interview!","error");
+         });
+     }
 
 })

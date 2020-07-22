@@ -44,4 +44,9 @@ public class InterviewController {
     public void deleteNoteForInterview(@PathVariable("interviewId") int interviewId, @PathVariable("noteId") int noteId){
         interviewService.deleteNote(noteId);
     }
+
+    @DeleteMapping("/{interviewId}")
+    public void deleteInterview(@PathVariable("interviewId")int interviewId){
+        interviewService.deleteInterview(interviewId);
+    }
 }
