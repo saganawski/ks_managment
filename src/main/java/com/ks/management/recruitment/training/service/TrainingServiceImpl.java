@@ -7,6 +7,7 @@ import com.ks.management.recruitment.training.TrainingConfirmationType;
 import com.ks.management.recruitment.training.TrainingNote;
 import com.ks.management.recruitment.training.dao.JpaTraining;
 import com.ks.management.recruitment.training.dao.JpaTrainingConfirmationType;
+import com.ks.management.recruitment.training.dao.JpaTrainingNote;
 import com.ks.management.recruitment.training.ui.TrainingDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,6 +24,8 @@ public class TrainingServiceImpl implements TrainingService{
     private JpaEmployeeRepo employeeRepo;
     @Autowired
     private JpaTrainingConfirmationType jpaTrainingConfirmationType;
+    @Autowired
+    private JpaTrainingNote jpaTrainingNote;
 
     @Override
     public List<Training> getAllTrainings() {
@@ -87,5 +90,10 @@ public class TrainingServiceImpl implements TrainingService{
             training.addTrainingNote(note);
         }
         return jpaTraining.save(training);
+    }
+
+    @Override
+    public void deleteNote(int noteId) {
+        jpaTrainingNote.deleteById(noteId);
     }
 }

@@ -42,4 +42,9 @@ public class TrainingController {
         return trainingService.updateTraining(training);
     }
 
+    @DeleteMapping("/{trainingId}/notes/{noteId}")
+    public void deleteNotes(@PathVariable("trainingId") int trainingId, @PathVariable("noteId") int noteId){
+        trainingService.deleteNote(noteId);
+    }
+
 }

@@ -109,21 +109,21 @@ $(document).ready(function(){
         }
         return json;
     }
-//
-//    $('#interview-note-body').on("click","a.delete-note",function(event){
-//        event.preventDefault();
-//        let url = event.target.href;
-//        $.ajax({
-//            type:"DELETE",
-//            url: url
-//        }).then(function(response){
-//            swal("Success!","You deleted a note","success");
-//            location.reload();
-//        }).fail(function(error){
-//            console.log(error);
-//            swal("ERROR", "Could NOT remove note!","error");
-//        });
-//     })
+
+    $('#note-body').on("click","a.delete-note",function(event){
+        event.preventDefault();
+        let url = event.target.href;
+        $.ajax({
+            type:"DELETE",
+            url: url
+        }).then(function(response){
+            swal("Success!","You deleted a note","success");
+            location.reload();
+        }).fail(function(error){
+            console.log(error);
+            swal("ERROR", "Could NOT remove note!","error");
+        });
+     })
 //
 //     $('#deleteInterview').on('click', function(event){
 //         event.preventDefault();

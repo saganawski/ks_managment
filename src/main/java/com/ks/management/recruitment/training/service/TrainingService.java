@@ -15,4 +15,6 @@ public interface TrainingService {
     TrainingDto getTrainingDtoById(int trainingId);
 
     Training updateTraining(Training training);
+
+    void deleteNote(int noteId);
 }
