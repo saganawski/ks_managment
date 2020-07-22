@@ -1,4 +1,4 @@
-package com.ks.management.recruitment.interview;
+package com.ks.management.recruitment.training;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.ks.management.employee.Employee;
@@ -14,13 +14,12 @@ import java.util.Date;
 import java.util.List;
 
 @Entity
-@Table(name="interview")
+@Table(name="training")
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
 @Builder
-public class Interview {
-
+public class Training {
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     @Column(name="id")
@@ -31,21 +30,24 @@ public class Interview {
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private Application application;
 
+    @OneToOne
+    @JoinColumn(name="training_id", referencedColumnName = "id")
+    private Training training;
+
     @Column(name = "scheduled_time")
     private Date scheduledTime;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
     @JoinColumn(name = "employee_id")
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-    private Employee scheduler;
+    private Employee trainer;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
     @JoinColumn(name = "interview_confirmation_type_id")
-    private InterviewConfirmationType interviewConfirmationType;
+    private TrainingConfirmationType trainingConfirmationType;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
-    @JoinColumn(name = "interview_result_id")
-    private InterviewResult interviewResult;
+    @Column(name = "has_show")
+    private Boolean has_show;
 
     @Column(name = "updated_by")
     private Integer updatedBy;
@@ -61,32 +63,14 @@ public class Interview {
     @Temporal(TemporalType.TIMESTAMP)
     private Date createdDate;
 
-    @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE,
-            CascadeType.DETACH, CascadeType.REFRESH})
-    @JoinTable(
-            name= "interview_director",
-            joinColumns = @JoinColumn(name="interview_id"),
-            inverseJoinColumns = @JoinColumn(name="employee_id")
-    )
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-    private List<Employee> interviewers = new ArrayList<>();
+    @OneToMany(mappedBy = "training",fetch = FetchType.LAZY,cascade = CascadeType.ALL)
+    private List<TrainingNote> trainingNotes = new ArrayList<>();
 
-    public void addInterviewer(Employee interviewer){
-        if(interviewers == null){
-            interviewers = new ArrayList<>();
+    public void addTrainingNote(TrainingNote note){
+        if(trainingNotes == null){
+            trainingNotes = new ArrayList<>();
         }
-        interviewers.add(interviewer);
+        trainingNotes.add(note);
     }
-
-    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-    @OneToMany(mappedBy = "interview",fetch = FetchType.LAZY,cascade = CascadeType.ALL)
-    private List<InterviewNote> interviewNotes = new ArrayList<>();
-
-    public void addInterviewNote(InterviewNote note){
-        if(interviewNotes == null){
-            interviewNotes = new ArrayList<>();
-        }
-        interviewNotes.add(note);
-    }
-
 }

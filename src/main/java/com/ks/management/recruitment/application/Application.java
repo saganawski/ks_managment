@@ -91,7 +91,4 @@ public class Application {
         applicationNotes.remove(note);
     }
 
- /*   @OneToOne(mappedBy = "application")
-    private Interview interview;*/
-
 }
