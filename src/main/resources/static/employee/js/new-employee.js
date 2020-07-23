@@ -6,7 +6,8 @@ $(document).ready(function () {
 	}).then(function(data){
 		setOfficeOptions(data);
 	}).fail(function(error){
-		alert(error);
+	    console.log(error);
+		swal("ERROR", "Could not get offices!","error");
 	});
 	
 	function setOfficeOptions(offices){
@@ -26,7 +27,8 @@ $(document).ready(function () {
 		}).then(function(data){
 			setPositionOptions(data);
 		}).fail(function(err){
-			alert(err);
+		    console.log(err);
+			swal("ERROR", "Could not get positions!","error");
 		});
 
 	}
@@ -69,11 +71,11 @@ $(document).ready(function () {
             		data: JSON.stringify(formJson),
             		contentType: "application/json; charset=utf-8"
             	}).then(function(data){
-            		alert("success! You created a new employee");
+            		swal("Success!","You created a new employee","success");
             		window.location.href = "/employee/employee.html";
             	}).fail(function(error){
             		console.log(error);
-            		alert("fail" + error.responseJSON.error);
+            		swal("ERROR", "Could not get offices! \n" + error.responseJSON.error,"error");
             	});
 	}
 	function convertFormToJson(form){

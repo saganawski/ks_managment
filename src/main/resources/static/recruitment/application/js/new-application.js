@@ -126,7 +126,7 @@ $(document).ready(function () {
             data: JSON.stringify(jsonForm),
             contentType: "application/json; charset=utf-8"
         }).then(function(response){
-            alert("success! You created a new application");
+            swal("Success!","You created a new application","success");
             createInterviewIfScheduled(response);
             if(response.applicationResult.code != "SCHEDULED"){
                 window.location.href = "/recruitment/application/application.html";

@@ -8,7 +8,7 @@ $(document).ready(function() {
             }).then(function(data){
                 setPositionOptions(data);
             }).fail(function(err){
-                alert(err);
+                swal("ERROR", "Could note retrieve positions!","error");
             });
 
         }
@@ -48,7 +48,7 @@ $(document).ready(function() {
                               return resolve(data);
                           }).fail(function(err){
                               console.log(err);
-                              alert("Failure to retrieve employee!");
+                              swal("ERROR", "Could NOT retrieve employees!","error");
                               return reject("failed to retrieve Employee");
                           });
            }else{
@@ -116,20 +116,28 @@ $(document).ready(function() {
             contentType: "application/json; charset=utf-8"
         }).then(function(data){
             console.log(data);
-            alert("success! You updated employee");
+            swal("Success!","You updated employee","success");
             window.location.href = "/employee/employee.html";
         }).fail(function(error){
             console.log(error);
-            alert("ERROR!");
+            swal("ERROR", "Could not update employee!","error");
+
         });
     }
 
     $('#deleteEmpolyee').on('click', function(event){
         event.preventDefault();
         let employeeId = $('#id').val();
-        if(confirm("Confirm You want to delete Employee!?")){
+        swal({
+           title: "Are you sure?",
+           text: "Once deleted, you will not be able to recover this record!",
+           icon: "warning",
+           buttons: true,
+           dangerMode: true,
+         })
+         .then((willDelete) => {
             deleteEmployee(employeeId);
-        }
+         });
     });
 
     function deleteEmployee(employeeId){
@@ -137,11 +145,11 @@ $(document).ready(function() {
             type: "DELETE",
             url: "/employees/" + employeeId
         }).then(function(response){
-            alert("Success! You deleted this employee.");
+            swal("Success!","You deleted this employee.","success");
             window.location.href = "/employee/employee.html";
         }).fail(function(error){
             console.log(error);
-            alert("Error: Could not delete employee.");
+            swal("ERROR", "Could not delete employee!","error");
         });
     }
 

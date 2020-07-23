@@ -190,7 +190,7 @@ $(document).ready(function () {
             data: JSON.stringify(jsonForm),
             contentType: "application/json; charset=utf-8"
         }).then(function(response){
-            alert("Success! You updated an application");
+            swal("Success!","You updated an application","success");
             createInterviewIfScheduled(response);
             if(response.applicationResult.code != "SCHEDULED"){
                 window.location.href = "/recruitment/application/application.html";
@@ -213,9 +213,16 @@ $(document).ready(function () {
      $('#deleteApplication').on('click', function(event){
             event.preventDefault();
             let applicationId = $('#id').val();
-            if(confirm("Confirm You want to delete Application!?")){
+            swal({
+               title: "Are you sure?",
+               text: "Once deleted, you will not be able to recover this record!",
+               icon: "warning",
+               buttons: true,
+               dangerMode: true,
+             })
+             .then((willDelete) => {
                 deleteApplication(applicationId);
-            }
+             });
         });
 
         function deleteApplication(applicationId){
@@ -223,7 +230,7 @@ $(document).ready(function () {
                 type: "DELETE",
                 url: "/applications/" + applicationId
             }).then(function(response){
-                alert("Success! You deleted this application.");
+                swal("Success!","You deleted this application","success");
                 window.location.href = "/recruitment/application/application.html";
             }).fail(function(error){
                 console.log(error);
