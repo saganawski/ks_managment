@@ -96,7 +96,11 @@ $(document).ready(function(){
             contentType: "application/json; charset=utf-8"
         }).then(function(response){
             swal("Success!","You updated an interview","success");
-            location.reload();
+            if(response.hasShow == true){
+                createEmployeeOnHasShow();
+            }else{
+              location.reload();
+            }
         }).fail(function(err){
             console.log(err);
             swal("Error:", "Failure to update interview!","error");
@@ -110,6 +114,44 @@ $(document).ready(function(){
             json[j.name] = j.value || null;
         }
         return json;
+    }
+
+    function createEmployeeOnHasShow(){
+        //TODO: check if employee already exists
+        let newEmployeeJson = {};
+        newEmployeeJson.firstName = vm.trainingDto.application.firstName;
+        newEmployeeJson.lastName = vm.trainingDto.application.lastName;
+        newEmployeeJson.email = vm.trainingDto.application.email;
+        newEmployeeJson.phoneNumber = vm.trainingDto.application.phoneNumber;
+        newEmployeeJson.offices = [vm.trainingDto.application.office];
+        newEmployeeJson.position = {"id":	"23",
+                                                "name":	"Canvasser",
+                                                "code":	"CANVASSER"};
+        let url = "/employees/new";
+        $.ajax({
+            type : "POST",
+            url : url,
+            data: JSON.stringify(newEmployeeJson),
+            contentType: "application/json; charset=utf-8"
+        }).then(function(response){
+            swal({
+                title: "Success!",
+                text: "You have created a new employee. You will now be directed to the employee to finalize any details",
+                icon: "success",
+                buttons: ["Stay on current page!", true]
+            }).then((value) => {
+                if(value){
+                    window.location.href = "/employee/employee-details.html" +"?employeeId=" + response.id;
+                }else{
+                    location.reload();
+                }
+            });
+        }).fail(function(error){
+            console.log(error);
+            swal("ERROR", "Could not create new Employee!","error");
+        });
+
+
     }
 
     $('#note-body').on("click","a.delete-note",function(event){

@@ -78,6 +78,10 @@ public class Employee {
 		offices.add(office);
 	}
 
+	public void removeALlOffices(){
+		this.offices = new ArrayList<>();
+	}
+
 	/*@ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE,
 			CascadeType.DETACH, CascadeType.REFRESH})
 	@JoinTable(

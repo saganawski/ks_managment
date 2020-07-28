@@ -120,4 +120,23 @@ public class EmployeeServiceImpl implements EmployeeService{
         repo.deleteById(employeeId);
     }
 
+    @Override
+    public Employee createNewEmployee(Employee employee) {
+        final List<Office> offices = new ArrayList<>();
+
+        employee.getOffices().stream()
+                .map(Office::getId)
+                .filter(officeId -> officeRepo.findById(officeId).isPresent())
+                .map(id -> officeRepo.findById(id).get())
+                .forEach(offices::add);
+
+        employee.removeALlOffices();
+        offices.forEach(employee::addOffice);
+        //TODO: set by auth id
+        employee.setUpdatedBy(-1);
+        employee.setCreatedBy(-1);
+
+        return repo.save(employee);
+    }
+
 }

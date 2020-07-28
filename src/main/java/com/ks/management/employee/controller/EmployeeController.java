@@ -41,5 +41,10 @@ public class EmployeeController {
 		employeeService.deleteEmployee(employeeId);
 	}
 
+	@PostMapping("/new")
+	public Employee createEmployee(@RequestBody Employee employee){
+		return  employeeService.createNewEmployee(employee);
+	}
+
 
 }
