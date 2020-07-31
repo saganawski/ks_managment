@@ -8,11 +8,13 @@ import com.ks.management.office.Office;
 import com.ks.management.office.dao.JpaOfficeRepo;
 import com.ks.management.position.Position;
 import com.ks.management.position.dao.JpaPositionRepo;
+import com.ks.management.security.UserPrincipal;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.criteria.CriteriaBuilder;
 import javax.validation.constraints.NotNull;
 import java.util.*;
 
@@ -30,7 +32,7 @@ public class EmployeeServiceImpl implements EmployeeService{
 
     @Override
     @NotNull
-    public Employee createEmployee(NewEmployeeDTO newEmployeeDTO) {
+    public Employee createEmployee(NewEmployeeDTO newEmployeeDTO, UserPrincipal userPrincipal) {
         final Set<Office> offices = new HashSet<>();
         for (Integer officeId: newEmployeeDTO.getOfficeSelections()){
             final Office office = officeRepo.findById(officeId).orElse(null);
@@ -45,6 +47,7 @@ public class EmployeeServiceImpl implements EmployeeService{
         final String email = Optional.ofNullable(newEmployeeDTO.getEmail()).orElse("");
         final String phoneNumber = Optional.ofNullable(newEmployeeDTO.getPhoneNumber()).orElse("");
         final Position position = Optional.ofNullable(newEmployeeDTO.getPosition()).orElse(null);
+        final Integer userId = Optional.ofNullable(userPrincipal.getUserId()).orElse(-1);
         final Employee employee = Employee.builder()
                 .firstName(firstName)
                 .lastName(lastName)
@@ -52,9 +55,8 @@ public class EmployeeServiceImpl implements EmployeeService{
                 .email(email)
                 .phoneNumber(phoneNumber)
                 .position(position)
-//                TODO get active userId
-                .updatedBy(-1)
-                .createdBy(-1)
+                .updatedBy(userId)
+                .createdBy(userId)
                 .build();
 
         for (Office office : offices){
@@ -79,7 +81,7 @@ public class EmployeeServiceImpl implements EmployeeService{
     }
 
     @Override
-    public Employee updateEmployee(EditEmployeeDTO employeeDTO) {
+    public Employee updateEmployee(EditEmployeeDTO employeeDTO, UserPrincipal userPrincipal) {
         final Set<Office> offices = new HashSet<>();
         for (Integer officeId: employeeDTO.getOfficeSelection()){
             final Office office = officeRepo.findById(officeId).orElse(null);
@@ -95,7 +97,7 @@ public class EmployeeServiceImpl implements EmployeeService{
         final String email = Optional.ofNullable(employeeDTO.getEmail()).orElse("");
         final String phoneNumber = Optional.ofNullable(employeeDTO.getPhoneNumber()).orElse("");
         final Integer id = Optional.ofNullable(employeeDTO.getId()).orElse(-1);
-
+        final Integer updatedById = Optional.ofNullable(userPrincipal.getUserId()).orElse(-1);
         final Employee employee = Employee.builder()
                 .id(id)
                 .firstName(firstName)
@@ -104,8 +106,7 @@ public class EmployeeServiceImpl implements EmployeeService{
                 .email(email)
                 .phoneNumber(phoneNumber)
                 .position(position)
-//                TODO get active userId
-                .updatedBy(-1)
+                .updatedBy(updatedById)
                 .build();
 
         for (Office office : offices){
@@ -121,7 +122,7 @@ public class EmployeeServiceImpl implements EmployeeService{
     }
 
     @Override
-    public Employee createNewEmployee(Employee employee) {
+    public Employee createNewEmployee(Employee employee, UserPrincipal userPrincipal) {
         final List<Office> offices = new ArrayList<>();
 
         employee.getOffices().stream()
@@ -132,9 +133,9 @@ public class EmployeeServiceImpl implements EmployeeService{
 
         employee.removeALlOffices();
         offices.forEach(employee::addOffice);
-        //TODO: set by auth id
-        employee.setUpdatedBy(-1);
-        employee.setCreatedBy(-1);
+        final Integer userId = Optional.ofNullable(userPrincipal.getUserId()).orElse(-1);
+        employee.setUpdatedBy(userId);
+        employee.setCreatedBy(userId);
 
         return repo.save(employee);
     }

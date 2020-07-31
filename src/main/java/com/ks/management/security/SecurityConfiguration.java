@@ -26,13 +26,16 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
+                .csrf().disable()
                 .authorizeRequests()
                 .antMatchers("/office/**").hasRole("ADMIN")
-//                .antMatchers("/offices/**").hasRole("ADMIN") TODO: need a way for everyone to read but only admin to write. Might not working for saving new Employee with office if role non-admin
                 .antMatchers("/users/**").hasRole("ADMIN")
                 .anyRequest().authenticated()
                 .and()
+                .formLogin()
+                .and()
                 .httpBasic();
+
     }
 
     @Bean
