@@ -3,8 +3,10 @@ package com.ks.management.recruitment.application.controller;
 import com.ks.management.recruitment.application.Application;
 import com.ks.management.recruitment.application.ApplicationDto;
 import com.ks.management.recruitment.application.service.ApplicationService;
+import com.ks.management.security.UserPrincipal;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -21,8 +23,8 @@ public class ApplicationController {
     }
 
     @PostMapping()
-    public Application createApplication(@RequestBody Application application){
-        return applicationService.createApplication(application);
+    public Application createApplication(@RequestBody Application application, @AuthenticationPrincipal UserPrincipal userPrincipal){
+        return applicationService.createApplication(application, userPrincipal);
     }
     @GetMapping("/{applicationId}")
     public ApplicationDto getApplication(@PathVariable("applicationId") Integer applicationId){
@@ -30,11 +32,11 @@ public class ApplicationController {
     }
 
     @PutMapping("/{applicationId}")
-    public Application updateApplication(@PathVariable("applicationId") Integer applicationId, @RequestBody Application application){
+    public Application updateApplication(@PathVariable("applicationId") Integer applicationId, @RequestBody Application application, @AuthenticationPrincipal UserPrincipal userPrincipal){
         if(!applicationId.equals(application.getId())){
             throw new RuntimeException("Id in path does not match request body");
         }
-        return  applicationService.updateApplication(application);
+        return  applicationService.updateApplication(application,userPrincipal);
     }
 
     @DeleteMapping("/{applicationId}")

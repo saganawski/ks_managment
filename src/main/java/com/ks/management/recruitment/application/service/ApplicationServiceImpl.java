@@ -5,6 +5,7 @@ import com.ks.management.office.dao.JpaOfficeRepo;
 import com.ks.management.recruitment.application.*;
 import com.ks.management.recruitment.application.dao.ApplicationJpa;
 import com.ks.management.recruitment.application.dao.JpaApplicationNote;
+import com.ks.management.security.UserPrincipal;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,21 +25,20 @@ public class ApplicationServiceImpl implements ApplicationService {
     private JpaApplicationNote jpaApplicationNote;
 
     @Override
-    public Application createApplication(Application application) {
+    public Application createApplication(Application application, UserPrincipal userPrincipal) {
+        final Integer activeUserId = Optional.ofNullable(userPrincipal.getUserId()).orElse(-1);
         Boolean hasNote = application.getApplicationNotes() != null;
         ApplicationNote note = null;
         if(hasNote){
             note = ApplicationNote.builder()
                     .note(application.getApplicationNotes().get(0).getNote())
-                    //TODO get active user
-                    .createdBy(-1)
-                    .updatedBy(-1)
+                    .createdBy(activeUserId)
+                    .updatedBy(activeUserId)
                     .build();
             application.removeNote(application.getApplicationNotes().get(0));
         }
-        // TODO: created and updated user_id
-        application.setCreatedBy(-1);
-        application.setUpdatedBy(-1);
+        application.setCreatedBy(activeUserId);
+        application.setUpdatedBy(activeUserId);
         final Application savedApplication = applicationJpa.save(application);
 
         if(hasNote){
@@ -135,10 +135,10 @@ public class ApplicationServiceImpl implements ApplicationService {
     }
 
     @Override
-    public Application updateApplication(Application application) {
+    public Application updateApplication(Application application, UserPrincipal userPrincipal) {
+        final Integer activeUserid = Optional.ofNullable(userPrincipal.getUserId()).orElse(-1);
         applyNoteToAppIfPresent(application);
-        // TODO: set updateBy with userId
-        application.setUpdatedBy(-1);
+        application.setUpdatedBy(activeUserid);
 
         return applicationJpa.save(application);
     }

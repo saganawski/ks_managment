@@ -2,18 +2,19 @@ package com.ks.management.recruitment.application.service;
 
 import com.ks.management.recruitment.application.Application;
 import com.ks.management.recruitment.application.ApplicationDto;
+import com.ks.management.security.UserPrincipal;
 
 import java.util.List;
 
 public interface ApplicationService {
 
-    Application createApplication(Application application);
+    Application createApplication(Application application, UserPrincipal userPrincipal);
 
     List<ApplicationDto> findAll();
 
     ApplicationDto findBydId(Integer applicationId);
 
-    Application updateApplication(Application application);
+    Application updateApplication(Application application, UserPrincipal userPrincipal);
 
     void deleteApplicationById(Integer applicationId);
 
