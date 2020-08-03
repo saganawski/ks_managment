@@ -4,7 +4,9 @@ import com.ks.management.recruitment.interview.Interview;
 import com.ks.management.recruitment.interview.service.InterviewService;
 import com.ks.management.recruitment.interview.ui.InterviewApplicationDto;
 import com.ks.management.recruitment.interview.ui.InterviewDto;
+import com.ks.management.security.UserPrincipal;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -21,8 +23,8 @@ public class InterviewController {
     }
 
     @PostMapping()
-    public Interview createInterview(@RequestBody Interview interview){
-        return  interviewService.createInterview(interview);
+    public Interview createInterview(@RequestBody Interview interview,@AuthenticationPrincipal UserPrincipal userPrincipal){
+        return  interviewService.createInterview(interview, userPrincipal);
     }
 
     @GetMapping("/{interviewId}/dto")
@@ -31,12 +33,12 @@ public class InterviewController {
     }
 
     @PutMapping("/{interviewId}")
-    public Interview updateInterview(@PathVariable("interviewId") Integer interviewId, @RequestBody InterviewDto interviewDto){
+    public Interview updateInterview(@PathVariable("interviewId") Integer interviewId, @RequestBody InterviewDto interviewDto, @AuthenticationPrincipal UserPrincipal userPrincipal){
         if(!interviewId.equals(interviewDto.getId())){
             throw new RuntimeException("Id in path does not match request body");
         }
 
-        return interviewService.updateInterview(interviewDto);
+        return interviewService.updateInterview(interviewDto,userPrincipal);
     }
 
     @DeleteMapping("/{interviewId}/notes/{noteId}")

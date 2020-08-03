@@ -3,7 +3,9 @@ package com.ks.management.recruitment.training.controller;
 import com.ks.management.recruitment.training.Training;
 import com.ks.management.recruitment.training.service.TrainingService;
 import com.ks.management.recruitment.training.ui.TrainingDto;
+import com.ks.management.security.UserPrincipal;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,8 +22,8 @@ public class TrainingController {
     }
 
     @PostMapping()
-    public Training createTraining(@RequestBody Training training){
-        return trainingService.createTraining(training);
+    public Training createTraining(@RequestBody Training training, @AuthenticationPrincipal UserPrincipal userPrincipal){
+        return trainingService.createTraining(training, userPrincipal);
     }
 
     @GetMapping("/{trainingId}")
@@ -35,11 +37,11 @@ public class TrainingController {
     }
 
     @PutMapping("/{trainingId}")
-    public Training updateTraining(@PathVariable("trainingId") Integer trainingId, @RequestBody Training training){
+    public Training updateTraining(@PathVariable("trainingId") Integer trainingId, @RequestBody Training training, @AuthenticationPrincipal UserPrincipal userPrincipal){
         if(!trainingId.equals(training.getId())){
             throw new RuntimeException("Id in path does not match request body");
         }
-        return trainingService.updateTraining(training);
+        return trainingService.updateTraining(training, userPrincipal);
     }
 
     @DeleteMapping("/{trainingId}/notes/{noteId}")

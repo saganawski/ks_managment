@@ -21,12 +21,15 @@ import com.ks.management.recruitment.interview.dao.JpaInterviewNote;
 import com.ks.management.recruitment.interview.dao.JpaInterviewResult;
 import com.ks.management.recruitment.interview.ui.InterviewApplicationDto;
 import com.ks.management.recruitment.interview.ui.InterviewDto;
+import com.ks.management.security.UserPrincipal;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.criteria.CriteriaBuilder;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 @Service
@@ -57,15 +60,15 @@ public class InterviewServiceImpl implements InterviewService {
     }
 
     @Override
-    public Interview createInterview(Interview interview) {
-        //TODO: find active user as employee and createdBy / updatedBy
+    public Interview createInterview(Interview interview, UserPrincipal userPrincipal) {
+        final Integer activeUserId = Optional.ofNullable(userPrincipal.getUserId()).orElse(-1);
         final Employee scheduler = jpaEmployeeRepo.findById(2).orElse(null);
         if(scheduler == null){
             throw  new RuntimeException("Could not find employee to set a scheduler!");
         }
         interview.setScheduler(scheduler);
-        interview.setCreatedBy(-1);
-        interview.setUpdatedBy(-1);
+        interview.setCreatedBy(activeUserId);
+        interview.setUpdatedBy(activeUserId);
 
         return jpaInterview.save(interview);
     }
@@ -120,14 +123,14 @@ public class InterviewServiceImpl implements InterviewService {
     }
 
     @Override
-    public Interview updateInterview(InterviewDto interviewDto) {
+    public Interview updateInterview(InterviewDto interviewDto, UserPrincipal userPrincipal) {
+        final Integer activeUserId = Optional.ofNullable(userPrincipal.getUserId()).orElse(-1);
         final Interview interview = jpaInterview.findById(interviewDto.getId()).orElse(null);
         if(interview == null){
             throw new RuntimeException("Could not find interview object with ID :"+ interviewDto.getId());
         }
         final List<Employee> interviewers = jpaEmployeeRepo.findAllById(interviewDto.getInterviewersId());
-        //TODO: get auth user
-        interview.setUpdatedBy(-1);
+        interview.setUpdatedBy(activeUserId);
         interview.setScheduledTime(interviewDto.getScheduledTime());
         interview.setInterviewConfirmationType(interviewDto.getInterviewConfirmationType());
         interview.setInterviewResult(interviewDto.getInterviewResult());
@@ -135,9 +138,8 @@ public class InterviewServiceImpl implements InterviewService {
         interview.setInterviewers(interviewers);
         if(interviewDto.getInterviewNotes() != null){
             final InterviewNote note = interviewDto.getInterviewNotes().get(0);
-            //TODO: auth user
-            note.setCreatedBy(-1);
-            note.setUpdatedBy(-1);
+            note.setCreatedBy(activeUserId);
+            note.setUpdatedBy(activeUserId);
             note.setInterview(interview);
             interview.addInterviewNote(note);
         }

@@ -9,6 +9,7 @@ import com.ks.management.recruitment.training.dao.JpaTraining;
 import com.ks.management.recruitment.training.dao.JpaTrainingConfirmationType;
 import com.ks.management.recruitment.training.dao.JpaTrainingNote;
 import com.ks.management.recruitment.training.ui.TrainingDto;
+import com.ks.management.security.UserPrincipal;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,10 +34,10 @@ public class TrainingServiceImpl implements TrainingService{
     }
 
     @Override
-    public Training createTraining(Training training) {
-        //TODO: get active user
-        training.setUpdatedBy(-1);
-        training.setCreatedBy(-1);
+    public Training createTraining(Training training, UserPrincipal userPrincipal) {
+        final Integer activeUserId = Optional.ofNullable(userPrincipal.getUserId()).orElse(-1);
+        training.setUpdatedBy(activeUserId);
+        training.setCreatedBy(activeUserId);
         return jpaTraining.save(training);
     }
 
@@ -78,14 +79,13 @@ public class TrainingServiceImpl implements TrainingService{
     }
 
     @Override
-    public Training updateTraining(Training training) {
-        //TODO: set by auth user
-        training.setUpdatedBy(-1);
+    public Training updateTraining(Training training, UserPrincipal userPrincipal) {
+        final Integer activeUserId = Optional.ofNullable(userPrincipal.getUserId()).orElse(-1);
+        training.setUpdatedBy(activeUserId);
         if(training.getTrainingNotes() != null){
             final TrainingNote note = training.getTrainingNotes().get(0);
-            //TODO: auth user
-            note.setCreatedBy(-1);
-            note.setUpdatedBy(-1);
+            note.setCreatedBy(activeUserId);
+            note.setUpdatedBy(activeUserId);
             note.setTraining(training);
             training.addTrainingNote(note);
         }
