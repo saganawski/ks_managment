@@ -8,7 +8,6 @@ $(document).ready(function(){
         $.ajax({
             url:"/users/" + userId
         }).then(function(data){
-            console.log(data);
             vm.user = data;
             setFormData(data);
         }).fail(function(err){
@@ -67,5 +66,47 @@ $(document).ready(function(){
         }
         return json;
     }
+
+
+    const passwordForm = document.querySelector('#passwordForm');
+    passwordForm.addEventListener('submit', function(event){
+        event.preventDefault();
+        if(passwordForm.checkValidity() === false){
+            event.stopPropagation();
+        }
+        const password = $('#password1');
+        const confirmPassword = $('#password2');
+        if(password.val() != confirmPassword.val()){
+            event.stopPropagation();
+            password.addClass('is-invalid');
+            confirmPassword.addClass('is-invalid');
+        }
+        passwordForm.classList.add('was-validated');
+
+        if(passwordForm.checkValidity() === true && password.val() == confirmPassword.val()){
+            console.log("lets update boy");
+            let userDTO = {id: vm.user.id, username: vm.user.username, password: password.val()};
+            $.ajax({
+                type: "PUT",
+                url:"/users/" + userDTO.id + "/password",
+                data: JSON.stringify(userDTO),
+                contentType: "application/json; charset=utf-8"
+            }).then(function(response){
+                swal({
+                    title: "Success!",
+                    text: "You updated an user password",
+                    icon: "success",
+                    timer: 2000
+                }).then(function(){
+                    location.reload();
+                });
+            }).fail(function(err){
+                console.log(err);
+                swal("Error:", "Failure to update interview!","error");
+            });
+
+        }
+
+    })
 
 })

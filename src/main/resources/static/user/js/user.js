@@ -1,5 +1,4 @@
 $(document).ready(function(){
-    console.log("hits");
     $('#user-table').DataTable({
             ajax:{
                 "url": "/users",

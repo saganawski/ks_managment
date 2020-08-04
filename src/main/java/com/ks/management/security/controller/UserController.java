@@ -1,6 +1,7 @@
 package com.ks.management.security.controller;
 
 import com.ks.management.security.User;
+import com.ks.management.security.UserDTO;
 import com.ks.management.security.UserPrincipal;
 import com.ks.management.security.UserRepository;
 import com.ks.management.security.service.UserService;
@@ -33,5 +34,15 @@ public class UserController {
         }
         return  userService.updateUser(user,userPrincipal);
     }
+
+    @PutMapping("/{userId}/password")
+    public UserDTO updateUserPassword(@PathVariable("userId")Integer userId, @RequestBody UserDTO userDTO, @AuthenticationPrincipal UserPrincipal userPrincipal){
+        if(!userId.equals(userDTO.getId()) || userDTO.getPassword().isEmpty() ){
+            throw new RuntimeException("Bad Request");
+        }
+        return userService.updateUserPassword(userDTO,userPrincipal);
+    }
+
+
 
 }

@@ -39,14 +39,13 @@
                 <div class="form-group col-md-3">
                     <label>Is Active</label>
                     <select id="isActive" name="isActive" class="custom-select">
-<!--                        <option value="null" selected>Choose Show / No Show</option>-->
                         <option value="true">Yes</option>
                         <option value="false">No</option>
                     </select>
                 </div>
                 <div class="form-group col-md-3">
                     <label>Roles</label>
-                    <select id="roles" name="roles"  class="selectpicker" multiple="multiple" data-live-search="true">
+                    <select id="roles" name="roles"  class="selectpicker" multiple="multiple" data-live-search="true" >
                         <option value="ADMIN">ADMIN</option>
                         <option value="MANAGER">MANAGER</option>
                         <option value="CANVASSER">CANVASSER</option>
@@ -57,7 +56,39 @@
                 <button id="updateUser" value="send" type="submit" class="btn btn-primary">Update user</button>
             </div>
         </form>
-
+        <button id="updatePassword" class="btn btn-danger" data-toggle="modal" data-target="#passwordModal">Update password</button>
+    </div>
+    <div class="modal fade" id="passwordModal" tabindex="-1" role="dialog" aria-labelledby="passwordModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="passwordModalLabel">Update Password</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="passwordForm" class="needs-validation" novalidate>
+                        <div class="form-group col-md-3 col-lg-9">
+                            <label>New Password</label>
+                            <input type="password" id="password1"  class="form-control" name="password1" required/>
+                            <div class="invalid-feedback">
+                                Passwords Must Match!
+                            </div>
+                        </div>
+                        <div class="form-group col-md-3 col-lg-9">
+                            <label>Confirm Password</label>
+                            <input type="password" id="password2"  class="form-control" name="password2" required/>
+                            <div class="invalid-feedback">
+                                Passwords Must Match!
+                            </div>
+                        </div>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button class="btn btn-primary" value="send" type="submit">Save changes</button>
+                    </form>
+                </div>
+            </div>
+        </div>
     </div>
 </body>
 </html>
