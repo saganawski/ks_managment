@@ -2,6 +2,8 @@ package com.ks.management.security;
 
 import lombok.*;
 
+import java.util.Date;
+
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
@@ -13,4 +15,6 @@ public class UserDTO {
     private String password;
     private Boolean isActive;
     private String roles;
+    private Date updatedDate;
+    private Date createdDate;
 }

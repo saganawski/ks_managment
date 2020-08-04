@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -19,20 +20,70 @@ public class UserServiceImpl implements UserService {
     UserRepository userRepository;
 
     @Override
-    public List<User> findAll() {
-        return userRepository.findAll();
+    public List<UserDTO> findAll() {
+        final List<User> users = userRepository.findAll();
+
+        final List<UserDTO> dtos = users.stream()
+                .map(user -> {
+                    return UserDTO.builder()
+                            .id(user.getId())
+                            .username(user.getUsername())
+                            .isActive(user.getIsActive())
+                            .roles(user.getRoles())
+                            .updatedDate(user.getUpdatedDate())
+                            .createdDate(user.getCreatedDate())
+                            .build();
+                })
+                .collect(Collectors.toList());
+
+        return dtos;
     }
 
     @Override
-    public User getOne(Integer userId) {
-        return userRepository.getOne(userId);
+    public UserDTO getOne(Integer userId) {
+        final User user = userRepository.getOne(userId);
+        final UserDTO userDto = UserDTO.builder()
+                .id(user.getId())
+                .username(user.getUsername())
+                .isActive(user.getIsActive())
+                .roles(user.getRoles())
+                .updatedDate(user.getUpdatedDate())
+                .createdDate(user.getCreatedDate())
+                .build();
+        return userDto;
     }
 
     @Override
-    public User updateUser(User user, UserPrincipal userPrincipal) {
+    public UserDTO updateUser(UserDTO userDto, UserPrincipal userPrincipal) {
         final Integer activeUserId = Optional.ofNullable(userPrincipal.getUserId()).orElse(-1);
+
+        final String username = Optional.ofNullable(userDto.getUsername()).orElse("");
+        final Boolean isActive = Optional.ofNullable(userDto.getIsActive()).orElse(null);
+        final String roles = Optional.ofNullable(userDto.getRoles()).orElse("");
+
+        final User user = userRepository.getOne(userDto.getId());
         user.setUpdatedBy(activeUserId);
-        return userRepository.save(user);
+        if(!username.isEmpty()){
+            user.setUsername(username);
+        }
+        if(isActive != null){
+            user.setIsActive(isActive);
+        }
+        if(!roles.isEmpty()){
+            user.setRoles(roles);
+        }
+        final User updatedUser = userRepository.save(user);
+
+        final UserDTO updatedUserDto = UserDTO.builder()
+                .id(updatedUser.getId())
+                .username(updatedUser.getUsername())
+                .isActive(updatedUser.getIsActive())
+                .roles(updatedUser.getRoles())
+                .updatedDate(updatedUser.getUpdatedDate())
+                .createdDate(updatedUser.getCreatedDate())
+                .build();
+
+        return updatedUserDto;
     }
 
     @Override
@@ -54,6 +105,8 @@ public class UserServiceImpl implements UserService {
                     .username(updatedUser.getUsername())
                     .isActive(updatedUser.getIsActive())
                     .roles(updatedUser.getRoles())
+                    .updatedDate(updatedUser.getUpdatedDate())
+                    .createdDate(updatedUser.getCreatedDate())
                     .build();
         }
         return updatedUserDto;

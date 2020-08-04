@@ -36,7 +36,7 @@ $(document).ready(function(){
         event.preventDefault();
         const roles = $('#roles').val().toString();
         let jsonForm = convertFormToJson($("form").serializeArray());
-        jsonForm.password = vm.user.password;
+//        jsonForm.password = vm.user.password;
         jsonForm.roles = roles;
         $.ajax({
             type: "PUT",

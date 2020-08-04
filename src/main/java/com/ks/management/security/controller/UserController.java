@@ -18,17 +18,17 @@ public class UserController {
     UserService userService;
 
     @GetMapping()
-    public List<User> getAllUsers(){
+    public List<UserDTO> getAllUsers(){
         return userService.findAll();
     }
 
     @GetMapping("/{userId}")
-    public User getUser(@PathVariable("userId") Integer userId){
+    public UserDTO getUser(@PathVariable("userId") Integer userId){
         return userService.getOne(userId);
     }
 
     @PutMapping("/{userId}")
-    public User updateUser(@PathVariable("userId") Integer userId, @RequestBody User user, @AuthenticationPrincipal UserPrincipal userPrincipal){
+    public UserDTO updateUser(@PathVariable("userId") Integer userId, @RequestBody UserDTO user, @AuthenticationPrincipal UserPrincipal userPrincipal){
         if(!userId.equals(user.getId())){
             throw new RuntimeException("Id in path does not match request body");
         }
