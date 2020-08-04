@@ -36,7 +36,6 @@ $(document).ready(function(){
         event.preventDefault();
         const roles = $('#roles').val().toString();
         let jsonForm = convertFormToJson($("form").serializeArray());
-//        jsonForm.password = vm.user.password;
         jsonForm.roles = roles;
         $.ajax({
             type: "PUT",
@@ -54,7 +53,13 @@ $(document).ready(function(){
             });
         }).fail(function(err){
             console.log(err);
-            swal("Error:", "Failure to update interview!","error");
+            swal({
+                title: "Error!",
+                text: "Failure to update user! \n" + err.responseJSON.message,
+                icon: "error"
+            }).then(function(){
+                location.reload();
+            });
         });
 
     });
