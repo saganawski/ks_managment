@@ -62,6 +62,7 @@ public class InterviewServiceImpl implements InterviewService {
     @Override
     public Interview createInterview(Interview interview, UserPrincipal userPrincipal) {
         final Integer activeUserId = Optional.ofNullable(userPrincipal.getUserId()).orElse(-1);
+        //TODO: fine empolyee by userPrinceipal;
         final Employee scheduler = jpaEmployeeRepo.findById(2).orElse(null);
         if(scheduler == null){
             throw  new RuntimeException("Could not find employee to set a scheduler!");

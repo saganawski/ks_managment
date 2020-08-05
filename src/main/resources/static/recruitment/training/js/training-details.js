@@ -13,7 +13,11 @@ $(document).ready(function(){
             setFormData(data);
         }).fail(function(err){
             console.log(err);
-            swal("Error:", "Failure to retrieve interview!","error");
+            swal({
+                title: "Error!",
+                text: "Failure to retrieve training! \n" + err.responseJSON.message,
+                icon: "error"
+            });
         });
     }else{
        swal("Error:", "no ID provided!","error");
@@ -95,15 +99,25 @@ $(document).ready(function(){
             data: JSON.stringify(jsonForm),
             contentType: "application/json; charset=utf-8"
         }).then(function(response){
-            swal("Success!","You updated an interview","success");
-            if(response.hasShow == true){
-                createEmployeeOnHasShow();
-            }else{
-              location.reload();
-            }
+            swal({
+                title: "Success!",
+                text: "You updated an interview",
+                icon: "success",
+                timer: 2000
+            }).then(function(){
+                if(response.hasShow == true){
+                    createEmployeeOnHasShow();
+                }else{
+                  location.reload();
+                }
+            });
         }).fail(function(err){
             console.log(err);
-            swal("Error:", "Failure to update interview!","error");
+            swal({
+                title: "Error!",
+                text: "Failure to update training! \n" + err.responseJSON.message,
+                icon: "error"
+            });
         });
 
     });
@@ -124,6 +138,7 @@ $(document).ready(function(){
         newEmployeeJson.email = vm.trainingDto.application.email;
         newEmployeeJson.phoneNumber = vm.trainingDto.application.phoneNumber;
         newEmployeeJson.offices = [vm.trainingDto.application.office];
+        // TODO: this shouldnt be hardcoded
         newEmployeeJson.position = {"id":	"23",
                                                 "name":	"Canvasser",
                                                 "code":	"CANVASSER"};
@@ -148,10 +163,12 @@ $(document).ready(function(){
             });
         }).fail(function(error){
             console.log(error);
-            swal("ERROR", "Could not create new Employee!","error");
+            swal({
+                title: "Error!",
+                text: "Failure to create new employee! \n" + error.responseJSON.message,
+                icon: "error"
+            });
         });
-
-
     }
 
     $('#note-body').on("click","a.delete-note",function(event){
@@ -161,11 +178,21 @@ $(document).ready(function(){
             type:"DELETE",
             url: url
         }).then(function(response){
-            swal("Success!","You deleted a note","success");
-            location.reload();
+            swal({
+                 title: "Success!",
+                 text: "You deleted a note",
+                 icon: "success",
+                 timer: 2000
+             }).then(function(){
+                location.reload();
+             });
         }).fail(function(error){
             console.log(error);
-            swal("ERROR", "Could NOT remove note!","error");
+            swal({
+                title: "Error!",
+                text: "Could NOT remove note! \n" + error.responseJSON.message,
+                icon: "error"
+            });
         });
      })
 
@@ -189,11 +216,21 @@ $(document).ready(function(){
              type: "DELETE",
              url: "/trainings/" + trainingId
          }).then(function(response){
-             swal("Success!","You deleted this training","success");
-             window.location.href = "/recruitment/training/training.html";
+             swal({
+                 title: "Success!",
+                 text: "You deleted this training",
+                 icon: "success",
+                 timer: 2000
+             }).then(function(){
+                window.location.href = "/recruitment/training/training.html";
+             });
          }).fail(function(error){
              console.log(error);
-             swal("ERROR", "Could NOT remove training!","error");
+             swal({
+                 title: "Error!",
+                 text: "Could NOT remove training! \n" + error.responseJSON.message,
+                 icon: "error"
+             });
          });
      }
 
