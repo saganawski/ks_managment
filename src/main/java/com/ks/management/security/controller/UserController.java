@@ -43,6 +43,11 @@ public class UserController {
         return userService.updateUserPassword(userDTO,userPrincipal);
     }
 
+    @PostMapping()
+    public UserDTO createUser(@RequestBody UserDTO userDTO, @AuthenticationPrincipal UserPrincipal userPrincipal){
+        return userService.createUser(userDTO,userPrincipal);
+    }
+
 
 
 }

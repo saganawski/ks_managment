@@ -13,4 +13,6 @@ public interface UserService {
     UserDTO updateUser(UserDTO user, UserPrincipal userPrincipal);
 
     UserDTO updateUserPassword(UserDTO userDTO, UserPrincipal userPrincipal);
+
+    UserDTO createUser(UserDTO userDTO, UserPrincipal userPrincipal);
 }

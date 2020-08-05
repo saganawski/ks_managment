@@ -111,4 +111,32 @@ public class UserServiceImpl implements UserService {
         }
         return updatedUserDto;
     }
+
+    @Override
+    public UserDTO createUser(UserDTO userDTO, UserPrincipal userPrincipal) {
+        if(!userDTO.getPassword().equalsIgnoreCase(userDTO.getConfirmPassword())){
+            throw new RuntimeException("Passwords must match!");
+        }
+        final String encodedPassword = new BCryptPasswordEncoder().encode(userDTO.getPassword());
+
+        final User user = User.builder()
+                .username(userDTO.getUsername())
+                .password(encodedPassword)
+                .isActive(userDTO.getIsActive())
+                .roles(userDTO.getRoles())
+                .updatedBy(userPrincipal.getUserId())
+                .createdBy(userPrincipal.getUserId())
+                .build();
+
+        final User savedUser = userRepository.save(user);
+        final UserDTO newUserDto = UserDTO.builder()
+                .id(savedUser.getId())
+                .username(savedUser.getUsername())
+                .isActive(savedUser.getIsActive())
+                .roles(savedUser.getRoles())
+                .updatedDate(savedUser.getUpdatedDate())
+                .createdDate(savedUser.getCreatedDate())
+                .build();
+        return newUserDto;
+    }
 }
