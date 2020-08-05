@@ -50,4 +50,9 @@ public class InterviewController {
     public void deleteInterview(@PathVariable("interviewId")int interviewId){
         interviewService.deleteInterview(interviewId);
     }
+
+    @GetMapping("/applications/{applicationId}")
+    public Boolean checkIfInterviewExistsByApplicationId(@PathVariable("applicationId")Integer applicationId){
+        return interviewService.checkIfInterviewExistsByApplicationId(applicationId);
+    }
 }

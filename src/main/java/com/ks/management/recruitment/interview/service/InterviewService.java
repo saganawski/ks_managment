@@ -19,4 +19,6 @@ public interface InterviewService {
     void deleteNote(int noteId);
 
     void deleteInterview(int interviewId);
+
+    Boolean checkIfInterviewExistsByApplicationId(Integer applicationId);
 }

@@ -217,12 +217,14 @@ $(document).ready(function () {
                 text: "You updated an application",
                 icon: "success",
                 timer: 2000
+            }).then(function(){
+                if(response.applicationResult.code != "SCHEDULED"){
+                    location.reload();
+                }else{
+                    createInterviewIfScheduled(response);
+                }
             });
-            //TODO: check if Interview already exists
-            createInterviewIfScheduled(response);
-            if(response.applicationResult.code != "SCHEDULED"){
-                window.location.href = "/recruitment/application/application.html";
-            }
+
         }).fail(function(err){
             console.log(err);
             swal({
@@ -232,7 +234,6 @@ $(document).ready(function () {
             });
 
         });
-
     });
 
     function convertFormToJson(form){
@@ -265,7 +266,7 @@ $(document).ready(function () {
             }).then(function(response){
                 swal({
                     title: "Success!",
-                    text: "You deleted this application,
+                    text: "You deleted this application",
                     icon: "success",
                     timer: 2000
                 }).then(function(){
@@ -297,28 +298,56 @@ $(document).ready(function () {
                 icon: "error"
             });
         });
-     })
-
-
-     function createInterviewIfScheduled(application){
-         let scheduleInterview = application.applicationResult.code == "SCHEDULED";
-         if(scheduleInterview){
-            let interview = {application: application};
+     });
+     const checkForInterview = (applicationId) =>{
+        return new Promise((resolve,reject) =>{
             $.ajax({
-                type:"POST",
-                url: "/interviews",
-                data: JSON.stringify(interview),
-                contentType: "application/json; charset=utf-8"
+                type:"GET",
+                url: "/interviews/applications/"+ applicationId
             }).then(function(response){
-                window.location.href = "/recruitment/interview/interview-details.html" +"?interviewId=" + response.id;
+                return resolve(response);
             }).fail(function(error){
                 console.log(error);
                 swal({
                     title: "Error!",
-                    text: "Something went wrong when creating a interview! \n" + error.responseJSON.message,
+                    text: "Something went wrong when checking if an interview already exists! \n" + error.responseJSON.message,
                     icon: "error"
                 });
+                return reject("failure to get interview status");
             });
-         }
+        });
+     }
+
+     function createInterviewIfScheduled(application, hasInterview){
+        let scheduleInterview = application.applicationResult.code == "SCHEDULED";
+        checkForInterview(application.id).then(hasInterview => {
+             if(scheduleInterview && !hasInterview){
+                let interview = {application: application};
+                $.ajax({
+                    type:"POST",
+                    url: "/interviews",
+                    data: JSON.stringify(interview),
+                    contentType: "application/json; charset=utf-8"
+                }).then(function(response){
+                    swal({
+                        title: "Success!",
+                        text: "You created an Interview for this application ",
+                        icon: "success",
+                        timer: 2000
+                    }).then(function(){
+                        window.location.href = "/recruitment/interview/interview-details.html" +"?interviewId=" + response.id;
+                    });
+                }).fail(function(error){
+                    console.log(error);
+                    swal({
+                        title: "Error!",
+                        text: "Something went wrong when creating a interview! \n" + error.responseJSON.message,
+                        icon: "error"
+                    });
+                });
+             }else{
+                location.reload();
+             }
+        })
      }
 });

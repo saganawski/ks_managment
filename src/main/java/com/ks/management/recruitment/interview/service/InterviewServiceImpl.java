@@ -155,4 +155,14 @@ public class InterviewServiceImpl implements InterviewService {
     public void deleteInterview(int interviewId) {
         jpaInterview.deleteById(interviewId);
     }
+
+    @Override
+    public Boolean checkIfInterviewExistsByApplicationId(Integer applicationId) {
+        final List<Interview> interviews = jpaInterview.findAllByApplicationId(applicationId);
+        Boolean exists = false;
+        if(!interviews.isEmpty()){
+            exists = true;
+        }
+        return exists;
+    }
 }
