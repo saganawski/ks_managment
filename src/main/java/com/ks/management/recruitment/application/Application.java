@@ -2,10 +2,7 @@ package com.ks.management.recruitment.application;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.ks.management.office.Office;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -16,7 +13,8 @@ import java.util.List;
 @Table(name="application")
 @NoArgsConstructor
 @AllArgsConstructor
-@Data
+@Getter
+@Setter
 @Builder
 public class Application {
     @Id

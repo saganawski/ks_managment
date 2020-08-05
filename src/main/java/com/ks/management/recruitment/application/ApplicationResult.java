@@ -1,9 +1,9 @@
 package com.ks.management.recruitment.application;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -12,7 +12,8 @@ import java.util.Date;
 @Table(name="application_result")
 @NoArgsConstructor
 @AllArgsConstructor
-@Data
+@Getter
+@Setter
 public class ApplicationResult {
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
