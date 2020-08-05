@@ -1,11 +1,14 @@
 $(document).ready(function(){
+    vm = this;
+    vm.interviewDto = {};
+
     let searchParams = new URLSearchParams(window.location.search);
     if(searchParams.has('interviewId')){
         let interviewId = searchParams.get('interviewId');
         $.ajax({
             url:"/interviews/" + interviewId +"/dto"
         }).then(function(data){
-            console.log(data);
+            vm.interviewDto = data;
             setFormData(data);
         }).fail(function(err){
             console.log(err);
@@ -17,7 +20,6 @@ $(document).ready(function(){
 
     function setFormData(interview){
         setInterviewFormData(interview);
-        setApplicationFormData(interview.application, interview.applicationFormOptionsDto, interview.officeOptions);
     }
 
     function setInterviewFormData(interview){
@@ -85,76 +87,6 @@ $(document).ready(function(){
             const interviewersId = currentInterviewers.map(interviewer => interviewer.id);
             $('#interviewDirectors').multiselect('select', interviewersId);
 
-        }
-    }
-
-    function setApplicationFormData(application, formOptionsDto, officeOptions){
-        $('#id').val(application.id);
-        $('#firstName').val(application.firstName);
-        $('#lastName').val(application.lastName);
-        $('#phoneNumber').val(application.phoneNumber);
-        $('#email').val(application.email);
-        if(application.dateReceived != null ){
-            $('#dateReceived').val(application.dateReceived.substr(0,10));
-        }
-        if(application.callBackDate != null){
-            $('#callBackDate').val(application.callBackDate.substr(0,10));
-        }
-
-        // set options
-        setApplicationContactType(formOptionsDto.applicationContactTypes, application.applicationContactType);
-        setApplicationSource(formOptionsDto.applicationSources, application.applicationSource);
-        setApplicationResult(formOptionsDto.applicationResults, application.result);
-        //set office
-        setOffice(officeOptions, application.office);
-
-        for(note of application.applicationNotes){
-            let message = note.note;
-            let val = JSON.stringify(note);
-
-            $("<textarea name='applicationNotes' class='form-control' value='"+ val + "' readonly>"+ message + "</textarea> <a href='/applications/"+
-                application.id+"/notes/"+note.id +"' class='delete-note btn btn-danger'>Delete Note</a>").prependTo('#application-note-body');
-        }
-    }
-
-    function setApplicationContactType(options, currentType){
-        for(type of options){
-            $('#applicationContactType').append("<option value='"+JSON.stringify(type)+"'>"+ type.type +"</option>");
-        }
-
-        if(currentType != null){
-            $('#applicationContactType').val(JSON.stringify(currentType));
-        }
-    }
-
-    function setApplicationSource(options, currentSource){
-        for(source of options){
-            $('#applicationSource').append("<option value='"+JSON.stringify(source)+"'>"+ source.source +"</option>");
-        }
-        if(currentSource != null){
-            $('#applicationSource').val(JSON.stringify(currentSource));
-        }
-    }
-
-    function setApplicationResult(options, currentResult){
-        for(result of options){
-            $('#applicationResult').append("<option value='"+JSON.stringify(result)+"'>"+ result.result +"</option>");
-        }
-        if(currentResult != null){
-            $('#applicationResult').val(JSON.stringify(application.applicationResult));
-        }
-    }
-
-    function setOffice(options, currentOffice){
-        for(office of options){
-            $('#office').append("<option value='"+JSON.stringify(office)+"'>"+ office.name +"</option>");
-        }
-
-        if(currentOffice != null ){
-            if(currentOffice.location != null){
-              delete currentOffice.location;
-            }
-            $('#office').val(JSON.stringify(currentOffice));
         }
     }
 
@@ -278,5 +210,10 @@ $(document).ready(function(){
              swal("ERROR", "Could NOT remove interview!","error");
          });
      }
+
+     $('#showApplication').on('click', function(event){
+         event.preventDefault();
+         window.location.href= "/recruitment/application/application-edit.html?applicationId=" + vm.interviewDto.application.id;
+      });
 
 })
