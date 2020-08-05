@@ -12,7 +12,11 @@ $(document).ready(function(){
             setFormData(data);
         }).fail(function(err){
             console.log(err);
-            swal("Error:", "Failure to retrieve interview!","error");
+            swal({
+                title: "Error!",
+                text: "Failure to get interview! \n" + err.responseJSON.message,
+                icon: "error"
+            });
         });
     }else{
        swal("Error:", "no ID provided!","error");
@@ -131,15 +135,25 @@ $(document).ready(function(){
             let interview = response;
             createTrainingIfHired(response);
             if(interview.interviewResult.code != "HIRED"){
-                swal("Success!","You updated an interview","success");
-                location.reload();
+                swal({
+                     title: "Success!",
+                     text: "You updated an interview",
+                     icon: "success",
+                     timer: 2000
+                 }).then(function(){
+                     location.reload();
+                 });
             }
         }).fail(function(err){
             console.log(err);
-            swal("Error:", "Failure to update interview!","error");
+            swal({
+                title: "Error!",
+                text: "Failure to update interview! \n" + err.responseJSON.message,
+                icon: "error"
+            });
         });
 
-        });
+    });
 
         function convertFormToJson(form){
             var json = {}
@@ -151,6 +165,9 @@ $(document).ready(function(){
         function createTrainingIfHired(interview){
         //TODO: check if training already exists
              let scheduleTraining= interview.interviewResult.code == "HIRED";
+             console.log(interview);
+             debugger;
+             // check if exisit by apllication id and interviewId
              if(scheduleTraining){
                 let training = {interview: interview, application: interview.application};
                 $.ajax({
@@ -159,11 +176,21 @@ $(document).ready(function(){
                     data: JSON.stringify(training),
                     contentType: "application/json; charset=utf-8"
                 }).then(function(response){
-                    swal("Success!","You created an training","success");
-                    window.location.href = "/recruitment/training/training-details.html" +"?trainingId=" + response.id;
+                    swal({
+                         title: "Success!",
+                         text: "You created an training",
+                         icon: "success",
+                         timer: 2000
+                     }).then(function(){
+                        window.location.href = "/recruitment/training/training-details.html" +"?trainingId=" + response.id;
+                     })
                 }).fail(function(error){
                     console.log(error);
-                    swal("Error:", "Something went wrong when creating a interview!","error");
+                    swal({
+                        title: "Error!",
+                        text: "Something went wrong when creating a training for interview!\n" + error.responseJSON.message,
+                        icon: "error"
+                    });
                 });
              }
          }
@@ -175,11 +202,21 @@ $(document).ready(function(){
             type:"DELETE",
             url: url
         }).then(function(response){
-            swal("Success!","You deleted a note","success");
-            location.reload();
+            swal({
+                 title: "Success!",
+                 text: "You deleted a note",
+                 icon: "success",
+                 timer: 2000
+             }).then(function(){
+                 location.reload();
+             });
         }).fail(function(error){
             console.log(error);
-            swal("ERROR", "Could NOT remove note!","error");
+            swal({
+                title: "Error!",
+                text: "Could NOT remove note!\n" + error.responseJSON.message,
+                icon: "error"
+            });
         });
      })
 
@@ -203,11 +240,21 @@ $(document).ready(function(){
              type: "DELETE",
              url: "/interviews/" + interviewId
          }).then(function(response){
-             swal("Success!","You deleted this interview","success");
-             window.location.href = "/recruitment/interview/interview.html";
+             swal({
+                 title: "Success!",
+                 text: "You deleted this interview",
+                 icon: "success",
+                 timer: 2000
+             }).then(function(){
+                window.location.href = "/recruitment/interview/interview.html";
+             });
          }).fail(function(error){
              console.log(error);
-             swal("ERROR", "Could NOT remove interview!","error");
+             swal({
+                 title: "Error!",
+                 text: "Something went wrong when creating a training for interview!\n" + error.responseJSON.message,
+                 icon: "error"
+             });
          });
      }
 
