@@ -20,4 +20,6 @@ public interface TrainingService {
     void deleteNote(int noteId);
 
     void deleteTraining(int trainingId);
+
+    Boolean checkForTraining(Integer applicationId, Integer interviewId);
 }

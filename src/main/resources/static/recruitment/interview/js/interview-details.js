@@ -163,12 +163,10 @@ $(document).ready(function(){
             return json;
         }
         function createTrainingIfHired(interview){
-        //TODO: check if training already exists
              let scheduleTraining= interview.interviewResult.code == "HIRED";
-             console.log(interview);
-             debugger;
-             // check if exisit by apllication id and interviewId
-             if(scheduleTraining){
+             let hasTraining = checkForTraining(interview.id, interview.application.id);
+
+             if(scheduleTraining && !hasTraining){
                 let training = {interview: interview, application: interview.application};
                 $.ajax({
                     type:"POST",
@@ -194,6 +192,21 @@ $(document).ready(function(){
                 });
              }
          }
+    function checkForTraining(interviewId,applicationId){
+        return $.ajax({
+            type:"GET",
+            url: "/trainings/applications/"+ applicationId +"/interviews/" + interviewId
+        }).then(function(response){
+            return response;
+        }).fail(function(error){
+            console.log(error);
+            swal({
+                title: "Error!",
+                text: "Something went wrong when creating a training for interview!\n" + error.responseJSON.message,
+                icon: "error"
+            });
+        });
+    }
 
     $('#interview-note-body').on("click","a.delete-note",function(event){
         event.preventDefault();

@@ -101,4 +101,15 @@ public class TrainingServiceImpl implements TrainingService{
     public void deleteTraining(int trainingId) {
         jpaTraining.deleteById(trainingId);
     }
+
+    @Override
+    public Boolean checkForTraining(Integer applicationId, Integer interviewId) {
+        Boolean hasTraining = false;
+        final List<Training> trainings = jpaTraining.findAllByApplicationIdAndInterviewId(applicationId,interviewId);
+        if(!trainings.isEmpty()){
+            hasTraining = true;
+        }
+
+        return hasTraining;
+    }
 }

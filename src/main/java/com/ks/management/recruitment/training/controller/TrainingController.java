@@ -4,6 +4,7 @@ import com.ks.management.recruitment.training.Training;
 import com.ks.management.recruitment.training.service.TrainingService;
 import com.ks.management.recruitment.training.ui.TrainingDto;
 import com.ks.management.security.UserPrincipal;
+import jdk.nashorn.internal.objects.annotations.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -52,6 +53,11 @@ public class TrainingController {
     @DeleteMapping("/{trainingId}")
     public void deleteTraining(@PathVariable("trainingId")int trainingId){
         trainingService.deleteTraining(trainingId);
+    }
+
+    @GetMapping("/applications/{applicationId}/interviews/{interviewId}")
+    public Boolean findIfTrainingExists(@PathVariable("applicationId")Integer applicationId, @PathVariable("interviewId")Integer interviewId){
+        return trainingService.checkForTraining(applicationId,interviewId);
     }
 
 }
