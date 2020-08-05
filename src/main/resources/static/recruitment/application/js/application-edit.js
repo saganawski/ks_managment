@@ -11,8 +11,13 @@ $(document).ready(function () {
             })
             .fail(function(err){
                 console.log(err);
+                swal({
+                    title: "Error!",
+                    text: "could not get contact types! \n" + err.responseJSON.message,
+                    icon: "error"
+                });
                 return reject("Error: could not get Application Contact Types!");
-                alert("problem getting contact types!");
+
             });
 
         function getContactOptions(){
@@ -40,8 +45,12 @@ $(document).ready(function () {
             })
             .fail(function(err){
                 console.log(err);
+                swal({
+                    title: "Error!",
+                    text: "could not get Application Source data!\n" + err.responseJSON.message,
+                    icon: "error"
+                });
                 return reject("Error: could not get Application Source data!");
-                alert("Error: could not get Application Source data!");
             });
         function getApplicationSource(){
             return $.ajax({
@@ -68,8 +77,12 @@ $(document).ready(function () {
             })
             .fail(function(err){
                 console.log(err);
+                 swal({
+                    title: "Error!",
+                    text: "could not get Application Result data!\n" + err.responseJSON.message,
+                    icon: "error"
+                 });
                 return reject("Error: could not get Application Result data!");
-                alert("Error: could not get Application Result data!");
             });
         function getResultOptions(){
             return $.ajax({
@@ -92,7 +105,12 @@ $(document).ready(function () {
                 })
                 .fail(function(err){
                     console.log(err);
-                    alert("Error: Could not get Offices for drop down");
+                    swal({
+                        title: "Error!",
+                        text: "Could not get Offices for drop down\n" + err.responseJSON.message,
+                        icon: "error"
+                    });
+
                 });
             function getOfficeOptions(){
                 return $.ajax({
@@ -121,8 +139,12 @@ $(document).ready(function () {
                 return resolve(data);
             }).fail(function(err){
                 console.log(err);
+                swal({
+                    title: "Error!",
+                    text: "Failure to retrieve application\n" + err.responseJSON.message,
+                    icon: "error"
+                });
                 return reject("Failure to retrieve application");
-                alert("Failure to retrieve application");
             });
         }else{
            return reject("no ID provided ");
@@ -190,14 +212,25 @@ $(document).ready(function () {
             data: JSON.stringify(jsonForm),
             contentType: "application/json; charset=utf-8"
         }).then(function(response){
-            swal("Success!","You updated an application","success");
+            swal({
+                title: "Success!",
+                text: "You updated an application",
+                icon: "success",
+                timer: 2000
+            });
+            //TODO: check if Interview already exists
             createInterviewIfScheduled(response);
             if(response.applicationResult.code != "SCHEDULED"){
                 window.location.href = "/recruitment/application/application.html";
             }
         }).fail(function(err){
             console.log(err);
-            alert("Error: Could not make new application");
+            swal({
+                title: "Error!",
+                text: "Could not make new application\n" + err.responseJSON.message,
+                icon: "error"
+            });
+
         });
 
     });
@@ -230,11 +263,21 @@ $(document).ready(function () {
                 type: "DELETE",
                 url: "/applications/" + applicationId
             }).then(function(response){
-                swal("Success!","You deleted this application","success");
-                window.location.href = "/recruitment/application/application.html";
+                swal({
+                    title: "Success!",
+                    text: "You deleted this application,
+                    icon: "success",
+                    timer: 2000
+                }).then(function(){
+                    window.location.href = "/recruitment/application/application.html";
+                });
             }).fail(function(error){
                 console.log(error);
-                alert("Error: Could not delete employee.");
+                swal({
+                    title: "Error!",
+                    text: "Could not delete employee! \n" + error.responseJSON.message,
+                    icon: "error"
+                });
             });
         }
 
@@ -248,7 +291,11 @@ $(document).ready(function () {
             location.reload();
         }).fail(function(error){
             console.log(error);
-            alert("ERROR: Could NOT remove note!");
+            swal({
+                title: "Error!",
+                text: "Could NOT remove note! \n" + error.responseJSON.message,
+                icon: "error"
+            });
         });
      })
 
@@ -266,7 +313,11 @@ $(document).ready(function () {
                 window.location.href = "/recruitment/interview/interview-details.html" +"?interviewId=" + response.id;
             }).fail(function(error){
                 console.log(error);
-                alert("ERROR: Something went wrong when creating a interview!");
+                swal({
+                    title: "Error!",
+                    text: "Something went wrong when creating a interview! \n" + error.responseJSON.message,
+                    icon: "error"
+                });
             });
          }
      }
