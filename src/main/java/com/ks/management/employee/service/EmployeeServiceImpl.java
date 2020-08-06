@@ -123,7 +123,11 @@ public class EmployeeServiceImpl implements EmployeeService{
 
     @Override
     public Employee createNewEmployee(Employee employee, UserPrincipal userPrincipal) {
-        //TODO: set position if null default and get canvesser
+        //this intended to auto create employees from training-details.js
+        if(employee.getPosition() == null){
+            final Position position = positionRepo.findByCode("CANVASSER");
+            employee.setPosition(position);
+        }
         final List<Office> offices = new ArrayList<>();
 
         employee.getOffices().stream()

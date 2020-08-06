@@ -151,7 +151,7 @@ $(document).ready(function(){
 
     function createEmployeeOnHasShow(){
         checkIfEmployeeExists(vm.trainingDto.application.lastName,vm.trainingDto.application.email).then(hasEmployee =>{
-            debugger;
+            
             if(!hasEmployee){
                 let newEmployeeJson = {};
                 newEmployeeJson.firstName = vm.trainingDto.application.firstName;
@@ -159,10 +159,7 @@ $(document).ready(function(){
                 newEmployeeJson.email = vm.trainingDto.application.email;
                 newEmployeeJson.phoneNumber = vm.trainingDto.application.phoneNumber;
                 newEmployeeJson.offices = [vm.trainingDto.application.office];
-                // TODO: this shouldnt be hardcoded
-        //        newEmployeeJson.position = {"id":	"23",
-        //                                                "name":	"Canvasser",
-        //                                                "code":	"CANVASSER"};
+
                 let url = "/employees/new";
                 $.ajax({
                     type : "POST",
