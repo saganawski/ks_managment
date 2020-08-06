@@ -21,7 +21,7 @@
 </head>
 <body>
     <div class="text-center">
-        <div class="spinner-border" role="status">
+        <div id="initialLoad" class="spinner-border" role="status">
             <span class="sr-only">Loading...</span>
         </div>
     </div>
@@ -56,8 +56,10 @@
                 <button id="updateUser" value="send" type="submit" class="btn btn-primary">Update user</button>
             </div>
         </form>
-        <button id="updatePassword" class="btn btn-danger" data-toggle="modal" data-target="#passwordModal">Update password</button>
+        <button id="updatePassword" class="btn btn-danger" data-toggle="modal" data-target="#passwordModal" style="margin:5px;">Update password</button>
+        <button id="linkEmployee" class="btn btn-secondary" data-toggle="modal" data-target="#employeeModal">Link to Employee</button>
     </div>
+<!--        PASSWORD MODAL-->
     <div class="modal fade" id="passwordModal" tabindex="-1" role="dialog" aria-labelledby="passwordModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
@@ -85,6 +87,45 @@
                         </div>
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                         <button class="btn btn-primary" value="send" type="submit">Save changes</button>
+
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+<!--        LINK TO EMPLOYEE MODAL-->
+    <div class="modal fade" id="employeeModal" tabindex="-1" role="dialog" aria-labelledby="employeeModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="text-center">
+                    <div class="spinner-border" role="status">
+                        <span class="sr-only">Loading...</span>
+                    </div>
+                </div>
+                <div class="modal-header">
+                    <h5 class="modal-title" id="employeeModalLabel">Link a user to an employee</h5>
+
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="employeeForm" class="needs-validation" novalidate>
+                        <div class="form-group col-md-3 col-lg-9">
+                            <label>Choose Employee</label>
+                            <select id="employeeSelect" class="custom-select" required>
+                                <option value="null">Choose an employee</option>
+                            </select>
+                            <div class="invalid-feedback">
+                                Must Choose Employee!
+                            </div>
+                            <small>Not all employees should be a <strong>"user"</strong> but all users should link to an <strong>"employee"</strong> </small>
+                            <br>
+                            <small>Currently Set to <strong>ONLY</strong> get Non-Canvassers </small>
+                        </div>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button id="employeeFormSubmit" class="btn btn-primary" value="send" type="submit">Save changes</button>
+
                     </form>
                 </div>
             </div>

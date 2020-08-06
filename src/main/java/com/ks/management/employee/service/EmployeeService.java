@@ -6,6 +6,7 @@ import com.ks.management.employee.ui.NewEmployeeDTO;
 import com.ks.management.security.UserPrincipal;
 
 import java.util.List;
+import java.util.Set;
 
 public interface EmployeeService {
 
@@ -22,4 +23,6 @@ public interface EmployeeService {
     Employee createNewEmployee(Employee employee, UserPrincipal userPrincipal);
 
     Boolean checkIfEmployeeExists(String lastName, String email);
+
+    Set<Employee> getAllEmployeesNonCanvassers();
 }

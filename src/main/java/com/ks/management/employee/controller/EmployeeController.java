@@ -10,6 +10,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/employees")
@@ -25,6 +26,11 @@ public class EmployeeController {
 	@GetMapping()
 	public List<Employee> getEmployees(){
 		return employeeService.getAllEmployees();
+	}
+
+	@GetMapping("/non-canvassers")
+	public Set<Employee> getEmployeesNonCanvassers(){
+		return employeeService.getAllEmployeesNonCanvassers();
 	}
 
 	@GetMapping("/{employeeId}")

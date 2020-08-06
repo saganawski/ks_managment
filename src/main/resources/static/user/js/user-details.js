@@ -1,7 +1,9 @@
 $(document).ready(function(){
     vm = this;
     vm.user = {};
+    vm.employees = {};
     $('#roles').multiselect();
+
     let searchParams = new URLSearchParams(window.location.search);
     if(searchParams.has('userId')){
         const userId = searchParams.get('userId');
@@ -29,14 +31,16 @@ $(document).ready(function(){
 
        $('#roles').multiselect('select', rolesArray);
 
-       $("div").removeClass("spinner-border");
+       $("#initialLoad").removeClass("spinner-border");
     }
 
     $('#updateUser').on('click', function(event){
         event.preventDefault();
         const roles = $('#roles').val().toString();
+
         let jsonForm = convertFormToJson($("form").serializeArray());
         jsonForm.roles = roles;
+
         $.ajax({
             type: "PUT",
             url:"/users/" + jsonForm.id,
@@ -109,9 +113,47 @@ $(document).ready(function(){
                 console.log(err);
                 swal("Error:", "Failure to update interview!","error");
             });
-
         }
+    });
 
-    })
+    $('#linkEmployee').on('click',function(event){
+        event.preventDefault();
+        /*TODO: think another way of linking to employee. CONCERN: employees can easily get too big
+        Maybe do a keyUpSearch?*/
+        getEmployeeOptions();
+
+    });
+     function getEmployeeOptions(){
+        $.ajax({
+            url: "/employees/non-canvassers"
+        }).then(function(data){
+            vm.employees = data;
+            setEmployeeOptionsDropDown(data);
+        }).fail(function(err){
+            console.log(err);
+             swal({
+                title: "Error!",
+                text: "Failure to get employees for drop down! \n" + err.responseJSON.message,
+                icon: "error"
+            });
+        });
+    }
+
+    function setEmployeeOptionsDropDown(employees){
+        for(employee of employees){
+            let optionName = employee.firstName + " " + employee.lastName;
+            $('#employeeSelect').append("<option value='"+JSON.stringify(employee)+"'>"+ optionName +"</option>");
+        }
+        $("div").removeClass("spinner-border");
+    }
+
+    $('#employeeFormSubmit').on('click',function(event){
+        event.preventDefault();
+        let selectedEmployee = $("#employeeSelect").val();
+        if(selectedEmployee == null || selectedEmployee == "null" ){
+            swal("Error:", "Must select employee!","error");
+        }
+        //TODO: make link
+    });
 
 })
