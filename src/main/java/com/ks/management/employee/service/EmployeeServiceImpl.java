@@ -123,6 +123,7 @@ public class EmployeeServiceImpl implements EmployeeService{
 
     @Override
     public Employee createNewEmployee(Employee employee, UserPrincipal userPrincipal) {
+        //TODO: set position if null default and get canvesser
         final List<Office> offices = new ArrayList<>();
 
         employee.getOffices().stream()
@@ -138,6 +139,16 @@ public class EmployeeServiceImpl implements EmployeeService{
         employee.setCreatedBy(userId);
 
         return repo.save(employee);
+    }
+
+    @Override
+    public Boolean checkIfEmployeeExists(String lastName, String email) {
+        final Employee employee = repo.findByLastNameAndEmail(lastName,email);
+        Boolean exists = false;
+        if(employee != null){
+            exists = true;
+        }
+        return exists;
     }
 
 }

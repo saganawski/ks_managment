@@ -73,6 +73,25 @@ $(document).ready(function(){
         }
     });
 
+    const checkIfEmployeeExists = (lastName, email) =>{
+        return new Promise((resolve,reject)=>{
+             $.ajax({
+                type:"GET",
+                url: "/employees/lastname/"+ lastName + "/email/" + email
+            }).then(function(response){
+                return resolve(response);
+            }).fail(function(error){
+                console.log(error);
+                swal({
+                    title: "Error!",
+                    text: "Something went wrong when checking if an employee already exists! \n" + error.responseJSON.message,
+                    icon: "error"
+                });
+                return reject("failure to get employee status");
+            });
+        })
+    }
+
     $('#editTraining').on('click', function(event){
         event.preventDefault();
         let jsonForm = convertFormToJson($("form").serializeArray());
@@ -131,44 +150,49 @@ $(document).ready(function(){
     }
 
     function createEmployeeOnHasShow(){
-        //TODO: check if employee already exists
-        let newEmployeeJson = {};
-        newEmployeeJson.firstName = vm.trainingDto.application.firstName;
-        newEmployeeJson.lastName = vm.trainingDto.application.lastName;
-        newEmployeeJson.email = vm.trainingDto.application.email;
-        newEmployeeJson.phoneNumber = vm.trainingDto.application.phoneNumber;
-        newEmployeeJson.offices = [vm.trainingDto.application.office];
-        // TODO: this shouldnt be hardcoded
-        newEmployeeJson.position = {"id":	"23",
-                                                "name":	"Canvasser",
-                                                "code":	"CANVASSER"};
-        let url = "/employees/new";
-        $.ajax({
-            type : "POST",
-            url : url,
-            data: JSON.stringify(newEmployeeJson),
-            contentType: "application/json; charset=utf-8"
-        }).then(function(response){
-            swal({
-                title: "Success!",
-                text: "You have created a new employee. You will now be directed to the employee to finalize any details",
-                icon: "success",
-                buttons: ["Stay on current page!", true]
-            }).then((value) => {
-                if(value){
-                    window.location.href = "/employee/employee-details.html" +"?employeeId=" + response.id;
-                }else{
-                    location.reload();
-                }
-            });
-        }).fail(function(error){
-            console.log(error);
-            swal({
-                title: "Error!",
-                text: "Failure to create new employee! \n" + error.responseJSON.message,
-                icon: "error"
-            });
+        checkIfEmployeeExists(vm.trainingDto.application.lastName,vm.trainingDto.application.email).then(hasEmployee =>{
+            debugger;
+            if(!hasEmployee){
+                let newEmployeeJson = {};
+                newEmployeeJson.firstName = vm.trainingDto.application.firstName;
+                newEmployeeJson.lastName = vm.trainingDto.application.lastName;
+                newEmployeeJson.email = vm.trainingDto.application.email;
+                newEmployeeJson.phoneNumber = vm.trainingDto.application.phoneNumber;
+                newEmployeeJson.offices = [vm.trainingDto.application.office];
+                // TODO: this shouldnt be hardcoded
+        //        newEmployeeJson.position = {"id":	"23",
+        //                                                "name":	"Canvasser",
+        //                                                "code":	"CANVASSER"};
+                let url = "/employees/new";
+                $.ajax({
+                    type : "POST",
+                    url : url,
+                    data: JSON.stringify(newEmployeeJson),
+                    contentType: "application/json; charset=utf-8"
+                }).then(function(response){
+                    swal({
+                        title: "Success!",
+                        text: "You have created a new employee. You will now be directed to the employee to finalize any details",
+                        icon: "success",
+                        buttons: ["Stay on current page!", true]
+                    }).then((value) => {
+                        if(value){
+                            window.location.href = "/employee/employee-details.html" +"?employeeId=" + response.id;
+                        }else{
+                            location.reload();
+                        }
+                    });
+                }).fail(function(error){
+                    console.log(error);
+                    swal({
+                        title: "Error!",
+                        text: "Failure to create new employee! \n" + error.responseJSON.message,
+                        icon: "error"
+                    });
+                });
+            }
         });
+
     }
 
     $('#note-body').on("click","a.delete-note",function(event){

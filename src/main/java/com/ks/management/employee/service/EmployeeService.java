@@ -20,4 +20,6 @@ public interface EmployeeService {
     void deleteEmployee(Integer employeeId);
 
     Employee createNewEmployee(Employee employee, UserPrincipal userPrincipal);
+
+    Boolean checkIfEmployeeExists(String lastName, String email);
 }

@@ -48,5 +48,9 @@ public class EmployeeController {
 		return  employeeService.createNewEmployee(employee,userPrincipal);
 	}
 
+	@GetMapping("/lastname/{lastname}/email/{email}")
+	public Boolean checkIfEmployeeExists(@PathVariable("lastname")String lastName, @PathVariable("email")String email){
+		return employeeService.checkIfEmployeeExists(lastName,email);
+	}
 
 }

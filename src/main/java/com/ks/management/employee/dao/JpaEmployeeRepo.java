@@ -12,4 +12,9 @@ public interface JpaEmployeeRepo extends JpaRepository<Employee, Integer> {
             "WHERE p.code != 'CANVASSER'",
             nativeQuery = true)
     Set<Employee> findAllNonCanvassers();
+
+    @Query(value = "Select * FROM employee " +
+            "WHERE last_name = ?1 AND email = ?2 ",
+            nativeQuery = true)
+    Employee findByLastNameAndEmail(String lastName, String email);
 }
