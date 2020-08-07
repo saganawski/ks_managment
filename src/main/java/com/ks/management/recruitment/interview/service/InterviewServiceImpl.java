@@ -21,7 +21,9 @@ import com.ks.management.recruitment.interview.dao.JpaInterviewNote;
 import com.ks.management.recruitment.interview.dao.JpaInterviewResult;
 import com.ks.management.recruitment.interview.ui.InterviewApplicationDto;
 import com.ks.management.recruitment.interview.ui.InterviewDto;
+import com.ks.management.security.UserEmployee;
 import com.ks.management.security.UserPrincipal;
+import com.ks.management.security.dao.UserEmployeeJpa;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -53,6 +55,8 @@ public class InterviewServiceImpl implements InterviewService {
     private JpaOfficeRepo jpaOfficeRepo;
     @Autowired
     private JpaInterviewNote jpaInterviewNote;
+    @Autowired
+    private UserEmployeeJpa userEmployeeJpa;
 
     @Override
     public List<Interview> getAllInterviews() {
@@ -62,11 +66,15 @@ public class InterviewServiceImpl implements InterviewService {
     @Override
     public Interview createInterview(Interview interview, UserPrincipal userPrincipal) {
         final Integer activeUserId = Optional.ofNullable(userPrincipal.getUserId()).orElse(-1);
-        //TODO: fine empolyee by userPrinceipal;
-        final Employee scheduler = jpaEmployeeRepo.findById(2).orElse(null);
-        if(scheduler == null){
-            throw  new RuntimeException("Could not find employee to set a scheduler!");
+
+        final UserEmployee userEmployee = userEmployeeJpa.findByUserId(activeUserId);
+        Employee scheduler = null;
+        if(userEmployee != null){
+            scheduler = userEmployee.getEmployee();
         }
+//        if(scheduler == null){
+//            throw  new RuntimeException("Could not find employee to set a scheduler!");
+//        }
         interview.setScheduler(scheduler);
         interview.setCreatedBy(activeUserId);
         interview.setUpdatedBy(activeUserId);
