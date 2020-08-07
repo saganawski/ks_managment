@@ -58,6 +58,28 @@
         </form>
         <button id="updatePassword" class="btn btn-danger" data-toggle="modal" data-target="#passwordModal" style="margin:5px;">Update password</button>
         <button id="linkEmployee" class="btn btn-secondary" data-toggle="modal" data-target="#employeeModal">Link to Employee</button>
+        <br>
+        <h5>Currently linked to employee below</h5>
+        <div class="form-row">
+            <div class="form-group col-md-3">
+                <label>FirstName</label>
+                <input type="text" id="firstName" name="firstName" class="form-control" readonly/>
+            </div>
+            <div class="form-group col-md-3">
+                <label>LastName</label>
+                <input id="lastName" name="lastName" class="form-control" readonly/>
+            </div>
+            <div class="form-group col-md-3">
+                <label>Email</label>
+                <input id="email" name="email" class="form-control" readonly/>
+            </div>
+            <div class="form-group col-md-3">
+                <label>Position</label>
+                <input id="position" name="position" class="form-control" readonly/>
+            </div>
+            <button id="details" class="btn btn-warning">Employee Details</button>
+
+        </div>
     </div>
 <!--        PASSWORD MODAL-->
     <div class="modal fade" id="passwordModal" tabindex="-1" role="dialog" aria-labelledby="passwordModalLabel" aria-hidden="true">

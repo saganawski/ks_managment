@@ -52,6 +52,11 @@ public class UserController {
         return userService.createUserEmployee(userEmployeeLinkDto,userPrincipal);
     }
 
+    @GetMapping("/{userId}/employee")
+    public Employee getEmployeeForUser(@PathVariable("userId") Integer userId){
+        return userService.getEmployeeForUserById(userId);
+    }
+
 
 
 }

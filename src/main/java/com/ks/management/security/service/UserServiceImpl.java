@@ -144,6 +144,10 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserEmployee createUserEmployee(UserEmployeeLinkDto userEmployeeLinkDto, UserPrincipal userPrincipal) {
         final Integer activeUser = userPrincipal.getUserId();
+        //TODO: think of a better way of doing this
+        final Integer userId = Optional.ofNullable(userEmployeeLinkDto.getUser()).map(u -> u.getId()).orElse(-1);
+        userEmployeeJpa.deleteAllByUserId(userId);
+
         final UserEmployee userEmployee = UserEmployee.builder()
                 .user(userEmployeeLinkDto.getUser())
                 .employee(userEmployeeLinkDto.getEmployee())
@@ -152,5 +156,16 @@ public class UserServiceImpl implements UserService {
                 .build();
 
         return userEmployeeJpa.save(userEmployee);
+    }
+
+    @Override
+    public Employee getEmployeeForUserById(Integer userId) {
+        final UserEmployee userEmployee = userEmployeeJpa.findByUserId(userId);
+        if(userEmployee == null){
+            return null;
+        }
+
+        final Employee employee = userEmployee.getEmployee();
+        return employee;
     }
 }

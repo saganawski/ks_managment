@@ -2,6 +2,8 @@ $(document).ready(function(){
     vm = this;
     vm.user = {};
     vm.employees = {};
+    vm.linkedEmployee = {};
+
     $('#roles').multiselect();
 
     let searchParams = new URLSearchParams(window.location.search);
@@ -12,8 +14,9 @@ $(document).ready(function(){
         }).then(function(data){
             vm.user = data;
             setFormData(data);
+            findLinkedEmployee(data);
         }).fail(function(err){
-            console.log(err);
+            console.log(err.responseJSON);
             swal("Error:", "Failure to retrieve user!","error");
         });
     }else{
@@ -56,7 +59,7 @@ $(document).ready(function(){
                 location.reload();
             });
         }).fail(function(err){
-            console.log(err);
+            console.log(err.responseJSON);
             swal({
                 title: "Error!",
                 text: "Failure to update user! \n" + err.responseJSON.message,
@@ -110,7 +113,7 @@ $(document).ready(function(){
                     location.reload();
                 });
             }).fail(function(err){
-                console.log(err);
+                console.log(err.responseJSON);
                 swal("Error:", "Failure to update interview!","error");
             });
         }
@@ -130,7 +133,7 @@ $(document).ready(function(){
             vm.employees = data;
             setEmployeeOptionsDropDown(data);
         }).fail(function(err){
-            console.log(err);
+            console.log(err.responseJSON);
              swal({
                 title: "Error!",
                 text: "Failure to get employees for drop down! \n" + err.responseJSON.message,
@@ -156,8 +159,6 @@ $(document).ready(function(){
         let userEmployeeLinkDto = {};
         userEmployeeLinkDto.user = vm.user;
         userEmployeeLinkDto.employee = selectedEmployee;
-        console.log(userEmployeeLinkDto);
-        //TODO: make dto
         $.ajax({
             type: "POST",
             url:"/users/employees",
@@ -173,7 +174,7 @@ $(document).ready(function(){
                 location.reload();
             });
         }).fail(function(err){
-            console.log(err);
+            console.log(err.responseJSON);
             swal({
                 title: "Error!",
                 text: "Failure to update user! \n" + err.responseJSON.message,
@@ -182,6 +183,40 @@ $(document).ready(function(){
                 location.reload();
             });
         });
+    });
+
+    //find and set current linked employee
+    function findLinkedEmployee(user){
+        $.ajax({
+            url: "/users/" + user.id + "/employee"
+        }).then(function(response){
+            vm.linkedEmployee = response;
+            if(response != ''){
+                setLinkedEmployee(response);
+            }
+        }).fail(function(err){
+            console.log(err.responseJSON);
+             swal({
+                title: "Error!",
+                text: "Failure to get employee info! \n" + err.responseJSON.message,
+                icon: "error"
+            });
+        });
+    }
+    function setLinkedEmployee(employee){
+        $('#firstName').val(employee.firstName);
+        $('#lastName').val(employee.lastName);
+        $('#email').val(employee.email);
+        $('#position').val(employee.position.name);
+    }
+
+    $('#details').on('click',function(event){
+        event.preventDefault();
+        if(vm.linkedEmployee.id != undefined){
+            window.location.href = "/employee/employee-details.html?employeeId="+ vm.linkedEmployee.id;
+        }else{
+            swal("Error:", "No Employee linked yet!","error");
+        }
     });
 
 })

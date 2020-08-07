@@ -21,4 +21,6 @@ public interface UserService {
     UserDTO createUser(UserDTO userDTO, UserPrincipal userPrincipal);
 
     UserEmployee createUserEmployee(UserEmployeeLinkDto userEmployeeLinkDto, UserPrincipal userPrincipal);
+
+    Employee getEmployeeForUserById(Integer userId);
 }
