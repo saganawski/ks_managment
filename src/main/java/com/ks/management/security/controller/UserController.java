@@ -1,10 +1,9 @@
 package com.ks.management.security.controller;
 
-import com.ks.management.security.User;
-import com.ks.management.security.UserDTO;
-import com.ks.management.security.UserPrincipal;
-import com.ks.management.security.UserRepository;
+import com.ks.management.employee.Employee;
+import com.ks.management.security.*;
 import com.ks.management.security.service.UserService;
+import com.ks.management.security.ui.UserEmployeeLinkDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -46,6 +45,11 @@ public class UserController {
     @PostMapping()
     public UserDTO createUser(@RequestBody UserDTO userDTO, @AuthenticationPrincipal UserPrincipal userPrincipal){
         return userService.createUser(userDTO,userPrincipal);
+    }
+
+    @PostMapping("/employees")
+    public UserEmployee createUserEmployee(@RequestBody UserEmployeeLinkDto userEmployeeLinkDto, @AuthenticationPrincipal UserPrincipal userPrincipal){
+        return userService.createUserEmployee(userEmployeeLinkDto,userPrincipal);
     }
 
 

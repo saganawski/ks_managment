@@ -1,9 +1,9 @@
 package com.ks.management.security.service;
 
-import com.ks.management.security.User;
-import com.ks.management.security.UserDTO;
-import com.ks.management.security.UserPrincipal;
-import com.ks.management.security.UserRepository;
+import com.ks.management.employee.Employee;
+import com.ks.management.security.*;
+import com.ks.management.security.dao.UserEmployeeJpa;
+import com.ks.management.security.ui.UserEmployeeLinkDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -18,6 +18,8 @@ import java.util.stream.Collectors;
 public class UserServiceImpl implements UserService {
     @Autowired
     UserRepository userRepository;
+    @Autowired
+    UserEmployeeJpa userEmployeeJpa;
 
     @Override
     public List<UserDTO> findAll() {
@@ -138,5 +140,17 @@ public class UserServiceImpl implements UserService {
                 .createdDate(savedUser.getCreatedDate())
                 .build();
         return newUserDto;
+    }
+    @Override
+    public UserEmployee createUserEmployee(UserEmployeeLinkDto userEmployeeLinkDto, UserPrincipal userPrincipal) {
+        final Integer activeUser = userPrincipal.getUserId();
+        final UserEmployee userEmployee = UserEmployee.builder()
+                .user(userEmployeeLinkDto.getUser())
+                .employee(userEmployeeLinkDto.getEmployee())
+                .createdBy(activeUser)
+                .updatedBy(activeUser)
+                .build();
+
+        return userEmployeeJpa.save(userEmployee);
     }
 }

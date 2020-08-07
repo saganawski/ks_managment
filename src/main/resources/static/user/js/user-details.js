@@ -149,11 +149,39 @@ $(document).ready(function(){
 
     $('#employeeFormSubmit').on('click',function(event){
         event.preventDefault();
-        let selectedEmployee = $("#employeeSelect").val();
+        let selectedEmployee = JSON.parse($("#employeeSelect").val());
         if(selectedEmployee == null || selectedEmployee == "null" ){
             swal("Error:", "Must select employee!","error");
         }
-        //TODO: make link
+        let userEmployeeLinkDto = {};
+        userEmployeeLinkDto.user = vm.user;
+        userEmployeeLinkDto.employee = selectedEmployee;
+        console.log(userEmployeeLinkDto);
+        //TODO: make dto
+        $.ajax({
+            type: "POST",
+            url:"/users/employees",
+            data: JSON.stringify(userEmployeeLinkDto),
+            contentType: "application/json; charset=utf-8"
+        }).then(function(response){
+            swal({
+                title: "Success!",
+                text: "You linked an user to an employee",
+                icon: "success",
+                timer: 2000
+            }).then(function(){
+                location.reload();
+            });
+        }).fail(function(err){
+            console.log(err);
+            swal({
+                title: "Error!",
+                text: "Failure to update user! \n" + err.responseJSON.message,
+                icon: "error"
+            }).then(function(){
+                location.reload();
+            });
+        });
     });
 
 })
