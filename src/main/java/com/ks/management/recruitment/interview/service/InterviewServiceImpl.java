@@ -72,9 +72,6 @@ public class InterviewServiceImpl implements InterviewService {
         if(userEmployee != null){
             scheduler = userEmployee.getEmployee();
         }
-//        if(scheduler == null){
-//            throw  new RuntimeException("Could not find employee to set a scheduler!");
-//        }
         interview.setScheduler(scheduler);
         interview.setCreatedBy(activeUserId);
         interview.setUpdatedBy(activeUserId);
