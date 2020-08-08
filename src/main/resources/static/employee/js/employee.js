@@ -35,6 +35,8 @@ $(document).ready(function () {
                     return '<a class="btn btn-warning" href="/employee/employee-details.html?employeeId='+ data.id +'">Details</a>'
                 }
             }
-        ]
+        ],
+        dom:"Bfrtip",
+        buttons: ['copy','csv','pdf']
     });
 });
