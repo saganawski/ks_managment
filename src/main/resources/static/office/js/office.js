@@ -3,8 +3,10 @@ $(document).ready(function () {
     var vm = this;
     vm.offices = [];
     
-    //TODO: does not handle nulls. maybe do a DTO
     $('#office-table').DataTable({
+        "initComplete": function(settings, json){
+            $("div").removeClass("spinner-border");
+        },
     	ajax: {
             url: "/offices",
             dataSrc: ''

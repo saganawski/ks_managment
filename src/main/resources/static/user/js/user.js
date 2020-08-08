@@ -1,5 +1,8 @@
 $(document).ready(function(){
     $('#user-table').DataTable({
+        "initComplete": function(settings, json){
+            $("div").removeClass("spinner-border");
+        },
             ajax:{
                 "url": "/users",
                 "dataSrc": ""
