@@ -115,9 +115,14 @@ $(document).ready(function() {
             dataType: "json",
             contentType: "application/json; charset=utf-8"
         }).then(function(data){
-            console.log(data);
-            swal("Success!","You updated employee","success");
-            window.location.href = "/employee/employee.html";
+            swal({
+                title: "Success!",
+                text: "You updated an employee",
+                icon: "success",
+                timer: 2000
+            }).then(function(){
+                window.location.href = "/employee/employee.html";
+            });
         }).fail(function(error){
             console.log(error);
             swal("ERROR", "Could not update employee!","error");
@@ -145,11 +150,23 @@ $(document).ready(function() {
             type: "DELETE",
             url: "/employees/" + employeeId
         }).then(function(response){
-            swal("Success!","You deleted this employee.","success");
-            window.location.href = "/employee/employee.html";
+            swal({
+                title: "Success!",
+                text: "You deleted this employee",
+                icon: "success",
+                timer: 2000
+            }).then(function(){
+                window.location.href = "/employee/employee.html";
+            });
         }).fail(function(error){
-            console.log(error);
-            swal("ERROR", "Could not delete employee!","error");
+            console.log(error.responseJSON);
+            swal({
+                title: "Error!",
+                text: "Could not delete employee! \n" + error.responseJSON.message,
+                icon: "error"
+            }).then(function(){
+                location.reload();
+            });
         });
     }
 

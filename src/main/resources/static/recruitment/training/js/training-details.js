@@ -8,7 +8,6 @@ $(document).ready(function(){
         $.ajax({
             url:"/trainings/" + trainingId +"/dto"
         }).then(function(data){
-            console.log(data);
             vm.trainingDto = data;
             setFormData(data);
         }).fail(function(err){
