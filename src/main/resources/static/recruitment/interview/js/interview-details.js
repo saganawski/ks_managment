@@ -133,16 +133,16 @@ $(document).ready(function(){
             contentType: "application/json; charset=utf-8"
         }).then(function(response){
             let interview = response;
-            createTrainingIfHired(response);
-            if(interview.interviewResult.code != "HIRED"){
-                swal({
-                     title: "Success!",
-                     text: "You updated an interview",
-                     icon: "success",
-                     timer: 2000
-                 }).then(function(){
-                     location.reload();
-                 });
+            swal({
+                 title: "Success!",
+                 text: "You updated an interview",
+                 icon: "success",
+                 timer: 2000
+             });
+            if(interview.interviewResult != null){
+                if(interview.interviewResult.code != undefined){
+                    createTrainingIfHired(response);
+                }
             }
         }).fail(function(err){
             console.log(err);
