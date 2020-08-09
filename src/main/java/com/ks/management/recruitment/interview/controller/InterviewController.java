@@ -55,4 +55,9 @@ public class InterviewController {
     public Boolean checkIfInterviewExistsByApplicationId(@PathVariable("applicationId")Integer applicationId){
         return interviewService.checkIfInterviewExistsByApplicationId(applicationId);
     }
+
+    @GetMapping("/todays")
+    public List<Interview> getTodaysInterviews(@AuthenticationPrincipal UserPrincipal userPrincipal){
+        return interviewService.getTodaysInterviews(userPrincipal);
+    }
 }

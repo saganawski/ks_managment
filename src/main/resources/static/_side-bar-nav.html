@@ -83,13 +83,28 @@
                 <div class="form-row">
                     <div class="card col-lg-12">
                         <div class="card-header">
-                            This is todays Interviews that need attention
+                            Today's scheduled Interviews
                         </div>
                         <div class="card-body">
-                            <ul>
-                                <li>Interview 1</li>
-                                <li>Interview 2</li>
-                            </ul>
+                            <div class="text-center">
+                                <div id="initialLoad" class="spinner-border" role="status">
+                                    <span class="sr-only">Loading...</span>
+                                </div>
+                            </div>
+                            <div class="container">
+                                <table id="interview-table" class="display">
+                                    <thead>
+                                    <tr>
+                                        <th>Id</th>
+                                        <th>Interviewee</th>
+                                        <th>Scheduled Time</th>
+                                        <th>Interviewers</th>
+                                        <th>Created Date</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                    </thead>
+                                </table>
+                            </div>
                         </div>
                     </div>
                 </div>

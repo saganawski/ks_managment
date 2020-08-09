@@ -11,4 +11,10 @@ public interface JpaInterview extends JpaRepository<Interview,Integer> {
             "WHERE application_id = ?1 ",
             nativeQuery = true)
     List<Interview> findAllByApplicationId(Integer applicationId);
+
+    @Query(value = "Select * FROM interview AS i " +
+            "JOIN interview_director AS id ON id.interview_id = i.id "+
+            "WHERE id.employee_id = ?1 AND DATE(i.scheduled_time) = CURDATE() ",
+            nativeQuery = true)
+    List<Interview> findTodaysInterviews(Integer employeeId);
 }

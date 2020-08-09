@@ -29,10 +29,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.criteria.CriteriaBuilder;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 @Service
 @Transactional
@@ -170,5 +167,18 @@ public class InterviewServiceImpl implements InterviewService {
             exists = true;
         }
         return exists;
+    }
+
+    @Override
+    public List<Interview> getTodaysInterviews(UserPrincipal userPrincipal) {
+        final Integer activeUserId = userPrincipal.getUserId();
+        final UserEmployee userEmployee = userEmployeeJpa.findByUserId(activeUserId);
+        if(userEmployee == null){
+            return Collections.emptyList();
+        }
+        final Integer employeeId = userEmployee.getEmployee().getId();
+        final List<Interview> interviews = jpaInterview.findTodaysInterviews(employeeId);
+
+        return interviews;
     }
 }

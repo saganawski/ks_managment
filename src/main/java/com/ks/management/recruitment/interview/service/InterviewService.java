@@ -21,4 +21,6 @@ public interface InterviewService {
     void deleteInterview(int interviewId);
 
     Boolean checkIfInterviewExistsByApplicationId(Integer applicationId);
+
+    List<Interview> getTodaysInterviews(UserPrincipal userPrincipal);
 }
