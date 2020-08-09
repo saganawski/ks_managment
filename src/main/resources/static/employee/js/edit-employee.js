@@ -72,7 +72,9 @@ $(document).ready(function() {
            $("#alias").val(alias);
            $("#email").val(email);
            $("#phoneNumber").val(phoneNumber);
-           $("#position").val(position.code);
+           if(position != null){
+                $("#position").val(position.code);
+           }
    //            Refresh multiselect with office ids
            var officeIds = [];
            for(office of offices){
