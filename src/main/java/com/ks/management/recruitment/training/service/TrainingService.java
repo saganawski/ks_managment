@@ -22,4 +22,6 @@ public interface TrainingService {
     void deleteTraining(int trainingId);
 
     Boolean checkForTraining(Integer applicationId, Integer interviewId);
+
+    List<Training> getTodaysTrainings(UserPrincipal userPrincipal);
 }

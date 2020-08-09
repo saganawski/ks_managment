@@ -60,4 +60,9 @@ public class TrainingController {
         return trainingService.checkForTraining(applicationId,interviewId);
     }
 
+    @GetMapping("/todays")
+    public List<Training> getTodaysTrainings(@AuthenticationPrincipal UserPrincipal userPrincipal){
+        return trainingService.getTodaysTrainings(userPrincipal);
+    }
+
 }

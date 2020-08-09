@@ -9,7 +9,9 @@ import com.ks.management.recruitment.training.dao.JpaTraining;
 import com.ks.management.recruitment.training.dao.JpaTrainingConfirmationType;
 import com.ks.management.recruitment.training.dao.JpaTrainingNote;
 import com.ks.management.recruitment.training.ui.TrainingDto;
+import com.ks.management.security.UserEmployee;
 import com.ks.management.security.UserPrincipal;
+import com.ks.management.security.dao.UserEmployeeJpa;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,6 +29,8 @@ public class TrainingServiceImpl implements TrainingService{
     private JpaTrainingConfirmationType jpaTrainingConfirmationType;
     @Autowired
     private JpaTrainingNote jpaTrainingNote;
+    @Autowired
+    private UserEmployeeJpa userEmployeeJpa;
 
     @Override
     public List<Training> getAllTrainings() {
@@ -111,5 +115,19 @@ public class TrainingServiceImpl implements TrainingService{
         }
 
         return hasTraining;
+    }
+
+    @Override
+    public List<Training> getTodaysTrainings(UserPrincipal userPrincipal) {
+        final Integer activeUserId = userPrincipal.getUserId();
+        final UserEmployee userEmployee = userEmployeeJpa.findByUserId(activeUserId);
+        if(userEmployee == null){
+            return Collections.emptyList();
+        }
+        final Integer employeeId = userEmployee.getEmployee().getId();
+
+        final List<Training> trainings = jpaTraining.getTodaysTrainigs(employeeId);
+
+        return trainings;
     }
 }

@@ -13,4 +13,9 @@ public interface JpaTraining extends JpaRepository<Training, Integer> {
             "WHERE application_id = ?1 AND interview_id = ?2 ",
             nativeQuery = true)
     List<Training> findAllByApplicationIdAndInterviewId(Integer applicationId, Integer interviewId);
+
+    @Query(value = "Select * FROM training " +
+            "WHERE employee_id = ?1 AND DATE(scheduled_time) = curdate() ",
+            nativeQuery = true)
+    List<Training> getTodaysTrainigs(Integer employeeId);
 }
