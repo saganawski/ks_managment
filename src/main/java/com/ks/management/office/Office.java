@@ -22,7 +22,7 @@ public class Office {
 	@Column(name="name")
 	private String name;
 	
-	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
 	@JoinColumn(name = "location_id")
 	private Location location;
 
