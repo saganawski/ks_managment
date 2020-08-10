@@ -1,0 +1,105 @@
+#load-layout {
+  display: grid;
+  height: 100vh;
+  grid-template-columns: repeat(12,1fr);
+  grid-template-rows: 70px 1fr 70px;
+  background: #fafafa;
+}
+
+header, .left-sidebar{
+    background: #7386D5;
+    color: #fff;
+    transition: all 0.3s;
+}
+header {
+  padding: 2rem;
+  grid-column: 1/-1;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+a {
+    color: #fff;
+}
+
+a:hover, a:focus {
+    text-decoration: none;
+    transition: all 0.3s;
+    color: #7386D5;
+    background: #fff;
+}
+
+.logout-button {
+    border:none;
+    padding:0;
+    background:none;
+    color: #fff;
+}
+
+.logout-button:hover, .logout-button:focus {
+    text-decoration: none;
+    transition: all 0.3s;
+    color: #7386D5;
+    background: #fff;
+}
+
+.left-sidebar {
+  grid-column: 1 / 2;
+  grid-row: 2/-1;
+  min-width: 200px;
+  max-width: 250px;
+}
+// might be worthless
+.left-sidebar ul.components{
+    padding: 20px 0;
+    border-bottom: 1px solid #47748b;
+}
+
+a[data-toggle="collapse"] {
+    position: relative;
+}
+
+.dropdown-toggle::after {
+    display: block;
+    position: absolute;
+    top: 50%;
+    right: 20px;
+    transform: translateY(-50%);
+}
+
+
+.left-sidebar ul li a {
+    padding: 10px;
+    font-size: 0.9em;
+    display: block;
+}
+
+ul ul a {
+    font-size: 0.8em !important;
+    padding-left: 30px !important;
+    background: #6d7fcc;
+}
+
+.left-sidebar ul li.active > a, a[aria-expanded="true"] {
+    color: #fff;
+    background: #6d7fcc;
+}
+
+main {
+  grid-column: 2 / -1;
+  grid-row: 2;
+  padding: 2rem;
+}
+
+footer {
+  padding: 2rem;
+  text-align: center;
+  grid-column: 2 / -1;
+  grid-row: 3 /-1;
+  background: #fafafa;
+}
+
+body {
+  font-family: system-ui, sans-serif;
+}

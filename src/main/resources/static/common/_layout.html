@@ -1,0 +1,56 @@
+<header>
+    <div>
+        <h3 class="name"><a href="/">KS Management</a></h3>
+    </div>
+    <div>
+        <form action="/logout">
+            <button class="logout-button" type="submit">Logout</button>
+        </form>
+    </div>
+</header>
+
+<div class="left-sidebar">
+    <ul class="list-unstyled components">
+        <li>
+            <a href="#adminSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Admin</a>
+            <ul class="collapse list-unstyled" id="adminSubmenu">
+                <li>
+                    <a href="/user/user.html">Users</a>
+                </li>
+                <li>
+                    <a href="#">Roles</a>
+                </li>
+                <li>
+                    <a href="/office/offices.html">Offices</a>
+                </li>
+            </ul>
+        </li>
+        <li>
+            <a href="#employeeSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Employees</a>
+            <ul class="collapse list-unstyled" id="employeeSubmenu">
+                <li>
+                    <a href="/employee/employee.html">Employees</a>
+                </li>
+                <li>
+                    <a href="#">Time Sheets</a>
+                </li>
+            </ul>
+        </li>
+        <li>
+            <a href="#recruitmentSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Recruitment Tracker</a>
+            <ul class="collapse list-unstyled" id="recruitmentSubmenu">
+                <li>
+                    <a href="/recruitment/application/application.html">Applications</a>
+                </li>
+                <li>
+                    <a href="/recruitment/interview/interview.html">Interviews</a>
+                </li>
+                <li>
+                    <a href="/recruitment/training/training.html">Training</a>
+                </li>
+            </ul>
+        </li>
+    </ul>
+</div>
+
+<footer>KS Management</footer>
