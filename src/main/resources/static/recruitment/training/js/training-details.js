@@ -2,6 +2,20 @@ $(document).ready(function(){
     vm = this;
     vm.trainingDto = {};
 
+    const main = $('#load-layout').html();
+    $('#load-layout').load("/common/_layout.html", function(responseTxt, statusTxt, xhr){
+        if(statusTxt == "success"){
+            $('#load-layout').append(main);
+            $('#scheduledTime').daterangepicker({
+                singleDatePicker: true,
+                timePicker: true,
+                locale: {
+                  format: 'M/DD/YYYY hh:mm A'
+                }
+            });
+        }
+    });
+
     let searchParams = new URLSearchParams(window.location.search);
     if(searchParams.has('trainingId')){
         let trainingId = searchParams.get('trainingId');
@@ -63,14 +77,6 @@ $(document).ready(function(){
             $('#trainer').val(JSON.stringify(currentTrainer));
         }
     }
-
-    $('#scheduledTime').daterangepicker({
-        singleDatePicker: true,
-        timePicker: true,
-        locale: {
-          format: 'M/DD/YYYY hh:mm A'
-        }
-    });
 
     const checkIfEmployeeExists = (lastName, email) =>{
         return new Promise((resolve,reject)=>{
