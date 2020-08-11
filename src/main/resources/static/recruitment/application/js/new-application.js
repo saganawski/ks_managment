@@ -1,5 +1,11 @@
 $(document).ready(function () {
-	// TODO: something to load side bar and nav
+
+    const main = $('#load-layout').html();
+    $('#load-layout').load("/common/_layout.html", function(responseTxt, statusTxt, xhr){
+        if(statusTxt == "success"){
+            $('#load-layout').append(main);
+        }
+    });
 	/*
 	SET CONTACT OPTIONS
 	*/
@@ -9,7 +15,11 @@ $(document).ready(function () {
 	    })
 	    .fail(function(err){
 	        console.log(err);
-	        alert("problem getting contact types!");
+	        swal({
+                title: "Error!",
+                text: "Problem getting contact types!\n" + err.responseJSON.message,
+                icon: "error"
+            });
 	    });
 
 	function getContactOptions(){
@@ -37,7 +47,11 @@ $(document).ready(function () {
         })
         .fail(function(err){
             console.log(err);
-            alert("Error: could not get Application Source data!");
+            swal({
+                title: "Error!",
+                text: "could not get Application Source data!\n" + err.responseJSON.message,
+                icon: "error"
+            });
         });
     function getApplicationSource(){
         return $.ajax({
@@ -64,7 +78,11 @@ $(document).ready(function () {
         })
         .fail(function(err){
             console.log(err);
-            alert("Error: could not get Application Result data!");
+            swal({
+                title: "Error!",
+                text: "could not get Application Result data!\n" + err.responseJSON.message,
+                icon: "error"
+            });
         });
     function getResultOptions(){
         return $.ajax({
@@ -88,7 +106,11 @@ $(document).ready(function () {
         })
         .fail(function(err){
             console.log(err);
-            alert("Error: Could not get Offices for drop down");
+            swal({
+                title: "Error!",
+                text: "Could not get offices for drop down!\n" + err.responseJSON.message,
+                icon: "error"
+            });
         });
     function getOfficeOptions(){
         return $.ajax({
@@ -104,7 +126,8 @@ $(document).ready(function () {
         }
     }
 
-    $('#newApplication').on('click', function(event){
+    $('#load-layout').on('click', '#newApplication', function(event){
+        debugger;
         event.preventDefault();
         let jsonForm = convertFormToJson($("form").serializeArray());
         let applicationResult = JSON.parse($('#applicationResult').val());
@@ -119,22 +142,38 @@ $(document).ready(function () {
             note = [{id:null,note:jsonForm.applicationNotes}];
             jsonForm.applicationNotes = note;
         }
-
+        debugger;
         $.ajax({
             type: "POST",
             url:"/applications",
             data: JSON.stringify(jsonForm),
             contentType: "application/json; charset=utf-8"
         }).then(function(response){
-            swal("Success!","You created a new application","success");
-            createInterviewIfScheduled(response);
-            if(response.applicationResult.code != "SCHEDULED"){
-                window.location.href = "/recruitment/application/application.html";
-            }
+            swal({
+                title: "Success!",
+                text: "You created a new application",
+                icon: "success",
+                timer: 2000
+            }).then(function(){
+                debugger;
+                if(response.applicationResult.code != "SCHEDULED"){
+                    window.location.href = "/recruitment/application/application.html";
+                }else{
+                    createInterviewIfScheduled(response);
+                }
+            });
+//            createInterviewIfScheduled(response);
+//            if(response.applicationResult.code != "SCHEDULED"){
+//                window.location.href = "/recruitment/application/application.html";
+//            }
 
         }).fail(function(err){
             console.log(err);
-            alert("Error: Could not make new application");
+            swal({
+                title: "Error!",
+                text: "could not make a new Application!\n" + err.responseJSON.message,
+                icon: "error"
+            });
         });
 
     });
@@ -160,7 +199,11 @@ $(document).ready(function () {
                 window.location.href = "/recruitment/interview/interview-details.html" +"?interviewId=" + response.id;
             }).then(function(error){
                 console.log(error);
-                alert("ERROR: Something went wrong when creating a interview!");
+                swal({
+                    title: "Error!",
+                    text: "Could not make a new interview for Application!\n" + error.responseJSON.message,
+                    icon: "error"
+                });
             });
          }
         }

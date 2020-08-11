@@ -1,3 +1,7 @@
+body{
+    background: #fafafa;
+}
+
 #load-layout {
   display: grid;
   height: 100vh;
