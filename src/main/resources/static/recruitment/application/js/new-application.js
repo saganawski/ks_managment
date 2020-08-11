@@ -127,55 +127,50 @@ $(document).ready(function () {
     }
 
     $('#load-layout').on('click', '#newApplication', function(event){
-        debugger;
         event.preventDefault();
-        let jsonForm = convertFormToJson($("form").serializeArray());
-        let applicationResult = JSON.parse($('#applicationResult').val());
-        let applicationSource = JSON.parse($('#applicationSource').val());
-        let applicationContactType = JSON.parse($('#applicationContactType').val());
-        let office = JSON.parse($('#office').val());
-        jsonForm.applicationResult = applicationResult;
-        jsonForm.applicationSource = applicationSource;
-        jsonForm.applicationContactType = applicationContactType;
-        jsonForm.office = office;
-        if(jsonForm.applicationNotes != null){
-            note = [{id:null,note:jsonForm.applicationNotes}];
-            jsonForm.applicationNotes = note;
+
+        let validated = validationCheck();
+        if(validated){
+            let jsonForm = convertFormToJson($("form").serializeArray());
+            let applicationResult = JSON.parse($('#applicationResult').val());
+            let applicationSource = JSON.parse($('#applicationSource').val());
+            let applicationContactType = JSON.parse($('#applicationContactType').val());
+            let office = JSON.parse($('#office').val());
+            jsonForm.applicationResult = applicationResult;
+            jsonForm.applicationSource = applicationSource;
+            jsonForm.applicationContactType = applicationContactType;
+            jsonForm.office = office;
+            if(jsonForm.applicationNotes != null){
+                note = [{id:null,note:jsonForm.applicationNotes}];
+                jsonForm.applicationNotes = note;
+            }
+            $.ajax({
+                type: "POST",
+                url:"/applications",
+                data: JSON.stringify(jsonForm),
+                contentType: "application/json; charset=utf-8"
+            }).then(function(response){
+                swal({
+                    title: "Success!",
+                    text: "You created a new application",
+                    icon: "success",
+                    timer: 2000
+                }).then(function(){
+                    if((response.applicationResult == undefined) || (response.applicationResult.code != "SCHEDULED")){
+                        window.location.href = "/recruitment/application/application.html";
+                    }else{
+                        createInterviewIfScheduled(response);
+                    }
+                });
+            }).fail(function(err){
+                console.log(err);
+                swal({
+                    title: "Error!",
+                    text: "could not make a new Application!\n" + err.responseJSON.message,
+                    icon: "error"
+                });
+            });
         }
-        debugger;
-        $.ajax({
-            type: "POST",
-            url:"/applications",
-            data: JSON.stringify(jsonForm),
-            contentType: "application/json; charset=utf-8"
-        }).then(function(response){
-            swal({
-                title: "Success!",
-                text: "You created a new application",
-                icon: "success",
-                timer: 2000
-            }).then(function(){
-                debugger;
-                if(response.applicationResult.code != "SCHEDULED"){
-                    window.location.href = "/recruitment/application/application.html";
-                }else{
-                    createInterviewIfScheduled(response);
-                }
-            });
-//            createInterviewIfScheduled(response);
-//            if(response.applicationResult.code != "SCHEDULED"){
-//                window.location.href = "/recruitment/application/application.html";
-//            }
-
-        }).fail(function(err){
-            console.log(err);
-            swal({
-                title: "Error!",
-                text: "could not make a new Application!\n" + err.responseJSON.message,
-                icon: "error"
-            });
-        });
-
     });
 
     function convertFormToJson(form){
@@ -184,6 +179,17 @@ $(document).ready(function () {
             json[j.name] = j.value || null;
         }
         return json;
+    }
+    function validationCheck(){
+        const form = document.querySelector('#app-form');
+        if(form.checkValidity()  === false){
+            event.stopPropagation();
+            form.classList.add('was-validated');
+            return false;
+        }
+
+        form.classList.add('was-validated');
+        return true;
     }
 
     function createInterviewIfScheduled(application){

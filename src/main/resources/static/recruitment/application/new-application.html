@@ -17,15 +17,21 @@
 </head>
 	<div id="load-layout">
 		<main>
-			<form>
+			<form id="app-form" class="needs-validation" novalidate>
 				<div class="form-row">
 					<div class="form-group col-md-3">
 						<label>First Name</label>
-						<input type="text" id="firstName" name="firstName" class="form-control"/>
+						<input type="text" id="firstName" name="firstName" class="form-control" required/>
+						<div class="invalid-feedback">
+							Field is Required!
+						</div>
 					</div>
 					<div class="form-group col-md-3">
 						<label>Last Name</label>
-						<input type="text" id="lastName" name="lastName" class="form-control"/>
+						<input type="text" id="lastName" name="lastName" class="form-control" required/>
+						<div class="invalid-feedback">
+							Field is Required!
+						</div>
 					</div>
 					<div class="form-group col-md-3">
 						<label>Phone Number</label>
@@ -36,7 +42,10 @@
 				<div class="form-row">
 					<div class="form-group col-md-3">
 						<label>Email</label>
-						<input type="email" id="email" name="email" class="form-control" maxlength="255"/>
+						<input type="email" id="email" name="email" class="form-control" maxlength="255" required/>
+						<div class="invalid-feedback">
+							Field is Required!
+						</div>
 					</div>
 					<div class="form-group col-md-3">
 						<label>Date Received</label>
@@ -71,9 +80,12 @@
 				<div class="form-row">
 					<div class="form-group col-sm-12 col-md-3 col-lg-3">
 						<label>Office</label>
-						<select id="office" name="office" class="custom-select">
-							<option value="null"  selected>Choose Office </option>
+						<select id="office" name="office" class="custom-select" required>
+							<option value=""  selected>Choose Office </option>
 						</select>
+						<div class="invalid-feedback">
+							Field is Required!
+						</div>
 					</div>
 					<div class="card col-lg-6">
 						<div class="card-header">
