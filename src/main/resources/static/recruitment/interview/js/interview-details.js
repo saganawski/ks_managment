@@ -224,26 +224,37 @@ $(document).ready(function(){
     $('#load-layout').on("click","a.delete-note",function(event){
         event.preventDefault();
         let url = event.target.href;
-        $.ajax({
-            type:"DELETE",
-            url: url
-        }).then(function(response){
-            swal({
-                 title: "Success!",
-                 text: "You deleted a note",
-                 icon: "success",
-                 timer: 2000
-             }).then(function(){
-                 location.reload();
-             });
-        }).fail(function(error){
-            console.log(error);
-            swal({
-                title: "Error!",
-                text: "Could NOT remove note!\n" + error.responseJSON.message,
-                icon: "error"
-            });
-        });
+        swal({
+           title: "Are you sure?",
+           text: "Once deleted, you will not be able to recover this note!",
+           icon: "warning",
+           buttons: true,
+           dangerMode: true,
+         })
+         .then((willDelete) => {
+            if(willDelete){
+                $.ajax({
+                    type:"DELETE",
+                    url: url
+                }).then(function(response){
+                    swal({
+                         title: "Success!",
+                         text: "You deleted a note",
+                         icon: "success",
+                         timer: 2000
+                     }).then(function(){
+                         location.reload();
+                     });
+                }).fail(function(error){
+                    console.log(error);
+                    swal({
+                        title: "Error!",
+                        text: "Could NOT remove note!\n" + error.responseJSON.message,
+                        icon: "error"
+                    });
+                });
+            }
+         });
      })
 
      $('#load-layout').on('click','#deleteInterview', function(event){
@@ -257,7 +268,9 @@ $(document).ready(function(){
            dangerMode: true,
          })
          .then((willDelete) => {
-            deleteInterview(interviewId);
+            if(willDelete){
+                deleteInterview(interviewId);
+            }
          });
      });
 
