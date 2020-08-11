@@ -22,29 +22,31 @@
     <!--    Moment pluggin-->
     <script src="/pluggins/moment/moment.min.js"></script>
 
+    <link rel="stylesheet" href="/common/style.css">
     <script src="/recruitment/interview/js/interview.js"></script>
 </head>
 <body>
-    <div class="text-center">
-        <div id="initialLoad" class="spinner-border" role="status">
-            <span class="sr-only">Loading...</span>
-        </div>
+    <div id="load-layout">
+        <main>
+            <div class="text-center">
+                <div id="initialLoad" class="spinner-border" role="status">
+                    <span class="sr-only">Loading...</span>
+                </div>
+            </div>
+                <table id="interview-table" class="display">
+                    <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Interviewee</th>
+                        <th>Scheduled Time</th>
+                        <th>Interviewers</th>
+                        <th>Created Date</th>
+                        <th>Actions</th>
+                    </tr>
+                    </thead>
+                </table>
+        </main>
     </div>
-    <div class="container">
-        <table id="interview-table" class="display">
-            <thead>
-            <tr>
-                <th>Id</th>
-                <th>Interviewee</th>
-                <th>Scheduled Time</th>
-                <th>Interviewers</th>
-                <th>Created Date</th>
-                <th>Actions</th>
-            </tr>
-            </thead>
-        </table>
-    </div>
-
 
 </body>
 </html>
