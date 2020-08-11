@@ -1,6 +1,12 @@
 $(document).ready(function(){
     vm = this;
     vm.interviewDto = {};
+    const main = $('#load-layout').html();
+    $('#load-layout').load("/common/_layout.html", function(responseTxt, statusTxt, xhr){
+        if(statusTxt == "success"){
+            $('#load-layout').append(main);
+        }
+    });
 
     let searchParams = new URLSearchParams(window.location.search);
     if(searchParams.has('interviewId')){
@@ -104,7 +110,7 @@ $(document).ready(function(){
 
 
 
-    $('#editInterview').on('click', function(event){
+    $('#load-layout').on('click','#editInterview', function(event){
         event.preventDefault();
         let jsonForm = convertFormToJson($("form").serializeArray());
         let interviewConfirmationType = JSON.parse($('#interviewConfirmationType').val());
@@ -143,6 +149,8 @@ $(document).ready(function(){
                 if(interview.interviewResult.code != undefined){
                     createTrainingIfHired(response);
                 }
+            }else{
+                location.reload();
             }
         }).fail(function(err){
             console.log(err);
@@ -208,7 +216,7 @@ $(document).ready(function(){
         });
     }
 
-    $('#interview-note-body').on("click","a.delete-note",function(event){
+    $('#load-layout').on("click","a.delete-note",function(event){
         event.preventDefault();
         let url = event.target.href;
         $.ajax({
@@ -233,7 +241,7 @@ $(document).ready(function(){
         });
      })
 
-     $('#deleteInterview').on('click', function(event){
+     $('#load-layout').on('click','#deleteInterview', function(event){
          event.preventDefault();
          let interviewId = $('#interview-id').val();
          swal({
@@ -271,7 +279,7 @@ $(document).ready(function(){
          });
      }
 
-     $('#showApplication').on('click', function(event){
+     $('#load-layout').on('click', '#showApplication', function(event){
          event.preventDefault();
          window.location.href= "/recruitment/application/application-edit.html?applicationId=" + vm.interviewDto.application.id;
       });
