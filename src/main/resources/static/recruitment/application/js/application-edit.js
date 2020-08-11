@@ -1,5 +1,10 @@
 $(document).ready(function () {
-	// TODO: something to load side bar and nav
+	const main = $('#load-layout').html();
+        $('#load-layout').load("/common/_layout.html", function(responseTxt, statusTxt, xhr){
+            if(statusTxt == "success"){
+                $('#load-layout').append(main);
+            }
+        });
 	// TODO: break up to sep promises use promise all?
 	const setSelectOptions = new Promise(function(resolve,reject){
         /*
