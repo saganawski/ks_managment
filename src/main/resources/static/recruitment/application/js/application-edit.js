@@ -195,51 +195,66 @@ $(document).ready(function () {
         },300);
     })
 
-    $('#editApplication').on('click', function(event){
+    $('#load-layout').on('click', '#editApplication', function(event){
         event.preventDefault();
-        let jsonForm = convertFormToJson($("form").serializeArray());
-        let applicationResult = JSON.parse($('#applicationResult').val());
-        let applicationSource = JSON.parse($('#applicationSource').val());
-        let applicationContactType = JSON.parse($('#applicationContactType').val());
-        let office = JSON.parse($('#office').val());
-        jsonForm.applicationResult = applicationResult;
-        jsonForm.applicationSource = applicationSource;
-        jsonForm.applicationContactType = applicationContactType;
-        jsonForm.office = office;
-        if(jsonForm.applicationNotes != null){
-            note = [{id:null,note:jsonForm.applicationNotes}];
-            jsonForm.applicationNotes = note;
+        let validated = validationCheck();
+        if(validated){
+            let jsonForm = convertFormToJson($("form").serializeArray());
+            let applicationResult = JSON.parse($('#applicationResult').val());
+            let applicationSource = JSON.parse($('#applicationSource').val());
+            let applicationContactType = JSON.parse($('#applicationContactType').val());
+            let office = JSON.parse($('#office').val());
+            jsonForm.applicationResult = applicationResult;
+            jsonForm.applicationSource = applicationSource;
+            jsonForm.applicationContactType = applicationContactType;
+            jsonForm.office = office;
+            if(jsonForm.applicationNotes != null){
+                note = [{id:null,note:jsonForm.applicationNotes}];
+                jsonForm.applicationNotes = note;
+            }
+
+            $.ajax({
+                type: "PUT",
+                url:"/applications/" + jsonForm.id,
+                data: JSON.stringify(jsonForm),
+                contentType: "application/json; charset=utf-8"
+            }).then(function(response){
+                swal({
+                    title: "Success!",
+                    text: "You updated an application",
+                    icon: "success",
+                    timer: 2000
+                }).then(function(){
+                    if(response.applicationResult.code != "SCHEDULED"){
+                        location.reload();
+                    }else{
+                        createInterviewIfScheduled(response);
+                    }
+                });
+
+            }).fail(function(err){
+                console.log(err);
+                swal({
+                    title: "Error!",
+                    text: "Could not make new application\n" + err.responseJSON.message,
+                    icon: "error"
+                });
+
+            });
+        }
+    });
+
+    function validationCheck(){
+        const form = document.querySelector('#app-form');
+        if(form.checkValidity()  === false){
+            event.stopPropagation();
+            form.classList.add('was-validated');
+            return false;
         }
 
-        $.ajax({
-            type: "PUT",
-            url:"/applications/" + jsonForm.id,
-            data: JSON.stringify(jsonForm),
-            contentType: "application/json; charset=utf-8"
-        }).then(function(response){
-            swal({
-                title: "Success!",
-                text: "You updated an application",
-                icon: "success",
-                timer: 2000
-            }).then(function(){
-                if(response.applicationResult.code != "SCHEDULED"){
-                    location.reload();
-                }else{
-                    createInterviewIfScheduled(response);
-                }
-            });
-
-        }).fail(function(err){
-            console.log(err);
-            swal({
-                title: "Error!",
-                text: "Could not make new application\n" + err.responseJSON.message,
-                icon: "error"
-            });
-
-        });
-    });
+        form.classList.add('was-validated');
+        return true;
+    }
 
     function convertFormToJson(form){
         var json = {}
@@ -249,7 +264,7 @@ $(document).ready(function () {
         return json;
     }
 
-     $('#deleteApplication').on('click', function(event){
+     $('#load-layout').on('click','#deleteApplication', function(event){
             event.preventDefault();
             let applicationId = $('#id').val();
             swal({
@@ -260,7 +275,9 @@ $(document).ready(function () {
                dangerMode: true,
              })
              .then((willDelete) => {
-                deleteApplication(applicationId);
+                if(willDelete){
+                    deleteApplication(applicationId);
+                }
              });
         });
 
@@ -287,22 +304,33 @@ $(document).ready(function () {
             });
         }
 
-     $('#note-body').on("click","a.delete-note",function(event){
+     $('#load-layout').on("click","a.delete-note",function(event){
         event.preventDefault();
         let url = event.target.href;
-        $.ajax({
-            type:"DELETE",
-            url: url
-        }).then(function(response){
-            location.reload();
-        }).fail(function(error){
-            console.log(error);
-            swal({
-                title: "Error!",
-                text: "Could NOT remove note! \n" + error.responseJSON.message,
-                icon: "error"
-            });
-        });
+         swal({
+           title: "Are you sure?",
+           text: "Once deleted, you will not be able to recover this Note!",
+           icon: "warning",
+           buttons: true,
+           dangerMode: true,
+         })
+         .then((willDelete) => {
+            if(willDelete){
+                $.ajax({
+                    type:"DELETE",
+                    url: url
+                }).then(function(response){
+                    location.reload();
+                }).fail(function(error){
+                    console.log(error);
+                    swal({
+                        title: "Error!",
+                        text: "Could NOT remove note! \n" + error.responseJSON.message,
+                        icon: "error"
+                    });
+                });
+            }
+         });
      });
      const checkForInterview = (applicationId) =>{
         return new Promise((resolve,reject) =>{
