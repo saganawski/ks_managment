@@ -107,6 +107,25 @@ $(document).ready(function(){
         }
     }
 
+    const checkForTraining = (interviewId, applicationId) =>{
+        return new Promise((resolve,reject)=>{
+             $.ajax({
+                type:"GET",
+                url: "/trainings/applications/"+ applicationId +"/interviews/" + interviewId
+            }).then(function(response){
+                return resolve(response);
+            }).fail(function(error){
+                console.log(error);
+                swal({
+                    title: "Error!",
+                    text: "Something went wrong when checking if an training already exists! \n" + error.responseJSON.message,
+                    icon: "error"
+                });
+                return reject("failure to get employee status");
+            });
+        })
+    }
+
     $('#load-layout').on('click','#editInterview', function(event){
         event.preventDefault();
         let jsonForm = convertFormToJson($("form").serializeArray());
@@ -169,49 +188,38 @@ $(document).ready(function(){
         }
         function createTrainingIfHired(interview){
              let scheduleTraining= interview.interviewResult.code == "HIRED";
-             let hasTraining = checkForTraining(interview.id, interview.application.id);
 
-             if(scheduleTraining && !hasTraining){
-                let training = {interview: interview, application: interview.application};
-                $.ajax({
-                    type:"POST",
-                    url: "/trainings",
-                    data: JSON.stringify(training),
-                    contentType: "application/json; charset=utf-8"
-                }).then(function(response){
-                    swal({
-                         title: "Success!",
-                         text: "You created an training",
-                         icon: "success",
-                         timer: 2000
-                     }).then(function(){
-                        window.location.href = "/recruitment/training/training-details.html" +"?trainingId=" + response.id;
-                     })
-                }).fail(function(error){
-                    console.log(error);
-                    swal({
-                        title: "Error!",
-                        text: "Something went wrong when creating a training for interview!\n" + error.responseJSON.message,
-                        icon: "error"
+             checkForTraining(interview.id,interview.application.id).then(hasTraining =>{
+                 if(scheduleTraining && !hasTraining){
+                    let training = {interview: interview, application: interview.application};
+                    $.ajax({
+                        type:"POST",
+                        url: "/trainings",
+                        data: JSON.stringify(training),
+                        contentType: "application/json; charset=utf-8"
+                    }).then(function(response){
+                        swal({
+                             title: "Success!",
+                             text: "You created an training",
+                             icon: "success",
+                             timer: 2000
+                         }).then(function(){
+                            window.location.href = "/recruitment/training/training-details.html" +"?trainingId=" + response.id;
+                         })
+                    }).fail(function(error){
+                        console.log(error);
+                        swal({
+                            title: "Error!",
+                            text: "Something went wrong when creating a training for interview!\n" + error.responseJSON.message,
+                            icon: "error"
+                        });
                     });
-                });
-             }
+                 }else{
+                    location.reload();
+                 }
+             });
+
          }
-    function checkForTraining(interviewId,applicationId){
-        return $.ajax({
-            type:"GET",
-            url: "/trainings/applications/"+ applicationId +"/interviews/" + interviewId
-        }).then(function(response){
-            return response;
-        }).fail(function(error){
-            console.log(error);
-            swal({
-                title: "Error!",
-                text: "Something went wrong when creating a training for interview!\n" + error.responseJSON.message,
-                icon: "error"
-            });
-        });
-    }
 
     $('#load-layout').on("click","a.delete-note",function(event){
         event.preventDefault();
