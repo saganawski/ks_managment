@@ -15,68 +15,73 @@
 <link rel="stylesheet" href="/pluggins/multiselect/css/bootstrap-multiselect.css" type="text/css">
 <script type="text/javascript" src="/pluggins/multiselect/js/bootstrap-multiselect.js"></script>
 
+<link rel="stylesheet" href="/common/style.css">
 <script src="/user/js/new-user.js"></script>
 </head>
 <body>
-	<div class="text-center">
-		<div class="spinner-border" role="status">
-			<span class="sr-only">Loading...</span>
-		</div>
-	</div>
-	<div class="container">
-		<form id="user-form" class="needs-validation" novalidate>
-			<div class="form-row">
-				<div class="form-group col-md-3">
-					<label>Username</label>
-					<input type="text" id="username" name="username" class="form-control" required/>
-					<div class="invalid-feedback">
-						Field is Required!
-					</div>
-				</div>
-				<div class="form-group col-md-3">
-					<label>Is Active</label>
-					<select id="isActive" name="isActive" class="custom-select" required>
-						<option value="true">Yes</option>
-						<option value="false">No</option>
-					</select>
-					<div class="invalid-feedback">
-						Must choose Yes or No!
-					</div>
-				</div>
-				<div class="form-group col-md-3">
-					<label>Roles</label>
-<!--					TODO: switch mutlpli-->
-					<select id="roles" name="roles" multiple="multiple" required>
-						<option value="ADMIN">ADMIN</option>
-						<option value="MANAGER">MANAGER</option>
-						<option value="CANVASSER">CANVASSER</option>
-					</select>
-					<div class="invalid-feedback">
-						Must select role!
-					</div>
-				</div>
-			</div>
-			<div class="form-row">
-				<div class="form-group col-md-3">
-					<label>Password</label>
-					<input type="password" id="password" name="password" class="form-control" required/>
-					<div class="invalid-feedback">
-						Field is Required!
-					</div>
-				</div>
-				<div class="form-group col-md-3">
-					<label>Confirm Password</label>
-					<input type="password" id="confirmPassword" name="confirmPassword" class="form-control" required/>
-					<div class="invalid-feedback">
-						Field is Required!
-					</div>
-				</div>
+	<div id="load-layout">
+		<main>
 
+			<div class="text-center">
+				<div class="spinner-border" role="status">
+					<span class="sr-only">Loading...</span>
+				</div>
 			</div>
-			<div>
-				<button id="createUser" value="send" type="submit" class="btn btn-primary">Create User</button>
-			</div>
-		</form>
+			<form id="user-form" class="needs-validation" novalidate>
+				<div class="form-row">
+					<div class="form-group col-md-3">
+						<label>Username</label>
+						<input type="text" id="username" name="username" class="form-control" required/>
+						<div class="invalid-feedback">
+							Field is Required!
+						</div>
+					</div>
+					<div class="form-group col-md-3">
+						<label>Is Active</label>
+						<select id="isActive" name="isActive" class="custom-select" required>
+							<option value="true">Yes</option>
+							<option value="false">No</option>
+						</select>
+						<div class="invalid-feedback">
+							Must choose Yes or No!
+						</div>
+					</div>
+					<div class="form-group col-md-3">
+						<label>Roles</label>
+						<!--					TODO: switch mutlpli-->
+						<select id="roles" name="roles" multiple="multiple" required>
+							<option value="ADMIN">ADMIN</option>
+							<option value="MANAGER">MANAGER</option>
+							<option value="CANVASSER">CANVASSER</option>
+						</select>
+						<div class="invalid-feedback">
+							Must select role!
+						</div>
+					</div>
+				</div>
+				<div class="form-row">
+					<div class="form-group col-md-3">
+						<label>Password</label>
+						<input type="password" id="password" name="password" class="form-control" required/>
+						<div class="invalid-feedback">
+							Field is Required!
+						</div>
+					</div>
+					<div class="form-group col-md-3">
+						<label>Confirm Password</label>
+						<input type="password" id="confirmPassword" name="confirmPassword" class="form-control" required/>
+						<div class="invalid-feedback">
+							Field is Required!
+						</div>
+					</div>
+
+				</div>
+				<div>
+					<button id="createUser" value="send" type="submit" class="btn btn-primary">Create User</button>
+				</div>
+			</form>
+		</main>
+
 	</div>
 
 </body>

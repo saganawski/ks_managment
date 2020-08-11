@@ -1,41 +1,47 @@
 $(document).ready(function () {
-	// TODO: something to load side bar and nav
-	$("div").removeClass("spinner-border");
-	$('#roles').multiselect();
+	const main = $('#load-layout').html();
+    $('#load-layout').load("/common/_layout.html", function(responseTxt, statusTxt, xhr){
+        if(statusTxt == "success"){
+            $('#load-layout').append(main);
+            $("div").removeClass("spinner-border");
 
-	const passwordForm = document.querySelector('#user-form');
-	passwordForm.addEventListener('submit',function(event){
-	    let validated = validationCheck();
-	    if(validated){
-            const roles = $('#roles').val().toString();
-            let jsonForm = convertFormToJson($("#user-form").serializeArray());
-            jsonForm.roles = roles;
-            $.ajax({
-                type: "POST",
-                url:"/users",
-                data: JSON.stringify(jsonForm),
-                contentType: "application/json; charset=utf-8"
-            }).then(function(response){
-                swal({
-                    title: "Success!",
-                    text: "You created a user",
-                    icon: "success",
-                    timer: 2000
-                }).then(function(){
-                    window.location.href = "/user/user.html";
-                });
-            }).fail(function(err){
-                console.log(err);
-                swal({
-                    title: "Error!",
-                    text: "Failure to create user! \n" + err.responseJSON.message,
-                    icon: "error"
-                });
+            $('#roles').multiselect();
+
+            const passwordForm = document.querySelector('#user-form');
+            passwordForm.addEventListener('submit',function(event){
+                let validated = validationCheck(passwordForm);
+                if(validated){
+                    const roles = $('#roles').val().toString();
+                    let jsonForm = convertFormToJson($("#user-form").serializeArray());
+                    jsonForm.roles = roles;
+                    $.ajax({
+                        type: "POST",
+                        url:"/users",
+                        data: JSON.stringify(jsonForm),
+                        contentType: "application/json; charset=utf-8"
+                    }).then(function(response){
+                        swal({
+                            title: "Success!",
+                            text: "You created a user",
+                            icon: "success",
+                            timer: 2000
+                        }).then(function(){
+                            window.location.href = "/user/user.html";
+                        });
+                    }).fail(function(err){
+                        console.log(err);
+                        swal({
+                            title: "Error!",
+                            text: "Failure to create user! \n" + err.responseJSON.message,
+                            icon: "error"
+                        });
+                    });
+                }
             });
-	    }
-	});
+        }
+    });
 
-	function validationCheck(){
+	function validationCheck(form){
 	    event.preventDefault();
 	    const roles = $('#roles').val().toString();
 	    if(roles == null || roles === ""){
@@ -44,12 +50,12 @@ $(document).ready(function () {
                 text: "Must Select at least one role!",
                 icon: "error"
             })
-            passwordForm.classList.add('was-validated');
+            form.classList.add('was-validated');
 	        return false;
 	    }
-        if(passwordForm.checkValidity() === false){
+        if(form.checkValidity() === false){
             event.stopPropagation();
-            passwordForm.classList.add('was-validated');
+            form.classList.add('was-validated');
             return false;
         }
         const password = document.getElementById('password');
@@ -58,10 +64,10 @@ $(document).ready(function () {
             event.stopPropagation();
             setErrorFor(password, "Passwords Must match");
             setErrorFor(confirmPassword, "Passwords Must match");
-            passwordForm.classList.add('was-validated');
+           form.classList.add('was-validated');
             return false;
         }
-        passwordForm.classList.add('was-validated');
+        form.classList.add('was-validated');
         return true;
 	}
 
