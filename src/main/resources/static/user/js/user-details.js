@@ -4,7 +4,13 @@ $(document).ready(function(){
     vm.employees = {};
     vm.linkedEmployee = {};
 
-    $('#roles').multiselect();
+    const main = $('#load-layout').html();
+    $('#load-layout').load("/common/_layout.html", function(responseTxt, statusTxt, xhr){
+        if(statusTxt == "success"){
+            $('#load-layout').append(main);
+            $('#roles').multiselect();
+        }
+    });
 
     let searchParams = new URLSearchParams(window.location.search);
     if(searchParams.has('userId')){
@@ -37,7 +43,7 @@ $(document).ready(function(){
        $("#initialLoad").removeClass("spinner-border");
     }
 
-    $('#updateUser').on('click', function(event){
+    $('#load-layout').on('click', '#updateUser', function(event){
         event.preventDefault();
         const roles = $('#roles').val().toString();
 
@@ -119,7 +125,7 @@ $(document).ready(function(){
         }
     });
 
-    $('#linkEmployee').on('click',function(event){
+    $('#load-layout').on('click', '#linkEmployee', function(event){
         event.preventDefault();
         /*TODO: think another way of linking to employee. CONCERN: employees can easily get too big
         Maybe do a keyUpSearch?*/
@@ -210,7 +216,7 @@ $(document).ready(function(){
         $('#position').val(employee.position.name);
     }
 
-    $('#details').on('click',function(event){
+    $('#load-layout').on('click', '#details',function(event){
         event.preventDefault();
         if(vm.linkedEmployee.id != undefined){
             window.location.href = "/employee/employee-details.html?employeeId="+ vm.linkedEmployee.id;
