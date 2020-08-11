@@ -5,6 +5,13 @@ $(document).ready(function(){
     $('#load-layout').load("/common/_layout.html", function(responseTxt, statusTxt, xhr){
         if(statusTxt == "success"){
             $('#load-layout').append(main);
+            $('#scheduledTime').daterangepicker({
+                singleDatePicker: true,
+                timePicker: true,
+                locale: {
+                  format: 'M/DD/YYYY hh:mm A'
+                }
+            });
         }
     });
 
@@ -99,16 +106,6 @@ $(document).ready(function(){
 
         }
     }
-
-    $('#scheduledTime').daterangepicker({
-        singleDatePicker: true,
-        timePicker: true,
-        locale: {
-          format: 'M/DD/YYYY hh:mm A'
-        }
-    });
-
-
 
     $('#load-layout').on('click','#editInterview', function(event){
         event.preventDefault();
