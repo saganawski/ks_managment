@@ -50,8 +50,8 @@ $(document).ready(function(){
            let message = note.note;
            let val = JSON.stringify(note);
 
-           $("<textarea name='trainingNotes' class='form-control' value='"+ val + "' readonly>"+ message + "</textarea> <a href='/trainings/"+
-               training.id+"/notes/"+note.id +"' class='delete-note btn btn-danger'>Delete Note</a>").prependTo('#note-body');
+           $("<textarea name='trainingNotes' class='form-control' value='"+ val + "' readonly>"+ message + "</textarea> <div class='text-left'><a href='/trainings/"+
+               training.id+"/notes/"+note.id +"' class='delete-note btn btn-danger'>Delete Note</a></div>").prependTo('#note-body');
        }
 
        $("div").removeClass("spinner-border");
