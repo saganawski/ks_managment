@@ -28,58 +28,75 @@
                     <span class="sr-only">Loading...</span>
                 </div>
             </div>
-            <form id="interview-form">
-                <div class="form-group col-md-3 col-lg-9">
-                    <label>ID</label>
-                    <input type="text" id="id"  class="form-control" name="id" readonly />
+            <div class="card col-lg-10" style="margin:15px;">
+                <div class="card-header">
+                    User Details
                 </div>
-                <div class="form-row">
-                    <div class="form-group col-md-3">
-                        <label>Username</label>
-                        <input type="text" id="username" name="username" class="form-control"/>
+                <div class="card-body">
+                    <div class="container">
+                        <form id="interview-form">
+                            <div class="form-group col-md-3 col-lg-9">
+                                <label>ID</label>
+                                <input type="text" id="id"  class="form-control" name="id" readonly />
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group col-md-3">
+                                    <label>Username</label>
+                                    <input type="text" id="username" name="username" class="form-control"/>
+                                </div>
+                                <div class="form-group col-md-3">
+                                    <label>Is Active</label>
+                                    <select id="isActive" name="isActive" class="custom-select">
+                                        <option value="true">Yes</option>
+                                        <option value="false">No</option>
+                                    </select>
+                                </div>
+                                <div class="form-group col-md-3">
+                                    <label>Roles</label>
+                                    <select id="roles" name="roles"  class="form-control" multiple="multiple" >
+                                        <option value="ADMIN">ADMIN</option>
+                                        <option value="MANAGER">MANAGER</option>
+                                        <option value="CANVASSER">CANVASSER</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div>
+                                <button id="updateUser" value="send" type="submit" class="btn btn-primary">Update user</button>
+                                <button id="linkEmployee" class="btn btn-secondary" data-toggle="modal" data-target="#employeeModal">Link to Employee</button>
+                            </div>
+                        </form>
+                        <button id="updatePassword" class="btn btn-danger" data-toggle="modal" data-target="#passwordModal" style="margin:5px;">Update password</button>
                     </div>
-                    <div class="form-group col-md-3">
-                        <label>Is Active</label>
-                        <select id="isActive" name="isActive" class="custom-select">
-                            <option value="true">Yes</option>
-                            <option value="false">No</option>
-                        </select>
+                </div>
+            </div>
+
+            <div class="card col-lg-10" style="margin:15px;">
+                <div class="card-header">
+                    Currently linked to employee below
+                </div>
+                <div class="card-body">
+                    <div class="container">
+                        <div class="form-row">
+                            <div class="form-group col-md-3">
+                                <label>FirstName</label>
+                                <input type="text" id="firstName" name="firstName" class="form-control" readonly/>
+                            </div>
+                            <div class="form-group col-md-3">
+                                <label>LastName</label>
+                                <input id="lastName" name="lastName" class="form-control" readonly/>
+                            </div>
+                            <div class="form-group col-md-3">
+                                <label>Email</label>
+                                <input id="email" name="email" class="form-control" readonly/>
+                            </div>
+                            <div class="form-group col-md-3">
+                                <label>Position</label>
+                                <input id="position" name="position" class="form-control" readonly/>
+                            </div>
+                            <button id="details" class="btn btn-warning">Employee Details</button>
+                        </div>
                     </div>
-                    <div class="form-group col-md-3">
-                        <label>Roles</label>
-                        <select id="roles" name="roles"  class="form-control" multiple="multiple" >
-                            <option value="ADMIN">ADMIN</option>
-                            <option value="MANAGER">MANAGER</option>
-                            <option value="CANVASSER">CANVASSER</option>
-                        </select>
-                    </div>
                 </div>
-                <div>
-                    <button id="updateUser" value="send" type="submit" class="btn btn-primary">Update user</button>
-                </div>
-            </form>
-            <button id="updatePassword" class="btn btn-danger" data-toggle="modal" data-target="#passwordModal" style="margin:5px;">Update password</button>
-            <button id="linkEmployee" class="btn btn-secondary" data-toggle="modal" data-target="#employeeModal">Link to Employee</button>
-            <br>
-            <h5>Currently linked to employee below</h5>
-            <div class="form-row">
-                <div class="form-group col-md-3">
-                    <label>FirstName</label>
-                    <input type="text" id="firstName" name="firstName" class="form-control" readonly/>
-                </div>
-                <div class="form-group col-md-3">
-                    <label>LastName</label>
-                    <input id="lastName" name="lastName" class="form-control" readonly/>
-                </div>
-                <div class="form-group col-md-3">
-                    <label>Email</label>
-                    <input id="email" name="email" class="form-control" readonly/>
-                </div>
-                <div class="form-group col-md-3">
-                    <label>Position</label>
-                    <input id="position" name="position" class="form-control" readonly/>
-                </div>
-                <button id="details" class="btn btn-warning">Employee Details</button>
             </div>
 
         </main>
