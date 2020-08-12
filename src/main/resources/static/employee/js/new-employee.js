@@ -50,16 +50,40 @@ $(document).ready(function () {
 
 	$('#load-layout').on('click', '#newEmpolyee', function(event){
 		event.preventDefault();
-    	var formJson = convertFormToJson($("form").serializeArray());
-    	var selectedOffices = $('#officeSelect').val();
-    	formJson.officeSelections = selectedOffices;
-    	//Send To controller
-    	setUpNewEmployee(formJson)
-    	    .then(results => createNewEmployee(results))
-    	    .catch((err) => console.error(err));
-    	
+		let validated = validationCheck();
+		if(validated){
+            var formJson = convertFormToJson($("form").serializeArray());
+            var selectedOffices = $('#officeSelect').val();
+            formJson.officeSelections = selectedOffices;
+            //Send To controller
+            setUpNewEmployee(formJson)
+                .then(results => createNewEmployee(results))
+                .catch((err) => console.error(err));
+		}
+
 	});
-	
+
+	function validationCheck(){
+	    const offices = $('#officeSelect').val().toString();
+        if(offices == null || offices === ""){
+            swal({
+                title: "Error!",
+                text: "Must Select at least one office!",
+                icon: "error"
+            })
+            form.classList.add('was-validated');
+            return false;
+        }
+	    const form = document.querySelector('#employee-form');
+        if(form.checkValidity()  === false){
+            event.stopPropagation();
+            form.classList.add('was-validated');
+            return false;
+        }
+
+        form.classList.add('was-validated');
+        return true;
+	}
 	async function setUpNewEmployee(formJson){
 		let position = await getPositionByName(formJson.position);
 		formJson.position = position;
