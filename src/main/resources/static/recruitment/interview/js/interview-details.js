@@ -92,17 +92,15 @@ $(document).ready(function(){
     }
 
     function setInterviewersOptions(options, currentInterviewers){
-        let interviewerOptionsData = [];
             for(interviewer of options){
                 let name = interviewer.firstName + " " + interviewer.lastName;
-                option ={label:name, value:interviewer.id, name:name };
-                interviewerOptionsData.push(option);
+                $('#interviewDirectors').append("<option value='"+ interviewer.id + "'>"+ name +"</option>");
             }
-            $('#interviewDirectors').multiselect('dataprovider', interviewerOptionsData);
+            $('#interviewDirectors').selectpicker('refresh');
 
         if(currentInterviewers != null){
             const interviewersId = currentInterviewers.map(interviewer => interviewer.id);
-            $('#interviewDirectors').multiselect('select', interviewersId);
+            $('#interviewDirectors').selectpicker('val', interviewersId);
 
         }
     }
