@@ -84,7 +84,6 @@ $(document).ready(function() {
            for(office of offices){
                officeIds.push(office.id);
            }
-//           $('#officeSelect').multiselect('select', officeIds);
            $('#officeSelect').selectpicker('val', officeIds);
            return(true);
        }
