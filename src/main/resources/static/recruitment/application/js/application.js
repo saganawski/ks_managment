@@ -18,6 +18,7 @@ $(document).ready(function(){
                     dataSrc: ''
                 },
                 columns :[
+                    {"data" : "id"},
                     {"data" : "firstName"},
                     {"data" : "lastName"},
                     {"data" : "phoneNumber",
