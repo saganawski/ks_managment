@@ -100,12 +100,37 @@ $(document).ready(function() {
 
     $('#load-layout').on('click','#editEmployee', function(event){
         event.preventDefault();
-        let formJson = convertFormToJson($("form").serializeArray());
-        let selectedOffices = $('#officeSelect').val();
-        formJson.officeSelection = selectedOffices;
+        let validated = validationCheck();
+        if(validated){
+            let formJson = convertFormToJson($("form").serializeArray());
+            let selectedOffices = $('#officeSelect').val();
+            formJson.officeSelection = selectedOffices;
 
-        sendEmployeeToController(formJson);
+            sendEmployeeToController(formJson);
+        }
     });
+
+    function validationCheck(){
+        const offices = $('#officeSelect').val().toString();
+        if(offices == null || offices === ""){
+            swal({
+                title: "Error!",
+                text: "Must Select at least one office!",
+                icon: "error"
+            })
+            form.classList.add('was-validated');
+            return false;
+        }
+        const form = document.querySelector('#employee-form');
+        if(form.checkValidity()  === false){
+            event.stopPropagation();
+            form.classList.add('was-validated');
+            return false;
+        }
+
+        form.classList.add('was-validated');
+        return true;
+    }
 
     function convertFormToJson(form){
         var json = {}

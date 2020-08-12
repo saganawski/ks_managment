@@ -84,6 +84,7 @@ $(document).ready(function () {
         form.classList.add('was-validated');
         return true;
 	}
+
 	async function setUpNewEmployee(formJson){
 		let position = await getPositionByName(formJson.position);
 		formJson.position = position;
