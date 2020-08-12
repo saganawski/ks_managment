@@ -8,7 +8,7 @@ $(document).ready(function(){
     $('#load-layout').load("/common/_layout.html", function(responseTxt, statusTxt, xhr){
         if(statusTxt == "success"){
             $('#load-layout').append(main);
-            $('#roles').multiselect();
+            $('#roles').selectpicker('refresh');
         }
     });
 
@@ -38,12 +38,13 @@ $(document).ready(function(){
 
        const rolesArray = user.roles.split(',');
 
-       $('#roles').multiselect('select', rolesArray);
+       $('#roles').selectpicker('val', rolesArray);
 
        $("#initialLoad").removeClass("spinner-border");
     }
 
     $('#load-layout').on('click', '#updateUser', function(event){
+        //TODO: form validation
         event.preventDefault();
         const roles = $('#roles').val().toString();
 
@@ -85,7 +86,6 @@ $(document).ready(function(){
         return json;
     }
 
-
     const passwordForm = document.querySelector('#passwordForm');
     passwordForm.addEventListener('submit', function(event){
         event.preventDefault();
@@ -102,7 +102,6 @@ $(document).ready(function(){
         passwordForm.classList.add('was-validated');
 
         if(passwordForm.checkValidity() === true && password.val() == confirmPassword.val()){
-            console.log("lets update boy");
             let userDTO = {id: vm.user.id, username: vm.user.username, password: password.val()};
             $.ajax({
                 type: "PUT",
@@ -154,11 +153,13 @@ $(document).ready(function(){
             $('#employeeSelect').append("<option value='"+JSON.stringify(employee)+"'>"+ optionName +"</option>");
         }
         $("div").removeClass("spinner-border");
+        $('#employeeSelect').selectpicker('refresh');
     }
 
     $('#employeeFormSubmit').on('click',function(event){
         event.preventDefault();
         let selectedEmployee = JSON.parse($("#employeeSelect").val());
+        //TODO: validation
         if(selectedEmployee == null || selectedEmployee == "null" ){
             swal("Error:", "Must select employee!","error");
         }
