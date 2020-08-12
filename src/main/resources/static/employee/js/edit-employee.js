@@ -98,7 +98,7 @@ $(document).ready(function() {
                 })
         })
 
-    $('#editEmpolyee').on('click', function(event){
+    $('#load-layout').on('click','#editEmployee', function(event){
         event.preventDefault();
         let formJson = convertFormToJson($("form").serializeArray());
         let selectedOffices = $('#officeSelect').val();
@@ -138,7 +138,7 @@ $(document).ready(function() {
         });
     }
 
-    $('#deleteEmpolyee').on('click', function(event){
+    $('#load-layout').on('click', '#deleteEmployee', function(event){
         event.preventDefault();
         let employeeId = $('#id').val();
         swal({
@@ -149,7 +149,9 @@ $(document).ready(function() {
            dangerMode: true,
          })
          .then((willDelete) => {
-            deleteEmployee(employeeId);
+            if(willDelete){
+                deleteEmployee(employeeId);
+            }
          });
     });
 
