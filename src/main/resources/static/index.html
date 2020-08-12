@@ -16,16 +16,75 @@
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.20/css/jquery.dataTables.css">
 <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.js"></script>
 <!-- Font Awesome -->
-<script src="https://kit.fontawesome.com/3154decd90.js" crossorigin="anonymous"></script>
+<!--<script src="https://kit.fontawesome.com/3154decd90.js" crossorigin="anonymous"></script>-->
 	<!--    Moment pluggin-->
-	<script src="/pluggins/moment/moment.min.js"></script>
+<script src="/pluggins/moment/moment.min.js"></script>
 <!-- Our Custom CSS -->
-<link rel="stylesheet" href="style.css">
-<script src="sidebar.js"></script>
+<link rel="stylesheet" href="/common/style.css">
+<script src="index.js"></script>
 <title>KS Management</title>
 </head>
 <body>
-	<div id="nav"></div>
+	<div id="load-layout">
+		<main>
+			<div class="card col-lg-10" style="margin:15px;">
+				<div class="card-header">
+					Today's Interviews
+				</div>
+				<div class="card-body">
+					<div class="text-center">
+						<div id="interviewLoad" class="spinner-border" role="status">
+							<span class="sr-only">Loading...</span>
+						</div>
+					</div>
+				<div class="container">
+					<table id="interview-table" class="display">
+						<thead>
+						<tr>
+							<th>Id</th>
+							<th>Interviewee</th>
+							<th>Scheduled Time</th>
+							<th>Interviewers</th>
+							<th>Created Date</th>
+							<th>Actions</th>
+						</tr>
+						</thead>
+					</table>
+				</div>
+				</div>
+			</div>
+
+			<div class="card col-lg-10" style="margin:15px;">
+				<div class="card-header">
+					Today's Trainings
+				</div>
+				<div class="card-body">
+					<div class="text-center">
+						<div id="trainingLoad" class="spinner-border" role="status">
+							<span class="sr-only">Loading...</span>
+						</div>
+					</div>
+					<div class="container">
+						<table id="trainer-table" class="display">
+							<thead>
+							<tr>
+								<th>Id</th>
+								<th>Trainee</th>
+								<th>Scheduled Time</th>
+								<th>Trainer</th>
+								<th>Office Name</th>
+								<th>Created Date</th>
+								<th>Actions</th>
+							</tr>
+							</thead>
+						</table>
+					</div>
+				</div>
+			</div>
+
+		</main>
+	</div>
+
 
 </body>
 </html>

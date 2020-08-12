@@ -1,11 +1,9 @@
 $(document).ready(function () {
 
-    $('body').on('click', '#sidebarCollapse', function () {
-    	$('#sidebar').toggleClass('active');
-    });
-
-    $('#nav').load("_side-bar-nav.html", function(responseTxt, statusTxt, xhr){
+    const main = $('#load-layout').html();
+    $('#load-layout').load("/common/_layout.html", function(responseTxt, statusTxt, xhr){
         if(statusTxt =="success"){
+            $('#load-layout').append(main);
             setInterviewTable();
             setTrainingTable();
         }
