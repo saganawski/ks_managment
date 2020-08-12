@@ -1,15 +1,24 @@
 $(document).ready(function () {
-	// TODO: something to load side bar and nav
-	$.ajax({
-		type:"GET",
-		url: "/offices"
-	}).then(function(data){
-		setOfficeOptions(data);
-	}).fail(function(error){
-	    console.log(error);
-		swal("ERROR", "Could not get offices!","error");
-	});
-	
+	const main = $('#load-layout').html();
+    $('#load-layout').load("/common/_layout.html", function(responseTxt, statusTxt, xhr){
+        if(statusTxt == "success"){
+            $('#load-layout').append(main);
+            getOffices();
+        }
+    });
+
+    function getOffices(){
+        $.ajax({
+            type:"GET",
+            url: "/offices"
+        }).then(function(data){
+            setOfficeOptions(data);
+        }).fail(function(error){
+            console.log(error);
+            swal("ERROR", "Could not get offices!","error");
+        });
+    }
+
 	function setOfficeOptions(offices){
 		var officeOptionsData = [];
 		for(office of offices){
@@ -39,7 +48,7 @@ $(document).ready(function () {
 		}
 	}
 
-	$('#newEmpolyee').on('click', function(event){
+	$('#load-layout').on('click', '#newEmpolyee', function(event){
 		event.preventDefault();
     	var formJson = convertFormToJson($("form").serializeArray());
     	var selectedOffices = $('#officeSelect').val();
@@ -64,19 +73,18 @@ $(document).ready(function () {
 		})
 	}
 	function createNewEmployee(formJson){
-
-	    	  	$.ajax({
-            		type:"POST",
-            		url: "/employees",
-            		data: JSON.stringify(formJson),
-            		contentType: "application/json; charset=utf-8"
-            	}).then(function(data){
-            		swal("Success!","You created a new employee","success");
-            		window.location.href = "/employee/employee.html";
-            	}).fail(function(error){
-            		console.log(error);
-            		swal("ERROR", "Could not get offices! \n" + error.responseJSON.error,"error");
-            	});
+        $.ajax({
+            type:"POST",
+            url: "/employees",
+            data: JSON.stringify(formJson),
+            contentType: "application/json; charset=utf-8"
+        }).then(function(data){
+            swal("Success!","You created a new employee","success");
+            window.location.href = "/employee/employee.html";
+        }).fail(function(error){
+            console.log(error);
+            swal("ERROR", "Could not get offices! \n" + error.responseJSON.error,"error");
+        });
 	}
 	function convertFormToJson(form){
     	var json = {}
