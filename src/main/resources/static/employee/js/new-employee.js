@@ -20,7 +20,6 @@ $(document).ready(function () {
     }
 
 	function setOfficeOptions(offices){
-		var officeOptionsData = [];
 		for(office of offices){
 			$('#officeSelect').append("<option value='"+ office.id + "'>"+ office.name +"</option>");
 		}

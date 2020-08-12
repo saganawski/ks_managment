@@ -36,13 +36,10 @@ $(document).ready(function() {
                    });
     });
    async function setOfficeOptions(offices){
-        var officeOptionsData = [];
         for(office of offices){
-            option ={label:office.name, value:office.id, name:office.name };
-            officeOptionsData.push(option);
+            $('#officeSelect').append("<option value='"+ office.id + "'>"+ office.name +"</option>");
         }
-//        $('#officeSelect').multiselect('dataprovider', officeOptionsData);
-        $('#newOfficeSelect').selectpicker('val', officeOptionsData);
+        $('#officeSelect').selectpicker('refresh');
         return true;
    }
    const employeeDataPromise = new Promise(function(resolve,reject) {
@@ -87,7 +84,8 @@ $(document).ready(function() {
            for(office of offices){
                officeIds.push(office.id);
            }
-           $('#officeSelect').multiselect('select', officeIds);
+//           $('#officeSelect').multiselect('select', officeIds);
+           $('#officeSelect').selectpicker('val', officeIds);
            return(true);
        }
     officesPromise
