@@ -5,7 +5,7 @@ $(document).ready(function () {
             $('#load-layout').append(main);
             $("div").removeClass("spinner-border");
 
-            $('#roles').multiselect();
+            $('#roles').selectpicker('refresh');
 
             const passwordForm = document.querySelector('#user-form');
             passwordForm.addEventListener('submit',function(event){
