@@ -1,5 +1,11 @@
 $(document).ready(function() {
-//TODO: make these function a javascript iport?
+    const main = $('#load-layout').html();
+    $('#load-layout').load("/common/_layout.html", function(responseTxt, statusTxt, xhr){
+        if(statusTxt == "success"){
+            $('#load-layout').append(main);
+        }
+    });
+
     getPositionsForDropDown();
         function getPositionsForDropDown(){
             $.ajax({
@@ -100,7 +106,7 @@ $(document).ready(function() {
 
         sendEmployeeToController(formJson);
     });
-//    TODO: place in module
+
     function convertFormToJson(form){
         var json = {}
         for(let j of form){
