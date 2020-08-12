@@ -22,10 +22,9 @@ $(document).ready(function () {
 	function setOfficeOptions(offices){
 		var officeOptionsData = [];
 		for(office of offices){
-			option ={label:office.name, value:office.id, name:office.name };
-			officeOptionsData.push(option);
+			$('#officeSelect').append("<option value='"+ office.id + "'>"+ office.name +"</option>");
 		}
-		$('#officeSelect').multiselect('dataprovider', officeOptionsData);
+		$('#officeSelect').selectpicker('refresh');
 	}
 	
 	getPositionsForDropDown();
@@ -48,12 +47,13 @@ $(document).ready(function () {
 		}
 	}
 
-	$('#load-layout').on('click', '#newEmpolyee', function(event){
+	$('#load-layout').on('click', '#newEmployee', function(event){
 		event.preventDefault();
 		let validated = validationCheck();
 		if(validated){
             var formJson = convertFormToJson($("form").serializeArray());
             var selectedOffices = $('#officeSelect').val();
+            debugger;
             formJson.officeSelections = selectedOffices;
             //Send To controller
             setUpNewEmployee(formJson)
@@ -64,6 +64,7 @@ $(document).ready(function () {
 	});
 
 	function validationCheck(){
+	    debugger;
 	    const offices = $('#officeSelect').val().toString();
         if(offices == null || offices === ""){
             swal({
@@ -108,7 +109,7 @@ $(document).ready(function () {
             window.location.href = "/employee/employee.html";
         }).fail(function(error){
             console.log(error);
-            swal("ERROR", "Could not get offices! \n" + error.responseJSON.error,"error");
+            swal("ERROR", "Could not create employee! \n" + error.responseJSON.error,"error");
         });
 	}
 	function convertFormToJson(form){

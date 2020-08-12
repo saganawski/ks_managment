@@ -41,7 +41,8 @@ $(document).ready(function() {
             option ={label:office.name, value:office.id, name:office.name };
             officeOptionsData.push(option);
         }
-        $('#officeSelect').multiselect('dataprovider', officeOptionsData);
+//        $('#officeSelect').multiselect('dataprovider', officeOptionsData);
+        $('#newOfficeSelect').selectpicker('val', officeOptionsData);
         return true;
    }
    const employeeDataPromise = new Promise(function(resolve,reject) {
