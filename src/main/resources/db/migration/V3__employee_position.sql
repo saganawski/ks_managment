@@ -37,8 +37,9 @@ CREATE TABLE employee (
   updated_by int(11) DEFAULT '-1',
   updated_date datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (id),
+  UNIQUE KEY (email,last_name),
   KEY position_id (position_id),
-  CONSTRAINT position_ibfk_1 FOREIGN KEY (position_id) REFERENCES position (id) ON UPDATE NO ACTION ON DELETE NO ACTION
+  CONSTRAINT position_ibfk_1 FOREIGN KEY (position_id) REFERENCES position (id) ON DELETE RESTRICT ON UPDATE RESTRICT
 );
 insert into employee
     (first_name,last_name,email,phone_number) VALUES
