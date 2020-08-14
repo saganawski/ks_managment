@@ -84,7 +84,7 @@ CREATE TABLE `application` (
     CONSTRAINT application_ibfk_1 FOREIGN KEY (application_contact_type_id) REFERENCES application_contact_type (id) ON UPDATE NO ACTION ON DELETE NO ACTION,
     CONSTRAINT application_ibfk_2 FOREIGN KEY (application_source_id) REFERENCES application_source (id) ON UPDATE NO ACTION ON DELETE NO ACTION,
     CONSTRAINT application_ibfk_3 FOREIGN KEY (application_result_id) REFERENCES application_result (id) ON UPDATE NO ACTION ON DELETE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+);
 
 
 INSERT INTO application
