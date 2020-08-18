@@ -40,4 +40,22 @@ public class OfficeServiceImpl implements OfficeService {
 		return jpaOfficeRepo.save(office);
 	}
 
+	@Override
+	public Office getOfficeById(Integer officeId) {
+		return jpaOfficeRepo.getOne(officeId);
+	}
+
+	@Override
+	public Office updateOffice(Office office, UserPrincipal userPrincipal) {
+		final Integer userId = userPrincipal.getUserId();
+		office.setUpdatedBy(userId);
+
+		final Location location = office.getLocation();;
+		jpaLocationDao.save(location);
+
+		office.setLocation(location);
+
+		return jpaOfficeRepo.save(office);
+	}
+
 }

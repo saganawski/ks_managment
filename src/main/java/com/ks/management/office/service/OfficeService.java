@@ -10,4 +10,8 @@ public interface OfficeService {
 	List<Office> getOffices();
 
     Office createOffice(Office office, UserPrincipal userPrincipal);
+
+    Office getOfficeById(Integer officeId);
+
+    Office updateOffice(Office office, UserPrincipal userPrincipal);
 }
