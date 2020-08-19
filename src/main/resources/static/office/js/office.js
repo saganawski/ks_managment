@@ -23,6 +23,12 @@ $(document).ready(function () {
                 {"data": "name"},
                 {"data": "location.address1",
                     "defaultContent":""
+                },
+                {   "targets": -1,
+                    "data": function(data, type,row,meta){
+                        return '<a class="btn btn-warning" href="/office/office-details.html?officeId= '+data.id + '">Details</a>'
+
+                    }
                 }
             ]
         });
