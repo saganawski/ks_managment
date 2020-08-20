@@ -8,6 +8,7 @@ import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -47,5 +48,10 @@ public class ApplicationController {
     @DeleteMapping("/{applicationId}/notes/{noteId}")
     public void deleteNoteForApp(@PathVariable("applicationId") int applicationId, @PathVariable("noteId") int noteId){
         applicationService.deleteNoteForAppId(applicationId,noteId) ;
+    }
+
+    @PostMapping("/bulk-upload")
+    public void bulkUpload(MultipartFile file, @AuthenticationPrincipal UserPrincipal userPrincipal){
+        applicationService.bulkUpload(file, userPrincipal);
     }
 }

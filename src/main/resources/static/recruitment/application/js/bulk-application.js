@@ -9,33 +9,34 @@ $(document).ready(function () {
             bulkForm.addEventListener('submit',function(event){
                 let validated = validationCheck(bulkForm);
 
-//                if(validated){
-//                    const roles = $('#roles').val().toString();
-//                    let jsonForm = convertFormToJson($("#user-form").serializeArray());
-//                    jsonForm.roles = roles;
-//                    $.ajax({
-//                        type: "POST",
-//                        url:"/users",
-//                        data: JSON.stringify(jsonForm),
-//                        contentType: "application/json; charset=utf-8"
-//                    }).then(function(response){
-//                        swal({
-//                            title: "Success!",
-//                            text: "You created a user",
-//                            icon: "success",
-//                            timer: 2000
-//                        }).then(function(){
+                if(validated){
+
+                    $.ajax({
+                        type: "POST",
+                        url:"/applications/bulk-upload",
+                        data: new FormData(this),
+                        enctype: 'multipart/form-data',
+                        processData: false,
+                        contentType: false,
+                        cache: false
+                    }).then(function(response){
+                        swal({
+                            title: "Success!",
+                            text: "You upload a file",
+                            icon: "success",
+                            timer: 2000
+                        }).then(function(){
 //                            window.location.href = "/user/user.html";
-//                        });
-//                    }).fail(function(err){
-//                        console.log(err);
-//                        swal({
-//                            title: "Error!",
-//                            text: "Failure to create user! \n" + err.responseJSON.message,
-//                            icon: "error"
-//                        });
-//                    });
-//                }
+                        });
+                    }).fail(function(err){
+                        console.log(err);
+                        swal({
+                            title: "Error!",
+                            text: "Failure to upload applications! \n" + err.responseJSON.message,
+                            icon: "error"
+                        });
+                    });
+                }
             });
         }
     });
