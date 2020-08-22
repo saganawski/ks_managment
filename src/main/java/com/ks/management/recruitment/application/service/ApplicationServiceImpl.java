@@ -9,6 +9,7 @@ import com.ks.management.security.UserPrincipal;
 import com.opencsv.CSVIterator;
 import com.opencsv.CSVReader;
 import com.opencsv.CSVReaderBuilder;
+import com.opencsv.bean.CsvToBeanBuilder;
 import com.opencsv.exceptions.CsvException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.text.ParseException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -180,19 +182,23 @@ public class ApplicationServiceImpl implements ApplicationService {
     @Override
     public void bulkUpload(MultipartFile file, UserPrincipal userPrincipal) {
 
-//        try {
-//            Reader reader = new InputStreamReader(file.getInputStream());
-//            CSVReader csvReader = new CSVReaderBuilder(reader).withSkipLines(1).build();
-//
-//            List<String[]> applications = csvReader.readAll();
-//            applications.forEach(a -> {
-//                System.out.println(a[0]);
-//
-//                System.out.println("DONE");
-//            });
-//        } catch (IOException | CsvException e) {
-//            e.printStackTrace();
-//            throw new RuntimeException("Exception : \n" + e.getMessage() );
-//        }
+        try {
+            Reader reader = new InputStreamReader(file.getInputStream());
+            CSVReader csvReader = new CSVReaderBuilder(reader).withSkipLines(1).build();
+
+            List<String[]> applications = csvReader.readAll();
+
+            applications.forEach(a -> {
+                final List<String> sourceApplication = ApplicationBulkUpload.cleanInput(a[0]);
+
+                final ApplicationBulkUpload applicationBulkUpload = new ApplicationBulkUpload(sourceApplication);
+                //create note
+                //create application
+                //find office
+            });
+        } catch (IOException | CsvException e) {
+            e.printStackTrace();
+            throw new RuntimeException("Exception : \n" + e.getMessage() );
+        }
     }
 }
