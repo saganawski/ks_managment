@@ -4,6 +4,7 @@ import com.ks.management.office.Office;
 import com.ks.management.office.dao.JpaOfficeRepo;
 import com.ks.management.recruitment.application.*;
 import com.ks.management.recruitment.application.dao.ApplicationJpa;
+import com.ks.management.recruitment.application.dao.ApplicationSourceJpaDao;
 import com.ks.management.recruitment.application.dao.JpaApplicationNote;
 import com.ks.management.security.UserPrincipal;
 import com.opencsv.CSVIterator;
@@ -17,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.xml.ws.Response;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -31,9 +33,10 @@ public class ApplicationServiceImpl implements ApplicationService {
     private ApplicationJpa applicationJpa;
     @Autowired
     private JpaOfficeRepo jpaOfficeRepo;
-
     @Autowired
     private JpaApplicationNote jpaApplicationNote;
+    @Autowired
+    private ApplicationSourceJpaDao applicationSourceJpaDao;
 
     @Override
     public Application createApplication(Application application, UserPrincipal userPrincipal) {
@@ -188,13 +191,45 @@ public class ApplicationServiceImpl implements ApplicationService {
 
             List<String[]> applications = csvReader.readAll();
 
-            applications.forEach(a -> {
+            applications.stream().filter(a -> a[0].length() > 1).forEach(a -> {
                 final List<String> sourceApplication = ApplicationBulkUpload.cleanInput(a[0]);
 
                 final ApplicationBulkUpload applicationBulkUpload = new ApplicationBulkUpload(sourceApplication);
-                //create note
+
+                final Integer userId = userPrincipal.getUserId();
                 //create application
-                //find office
+                final String sourceJobLocation = Optional.ofNullable(applicationBulkUpload.getJobLocation())
+                        .map(l -> l.split(","))
+                        .map(s -> s[0])
+                        .orElse("");
+                final Office office = Optional.ofNullable(jpaOfficeRepo.findByName(sourceJobLocation))
+                        .map(o -> o.get())
+                        .orElse(null);
+
+                final ApplicationSource indeed = applicationSourceJpaDao.findByCode("INDEED");
+                final String firstName = Optional.ofNullable(applicationBulkUpload.getName()).map(n -> n.split(" ")).map(s -> s[0]).orElse(null);
+                final String lastName = Optional.ofNullable(applicationBulkUpload.getName()).map(n -> n.split(" ")).map(s -> s[s.length -1]).orElse(null);
+
+                final Application application = Application.builder()
+                        .firstName(firstName)
+                        .lastName(lastName)
+                        .phoneNumber(applicationBulkUpload.getPhone())
+                        .email(applicationBulkUpload.getEmail())
+                        .dateReceived(applicationBulkUpload.getDate())
+                        .applicationSource(indeed)
+                        .office(office)
+                        .createdBy(userId)
+                        .updatedBy(userId)
+                        .build();
+
+                final Application savedApplication = applicationJpa.save(application);
+
+                final ApplicationNote note = new ApplicationNote();
+                note.setCreatedBy(userId);
+                note.setUpdatedBy(userId);
+                note.setNote("Added FROM Bulk raw data: \n" + applicationBulkUpload.toString());
+                note.setApplication(savedApplication);
+                jpaApplicationNote.save(note);
             });
         } catch (IOException | CsvException e) {
             e.printStackTrace();

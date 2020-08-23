@@ -5,6 +5,7 @@ import lombok.Getter;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -103,10 +104,12 @@ public class ApplicationBulkUpload {
     }
 
     public static List<String> cleanInput(String application){
+        if(application.length() < 1){
+            return Collections.emptyList();
+        }
         final List<String> cleanedInput = new ArrayList<>();
         String[] values = application.split("\\t");
         for(String val: values){
-            StringBuilder charTransformBuilder = new StringBuilder();
             final String removeNonPrintChars = val.replaceAll("\\P{Print}", "");
             final String removeQuotes = removeNonPrintChars.replaceAll("\"","");
             cleanedInput.add(removeQuotes);
