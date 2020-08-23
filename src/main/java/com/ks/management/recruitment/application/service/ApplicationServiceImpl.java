@@ -202,9 +202,17 @@ public class ApplicationServiceImpl implements ApplicationService {
                         .map(l -> l.split(","))
                         .map(s -> s[0])
                         .orElse("");
-                final Office office = Optional.ofNullable(jpaOfficeRepo.findByName(sourceJobLocation))
-                        .map(o -> o.get())
-                        .orElse(null);
+
+                Office office = null;
+
+                if(!sourceJobLocation.isEmpty()){
+                    try{
+                        office = jpaOfficeRepo.findByName(sourceJobLocation).get();
+                    }catch (NoSuchElementException ne){
+                        ne.printStackTrace();
+                    }
+                }
+
 
                 final ApplicationSource indeed = applicationSourceJpaDao.findByCode("INDEED");
                 final String firstName = Optional.ofNullable(applicationBulkUpload.getName()).map(n -> n.split(" ")).map(s -> s[0]).orElse(null);
