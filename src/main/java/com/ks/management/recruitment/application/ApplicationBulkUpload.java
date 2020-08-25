@@ -49,35 +49,41 @@ public class ApplicationBulkUpload {
     private String qualification2Match;
 
     public ApplicationBulkUpload(List<String> application) {
-        this.name = application.get(NAME);
-        this.email = application.get(EMAIL);
-        this.phone =application.get(PHONE);
-        this.candidateLocation = application.get(CANDIDATE_LOCATION);
-        this.currentRole = application.get(CURRENT_ROLE);
-        this.education = application.get(EDUCATION);
-        this.jobTitle = application.get(JOB_TITLE);
-        this.jobLocation = application.get(JOB_LOCATION);
-
-        Date parsedDate;
         try{
-            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-            String dateString = application.get(DATE);
-            parsedDate = formatter.parse(dateString);
+            this.name = application.get(NAME);
+            this.email = application.get(EMAIL);
+            this.phone =application.get(PHONE);
+            this.candidateLocation = application.get(CANDIDATE_LOCATION);
+            this.currentRole = application.get(CURRENT_ROLE);
+            this.education = application.get(EDUCATION);
+            this.jobTitle = application.get(JOB_TITLE);
+            this.jobLocation = application.get(JOB_LOCATION);
 
-        }catch (ParseException pe){
-            pe.printStackTrace();
-            throw new RuntimeException("couldnt parse" + pe.getMessage());
+            Date parsedDate;
+            try{
+                SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+                String dateString = application.get(DATE);
+                parsedDate = formatter.parse(dateString);
+
+            }catch (ParseException pe){
+                pe.printStackTrace();
+                throw new RuntimeException("couldnt parse" + pe.getMessage());
+            }
+
+            this.date = parsedDate;
+            this.interestLevel = application.get(INTEREST_LEVEL);
+            this.source = application.get(SOURCE);
+            this.qualification1 = application.get(QUALIFICATION_1);
+            this.qualification1Answer = application.get(QUALIFICATION_1_ANWSER);
+            this.qualification1Match = application.get(QUALIFICATION_1_MATCH);
+            this.qualification2 = application.get(QUALIFICATION_2);
+            this.qualification2Answer = application.get(QUALIFICATION_2_ANWSER);
+            this.qualification2Match = application.get(QUALIFICATION_2_MATCH);
+
+        }catch (Exception e){
+            e.printStackTrace();
+            throw new RuntimeException("Unable to make Application \n" + e.getStackTrace());
         }
-
-        this.date = parsedDate;
-        this.interestLevel = application.get(INTEREST_LEVEL);
-        this.source = application.get(SOURCE);
-        this.qualification1 = application.get(QUALIFICATION_1);
-        this.qualification1Answer = application.get(QUALIFICATION_1_ANWSER);
-        this.qualification1Match = application.get(QUALIFICATION_1_MATCH);
-        this.qualification2 = application.get(QUALIFICATION_2);
-        this.qualification2Answer = application.get(QUALIFICATION_2_ANWSER);
-        this.qualification2Match = application.get(QUALIFICATION_2_MATCH);
     }
 
     @Override
@@ -108,10 +114,11 @@ public class ApplicationBulkUpload {
             return Collections.emptyList();
         }
         final List<String> cleanedInput = new ArrayList<>();
-        String[] values = application.split("\\t");
-        for(String val: values){
-            final String removeNonPrintChars = val.replaceAll("\\P{Print}", "");
-            final String removeQuotes = removeNonPrintChars.replaceAll("\"","");
+
+        String[] tabSplitValues = application.split("\\t");
+        for(String val: tabSplitValues){
+            final String removeNonPrintChars1 = val.replaceAll("\\P{Print}", "");
+            final String removeQuotes = removeNonPrintChars1.replaceAll("\"","");
             cleanedInput.add(removeQuotes);
         }
         return cleanedInput;

@@ -187,12 +187,17 @@ public class ApplicationServiceImpl implements ApplicationService {
 
         try {
             Reader reader = new InputStreamReader(file.getInputStream());
-            CSVReader csvReader = new CSVReaderBuilder(reader).withSkipLines(1).build();
 
-            List<String[]> applications = csvReader.readAll();
+            List<String> applications = new ArrayList<>();
+            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(file.getInputStream()));
 
-            applications.stream().filter(a -> a[0].length() > 1).forEach(a -> {
-                final List<String> sourceApplication = ApplicationBulkUpload.cleanInput(a[0]);
+            String line;
+            while((line = bufferedReader.readLine()) != null){
+                applications.add(line);
+            }
+
+            applications.stream().skip(1).filter(a -> a.length() > 1).forEach(a -> {
+                final List<String> sourceApplication = ApplicationBulkUpload.cleanInput(a);
 
                 final ApplicationBulkUpload applicationBulkUpload = new ApplicationBulkUpload(sourceApplication);
 
@@ -212,7 +217,6 @@ public class ApplicationServiceImpl implements ApplicationService {
                         ne.printStackTrace();
                     }
                 }
-
 
                 final ApplicationSource indeed = applicationSourceJpaDao.findByCode("INDEED");
                 final String firstName = Optional.ofNullable(applicationBulkUpload.getName()).map(n -> n.split(" ")).map(s -> s[0]).orElse(null);
@@ -235,11 +239,11 @@ public class ApplicationServiceImpl implements ApplicationService {
                 final ApplicationNote note = new ApplicationNote();
                 note.setCreatedBy(userId);
                 note.setUpdatedBy(userId);
-                note.setNote("Added FROM Bulk raw data: \n" + applicationBulkUpload.toString());
+                note.setNote("Added FROM Bulk Upload: \n" + applicationBulkUpload.toString());
                 note.setApplication(savedApplication);
                 jpaApplicationNote.save(note);
             });
-        } catch (IOException | CsvException e) {
+        } catch (IOException e) {
             e.printStackTrace();
             throw new RuntimeException("Exception : \n" + e.getMessage() );
         }
