@@ -4,12 +4,18 @@ import com.ks.management.office.Office;
 import com.ks.management.office.dao.JpaOfficeRepo;
 import com.ks.management.recruitment.application.*;
 import com.ks.management.recruitment.application.dao.ApplicationJpa;
+import com.ks.management.recruitment.application.dao.ApplicationSourceJpaDao;
 import com.ks.management.recruitment.application.dao.JpaApplicationNote;
 import com.ks.management.security.UserPrincipal;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -20,9 +26,10 @@ public class ApplicationServiceImpl implements ApplicationService {
     private ApplicationJpa applicationJpa;
     @Autowired
     private JpaOfficeRepo jpaOfficeRepo;
-
     @Autowired
     private JpaApplicationNote jpaApplicationNote;
+    @Autowired
+    private ApplicationSourceJpaDao applicationSourceJpaDao;
 
     @Override
     public Application createApplication(Application application, UserPrincipal userPrincipal) {
@@ -166,5 +173,72 @@ public class ApplicationServiceImpl implements ApplicationService {
     @Override
     public void deleteNoteForAppId(int applicationId, int noteId) {
         jpaApplicationNote.deleteById(noteId);
+    }
+
+    @Override
+    public void bulkUpload(MultipartFile file, UserPrincipal userPrincipal) {
+
+        try {
+            Reader reader = new InputStreamReader(file.getInputStream());
+
+            List<String> applications = new ArrayList<>();
+            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(file.getInputStream()));
+
+            String line;
+            while((line = bufferedReader.readLine()) != null){
+                applications.add(line);
+            }
+
+            applications.stream().skip(1).filter(a -> a.length() > 1).forEach(a -> {
+                final List<String> sourceApplication = ApplicationBulkUpload.cleanInput(a);
+
+                final ApplicationBulkUpload applicationBulkUpload = new ApplicationBulkUpload(sourceApplication);
+
+                final Integer userId = userPrincipal.getUserId();
+                //create application
+                final String sourceJobLocation = Optional.ofNullable(applicationBulkUpload.getJobLocation())
+                        .map(l -> l.split(","))
+                        .map(s -> s[0])
+                        .orElse("");
+
+                Office office = null;
+
+                if(!sourceJobLocation.isEmpty()){
+                    try{
+                        office = jpaOfficeRepo.findByName(sourceJobLocation).get();
+                    }catch (NoSuchElementException ne){
+                        ne.printStackTrace();
+                    }
+                }
+
+                final ApplicationSource indeed = applicationSourceJpaDao.findByCode("INDEED");
+                final String firstName = Optional.ofNullable(applicationBulkUpload.getName()).map(n -> n.split(" ")).map(s -> s[0]).orElse(null);
+                final String lastName = Optional.ofNullable(applicationBulkUpload.getName()).map(n -> n.split(" ")).map(s -> s[s.length -1]).orElse(null);
+
+                final Application application = Application.builder()
+                        .firstName(firstName)
+                        .lastName(lastName)
+                        .phoneNumber(applicationBulkUpload.getPhone())
+                        .email(applicationBulkUpload.getEmail())
+                        .dateReceived(applicationBulkUpload.getDate())
+                        .applicationSource(indeed)
+                        .office(office)
+                        .createdBy(userId)
+                        .updatedBy(userId)
+                        .build();
+
+                final Application savedApplication = applicationJpa.save(application);
+
+                final ApplicationNote note = new ApplicationNote();
+                note.setCreatedBy(userId);
+                note.setUpdatedBy(userId);
+                note.setNote("Added FROM Bulk Upload: \n" + applicationBulkUpload.toString());
+                note.setApplication(savedApplication);
+                jpaApplicationNote.save(note);
+            });
+        } catch (IOException e) {
+            e.printStackTrace();
+            throw new RuntimeException("Exception : \n" + e.getMessage() );
+        }
     }
 }

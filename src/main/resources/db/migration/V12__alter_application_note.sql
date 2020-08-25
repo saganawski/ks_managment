@@ -1,0 +1,2 @@
+ALTER TABLE `application_note`
+CHANGE COLUMN `note` `note` VARCHAR(1000) NULL DEFAULT NULL ;

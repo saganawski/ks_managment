@@ -3,6 +3,7 @@ package com.ks.management.recruitment.application.service;
 import com.ks.management.recruitment.application.Application;
 import com.ks.management.recruitment.application.ApplicationDto;
 import com.ks.management.security.UserPrincipal;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -19,4 +20,6 @@ public interface ApplicationService {
     void deleteApplicationById(Integer applicationId);
 
     void deleteNoteForAppId(int applicationId, int noteId);
+
+    void bulkUpload(MultipartFile file, UserPrincipal userPrincipal);
 }
