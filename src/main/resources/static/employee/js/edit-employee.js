@@ -1,8 +1,25 @@
 $(document).ready(function() {
+    vm = this;
+    vm.employee = {};
     const main = $('#load-layout').html();
     $('#load-layout').load("/common/_layout.html", function(responseTxt, statusTxt, xhr){
         if(statusTxt == "success"){
             $('#load-layout').append(main);
+            var calendarEl = document.getElementById('calendar');
+            var calendar = new FullCalendar.Calendar(calendarEl, {
+                initialView: 'dayGridMonth',
+                selectable: true,
+                select: function(info) {
+                    alert('selected ' + info.startStr + ' to ' + info.endStr);
+                    calendar.addEvent({
+                        title: "Working",
+                        start: info.startStr,
+                        end: info.endStr,
+                        allDay: true
+                    });
+                  }
+            });
+            calendar.render();
         }
     });
 
@@ -49,6 +66,7 @@ $(document).ready(function() {
                return $.ajax({
                               url:"/employees/"+ employeeId
                           }).then(function(data){
+                              vm.employee = data;
                               return resolve(data);
                           }).fail(function(err){
                               console.log(err);
@@ -202,5 +220,34 @@ $(document).ready(function() {
             });
         });
     }
+
+    $('#load-layout').on('click','#scheduleEmployee', function(event){
+        event.preventDefault();
+        let scheduledTime = $('#scheduledTime').val();
+        debugger;
+        $.ajax({
+            type: "POST",
+            url: "/employees/" + vm.employee.id + "/schedules/" + scheduledTime
+        }).then(function(response){
+            swal({
+                title: "Success!",
+                text: "You Set a scheduled date for this employee",
+                icon: "success",
+                timer: 2000
+            }).then(function(){
+//                window.location.href = "/employee/employee.html";
+                location.reload();
+            });
+        }).fail(function(error){
+            console.log(error.responseJSON);
+            swal({
+                title: "Error!",
+                text: "Could not set schedule for employee! \n" + error.responseJSON.message,
+                icon: "error"
+            }).then(function(){
+                location.reload();
+            });
+        });
+    });
 
 });

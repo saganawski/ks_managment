@@ -1,8 +1,11 @@
 package com.ks.management.employee;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.ks.management.employee.employeeSchedule.EmployeeSchedule;
 import com.ks.management.office.Office;
 import com.ks.management.position.Position;
+import com.ks.management.recruitment.application.ApplicationNote;
 import com.ks.management.recruitment.interview.Interview;
 import lombok.*;
 
@@ -88,4 +91,8 @@ public class Employee {
 			inverseJoinColumns = @JoinColumn(name="interview_id")
 	)
 	private List<Interview> interviews = new ArrayList<>();*/
+
+	@JsonIgnore
+	@OneToMany(mappedBy = "employee",fetch = FetchType.LAZY,cascade = CascadeType.ALL)
+	private List<EmployeeSchedule> schedules = new ArrayList<>();
 }
