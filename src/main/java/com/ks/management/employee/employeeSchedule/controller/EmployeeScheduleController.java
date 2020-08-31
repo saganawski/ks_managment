@@ -5,22 +5,22 @@ import com.ks.management.employee.employeeSchedule.service.EmployeeScheduleServi
 import com.ks.management.security.UserPrincipal;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import java.util.Date;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.List;
 
 @RestController
-@RequestMapping("/employees/{employeeId}/schedules/")
+@RequestMapping("/employees/{employeeId}/schedules")
 public class EmployeeScheduleController {
 	@Autowired
 	private EmployeeScheduleService employeeScheduleService;
 
-	@PostMapping("{scheduledDate}")
-	public Employee createNewEmployee(@PathVariable("employeeId") Integer employeeId, @PathVariable("scheduledDate") String scheduleDate, @AuthenticationPrincipal UserPrincipal userPrincipal) {
-		return employeeScheduleService.createScheduleEmployee(employeeId,scheduleDate,userPrincipal);
+	
+	@PostMapping()
+	public Employee createNewEmployee(@PathVariable("employeeId") Integer employeeId, @RequestBody List<LocalDateTime> scheduleDates, @AuthenticationPrincipal UserPrincipal userPrincipal) {
+		return employeeScheduleService.createScheduleEmployee(employeeId,scheduleDates,userPrincipal);
 	}
 
 

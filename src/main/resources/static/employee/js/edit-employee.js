@@ -1,6 +1,8 @@
 $(document).ready(function() {
     vm = this;
     vm.employee = {};
+    vm.events = [];
+
     const main = $('#load-layout').html();
     $('#load-layout').load("/common/_layout.html", function(responseTxt, statusTxt, xhr){
         if(statusTxt == "success"){
@@ -8,16 +10,29 @@ $(document).ready(function() {
             var calendarEl = document.getElementById('calendar');
             var calendar = new FullCalendar.Calendar(calendarEl, {
                 initialView: 'dayGridMonth',
+
                 selectable: true,
                 select: function(info) {
-                    alert('selected ' + info.startStr + ' to ' + info.endStr);
                     calendar.addEvent({
                         title: "Working",
                         start: info.startStr,
                         end: info.endStr,
                         allDay: true
                     });
-                  }
+                    vm.events = calendar.getEvents();
+                },
+                eventClick: function(arg) {
+                    if (confirm('delete event?')) {
+                        arg.event.remove()
+                    }
+                },
+
+                eventSources: [
+                    {
+                        url:'',
+                        color: 'yellow',
+                    }
+                ]
             });
             calendar.render();
         }
@@ -223,11 +238,31 @@ $(document).ready(function() {
 
     $('#load-layout').on('click','#scheduleEmployee', function(event){
         event.preventDefault();
-        let scheduledTime = $('#scheduledTime').val();
-        debugger;
+
+        let eventDates = [];
+        for(event of vm.events){
+            const startDate = event._instance.range.start
+            let endDate = event._instance.range.end;
+            endDate.setDate(endDate.getDate() -1);
+            eventDates.push(startDate);
+
+            if(startDate.getTime() != endDate.getTime()){
+                let nextInRangeDate = new Date(startDate);
+                nextInRangeDate.setDate(startDate.getDate() + 1);
+                while(nextInRangeDate.getTime() != endDate.getTime()){
+                    eventDates.push(nextInRangeDate);
+                    nextInRangeDate = new Date(nextInRangeDate);
+                    nextInRangeDate.setDate(nextInRangeDate.getDate() + 1);
+                }
+                eventDates.push(endDate);
+            }
+        }
         $.ajax({
             type: "POST",
-            url: "/employees/" + vm.employee.id + "/schedules/" + scheduledTime
+            url: "/employees/" + vm.employee.id + "/schedules",
+            data: JSON.stringify(eventDates),
+            dataType: "json",
+            contentType: "application/json; charset=utf-8"
         }).then(function(response){
             swal({
                 title: "Success!",
@@ -235,7 +270,6 @@ $(document).ready(function() {
                 icon: "success",
                 timer: 2000
             }).then(function(){
-//                window.location.href = "/employee/employee.html";
                 location.reload();
             });
         }).fail(function(error){

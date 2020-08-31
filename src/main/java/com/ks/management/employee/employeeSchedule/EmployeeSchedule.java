@@ -4,7 +4,7 @@ import com.ks.management.employee.Employee;
 import lombok.*;
 
 import javax.persistence.*;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Entity
@@ -25,7 +25,7 @@ public class EmployeeSchedule {
     private Employee employee;
 
     @Column(name = "scheduled_time")
-    private LocalDate scheduledTime;
+    private LocalDateTime scheduledTime;
 
     @Column(name = "updated_by")
     private Integer updatedBy;

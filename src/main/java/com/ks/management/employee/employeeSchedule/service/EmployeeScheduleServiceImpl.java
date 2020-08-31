@@ -9,7 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 @Transactional
@@ -20,7 +21,7 @@ public class EmployeeScheduleServiceImpl implements EmployeeScheduleService{
     JpaEmployeeScheduleRepo jpaEmployeeScheduleRepo;
 
     @Override
-    public Employee createScheduleEmployee(Integer employeeId, String scheduleDate, UserPrincipal userPrincipal) {
+    public Employee createScheduleEmployee(Integer employeeId, List<LocalDateTime> scheduleDates, UserPrincipal userPrincipal) {
         final Integer userId = userPrincipal.getUserId();
 
         final Employee employee = jpaEmployeeRepo.getOne(employeeId);
@@ -28,16 +29,19 @@ public class EmployeeScheduleServiceImpl implements EmployeeScheduleService{
             throw new RuntimeException("Employee not found");
         }
 
-        final LocalDate scheduledDate = LocalDate.parse(scheduleDate);
+        scheduleDates.forEach(sd -> {
+//            final LocalDate scheduledDate = LocalDate.parse(sd);
 
-        final EmployeeSchedule employeeSchedule =  EmployeeSchedule.builder()
-                .employee(employee)
-                .scheduledTime(scheduledDate)
-                .updatedBy(userId)
-                .createdBy(userId)
-                .build();
+            final EmployeeSchedule employeeSchedule =  EmployeeSchedule.builder()
+                    .employee(employee)
+                    .scheduledTime(sd)
+                    .updatedBy(userId)
+                    .createdBy(userId)
+                    .build();
 
-        jpaEmployeeScheduleRepo.save(employeeSchedule);
+            jpaEmployeeScheduleRepo.save(employeeSchedule);
+
+        });
 
         return employee;
     }
