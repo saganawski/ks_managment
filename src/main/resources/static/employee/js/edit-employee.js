@@ -12,6 +12,7 @@ $(document).ready(function() {
                 initialView: 'dayGridMonth',
 
                 selectable: true,
+                selectOverlap: false,
                 select: function(info) {
                     calendar.addEvent({
                         title: "Working",
