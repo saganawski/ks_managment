@@ -27,12 +27,27 @@ $(document).ready(function() {
                     }
                 },
 
-                eventSources: [
-                    {
-                        url:'',
-                        color: 'yellow',
-                    }
-                ]
+
+                events: function (info, successCallback, failureCallback){
+                    let searchParams = new URLSearchParams(window.location.search);
+                    let employeeId = searchParams.get('employeeId');
+                    $.ajax({
+                        type: "GET",
+                        url: "/employees/"+ employeeId + "/schedules",
+
+                        success: function(data){
+                            var events = [];
+                            for(event of data){
+                                events.push(
+                                {title: '',
+                                    start: event.scheduledTime,
+                                    allDay : true}
+                                );
+                            }
+                            successCallback(events);
+                        }
+                    });
+                }
             });
             calendar.render();
         }

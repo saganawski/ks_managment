@@ -30,7 +30,6 @@ public class EmployeeScheduleServiceImpl implements EmployeeScheduleService{
         }
 
         scheduleDates.forEach(sd -> {
-//            final LocalDate scheduledDate = LocalDate.parse(sd);
 
             final EmployeeSchedule employeeSchedule =  EmployeeSchedule.builder()
                     .employee(employee)
@@ -44,5 +43,10 @@ public class EmployeeScheduleServiceImpl implements EmployeeScheduleService{
         });
 
         return employee;
+    }
+
+    @Override
+    public List<EmployeeSchedule> getSchedules(Integer employeeId) {
+        return jpaEmployeeScheduleRepo.findAllByEmployeeId(employeeId);
     }
 }
