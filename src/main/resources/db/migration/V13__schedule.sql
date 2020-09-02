@@ -7,5 +7,6 @@ CREATE TABLE employee_schedule (
     `updated_by` int DEFAULT '-1',
     `updated_date` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     PRIMARY KEY (id),
+    UNIQUE KEY (employee_id, scheduled_time),
     FOREIGN KEY (employee_id) REFERENCES employee(id) ON DELETE RESTRICT ON UPDATE RESTRICT
 );
