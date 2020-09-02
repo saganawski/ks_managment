@@ -23,11 +23,19 @@ $(document).ready(function() {
                     vm.events = calendar.getEvents();
                 },
                 eventClick: function(arg) {
-                    if (confirm('delete event?')) {
-                        arg.event.remove()
-                    }
+                    swal({
+                       title: "Remove this day from employees schedule?",
+                       icon: "warning",
+                       buttons: true,
+                       dangerMode: true,
+                     })
+                     .then((willDelete) => {
+                        if(willDelete){
+                            arg.event.remove();
+                            deleteEmployeeSchedule(vm.employee.id,arg.event._def.publicId);
+                        }
+                     });
                 },
-
 
                 events: function (info, successCallback, failureCallback){
                     let searchParams = new URLSearchParams(window.location.search);
@@ -42,7 +50,8 @@ $(document).ready(function() {
                                 events.push(
                                 {title: '',
                                     start: event.scheduledTime,
-                                    allDay : true}
+                                    allDay : true,
+                                    id: event.id}
                                 );
                             }
                             successCallback(events);
@@ -53,6 +62,31 @@ $(document).ready(function() {
             calendar.render();
         }
     });
+
+    function deleteEmployeeSchedule(employeeId, employeeScheduleId){
+        $.ajax({
+            type: "DELETE",
+            url: "/employees/" + employeeId + "/schedules/" + employeeScheduleId
+        }).then(function(response){
+            swal({
+                title: "Success!",
+                text: "You deleted this schedule day",
+                icon: "success",
+                timer: 2000
+            }).then(function(){
+                location.reload();
+            });
+        }).fail(function(error){
+            console.log(error.responseJSON);
+            swal({
+                title: "Error!",
+                text: "Could not delete scheduled day! \n" + error.responseJSON.message,
+                icon: "error"
+            }).then(function(){
+                location.reload();
+            });
+        });
+    }
 
     getPositionsForDropDown();
         function getPositionsForDropDown(){

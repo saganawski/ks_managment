@@ -11,4 +11,6 @@ public interface EmployeeScheduleService {
     Employee createScheduleEmployee(Integer employeeId, List<LocalDateTime> scheduleDates, UserPrincipal userPrincipal);
 
     List<EmployeeSchedule> getSchedules(Integer employeeId);
+
+    void deleteEmployeeScheduleById(Integer employeeScheduleId);
 }

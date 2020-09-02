@@ -27,6 +27,11 @@ public class EmployeeScheduleController {
 		return employeeScheduleService.createScheduleEmployee(employeeId,scheduleDates,userPrincipal);
 	}
 
+	@DeleteMapping("/{employeeScheduleId}")
+	void deleteEmployeeScheduleById(@PathVariable("employeeId") Integer employeeId, @PathVariable("employeeScheduleId") Integer employeeScheduleId){
+		employeeScheduleService.deleteEmployeeScheduleById(employeeScheduleId);
+	}
+
 
 
 }
