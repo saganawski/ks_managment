@@ -13,4 +13,6 @@ public interface EmployeeScheduleService {
     List<EmployeeSchedule> getSchedules(Integer employeeId);
 
     void deleteEmployeeScheduleById(Integer employeeScheduleId);
+
+    List<EmployeeSchedule> getEmployeeSchedulesByOffice(Integer office);
 }

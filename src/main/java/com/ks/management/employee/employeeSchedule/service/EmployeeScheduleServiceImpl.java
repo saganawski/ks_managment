@@ -56,4 +56,9 @@ public class EmployeeScheduleServiceImpl implements EmployeeScheduleService{
     public void deleteEmployeeScheduleById(Integer employeeScheduleId) {
         jpaEmployeeScheduleRepo.deleteById(employeeScheduleId);
     }
+
+    @Override
+    public List<EmployeeSchedule> getEmployeeSchedulesByOffice(Integer officeId) {
+        return jpaEmployeeScheduleRepo.findAllByOffice(officeId);
+    }
 }

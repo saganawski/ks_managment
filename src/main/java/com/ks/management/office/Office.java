@@ -47,7 +47,7 @@ public class Office {
 			joinColumns = @JoinColumn(name="office_id"),
 			inverseJoinColumns = @JoinColumn(name="employee_id")
 	)
-	private List<Employee> Employees = new ArrayList<>();
+	private List<Employee> employees = new ArrayList<>();
 	
 	public Office() {}
 
