@@ -27,6 +27,10 @@ $(document).ready(function(){
                 eventClick: function(arg) {
                     console.log(arg);
                     //set status
+                    // show modal with status
+                    $('#statusModal').modal('show');
+                    //set status
+                    //color code
                 },
 
             });
@@ -64,6 +68,33 @@ $(document).ready(function(){
             $('#officeSelect').append("<option value='"+JSON.stringify(office)+"'>"+ office.name +"</option>");
             $('#officeSelect').selectpicker('refresh');
         }
+    }
+
+    getStatusOptions()
+        .then(function(data){
+            setStatusOptions(data._embedded.employeeScheduleStatuses);
+        })
+        .fail(function(err){
+            console.log(err);
+            swal({
+                title: "Error!",
+                text: "Could not get statuses for drop down\n" + err.responseJSON.message,
+                icon: "error"
+            });
+        });
+
+    function getStatusOptions(){
+        return $.ajax({
+            type:"GET",
+            url:"/employeeScheduleStatuses"
+        });
+    }
+
+    function setStatusOptions(statuses){
+        statuses.forEach(status => {
+            $('#statusSelect').append("<option value='"+JSON.stringify(status)+"'>"+ status.status +"</option>");
+        });
+        $('#statusSelect').selectpicker('refresh');
     }
 
     $('#officeFormSubmit').on('click', function(event){

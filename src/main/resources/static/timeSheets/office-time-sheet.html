@@ -75,5 +75,32 @@
             </div>
         </div>
     </div>
+
+    <!--        Set Status MODAL-->
+    <div class="modal fade" id="statusModal" tabindex="-1" role="dialog" aria-labelledby="statusModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" >Replace With Employee Name</h5>
+                </div>
+                <div class="modal-body">
+                    <form id="statusForm" class="needs-validation" novalidate>
+                        <div class="form-group col-md-3 col-lg-9">
+                            <label>Choose Status</label>
+                            <select id="statusSelect" name="office"  required>
+                                <option value="">Choose an status</option>
+                            </select>
+                            <div class="invalid-feedback">
+                                Must Choose status!
+                            </div>
+                        </div>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button id="statusFormSubmit" class="btn btn-primary" value="send" type="submit">Set Status</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
 </body>
 </html>
