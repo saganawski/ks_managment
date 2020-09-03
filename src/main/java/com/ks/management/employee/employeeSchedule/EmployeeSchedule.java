@@ -27,6 +27,10 @@ public class EmployeeSchedule {
     @Column(name = "scheduled_time")
     private LocalDateTime scheduledTime;
 
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
+    @JoinColumn(name = "employee_schedule_status_id")
+    private EmployeeScheduleStatus employeeScheduleStatus;
+
     @Column(name = "updated_by")
     private Integer updatedBy;
 
