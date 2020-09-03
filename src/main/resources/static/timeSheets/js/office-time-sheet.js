@@ -26,19 +26,7 @@ $(document).ready(function(){
 
                 eventClick: function(arg) {
                     console.log(arg);
-                    alert(arg);
-//                    swal({
-//                       title: "Remove this day from employees schedule?",
-//                       icon: "warning",
-//                       buttons: true,
-//                       dangerMode: true,
-//                     })
-//                     .then((willDelete) => {
-//                        if(willDelete){
-//                            arg.event.remove();
-//                            deleteEmployeeSchedule(vm.employee.id,arg.event._def.publicId);
-//                        }
-//                     });
+                    //set status
                 },
 
             });
@@ -116,7 +104,6 @@ $(document).ready(function(){
             type: "Get",
             url: "/employees/schedules/office/" + officeId,
         }).then(function(data){
-            console.log(data);
             let employeeSchedules = data;
             setEvents(employeeSchedules);
         }).fail(function(error){
@@ -147,6 +134,7 @@ $(document).ready(function(){
             events.push(event);
 
         }
+
         fullCalendar.addEventSource(events);
         $("div").removeClass("spinner-border");
     }
