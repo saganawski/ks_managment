@@ -204,7 +204,6 @@ $(document).ready(function() {
         }
         const form = document.querySelector('#employee-form');
         if(form.checkValidity()  === false){
-            event.stopPropagation();
             form.classList.add('was-validated');
             return false;
         }

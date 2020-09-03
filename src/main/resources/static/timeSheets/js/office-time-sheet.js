@@ -19,20 +19,6 @@ $(document).ready(function(){
                     myCustomButton: {
                         text: 'Choose Office',
                         click: function() {
-                            getOfficeOptions()
-                                .then(function(data){
-                                    setOfficeOptions(data);
-                                    $("div").removeClass("spinner-border");
-                                })
-                                .fail(function(err){
-                                    console.log(err);
-                                    swal({
-                                        title: "Error!",
-                                        text: "Could not get Offices for drop down\n" + err.responseJSON.message,
-                                        icon: "error"
-                                    });
-                                });
-
                             $('#officeModal').modal('show');
                         }
                     }
@@ -55,31 +41,26 @@ $(document).ready(function(){
 //                     });
                 },
 
-//                events: function (info, successCallback, failureCallback){
-//                    let searchParams = new URLSearchParams(window.location.search);
-//                    let employeeId = searchParams.get('employeeId');
-//                    $.ajax({
-//                        type: "GET",
-//                        url: "/employees/"+ employeeId + "/schedules",
-//
-//                        success: function(data){
-//                            var events = [];
-//                            for(event of data){
-//                                events.push(
-//                                {title: '',
-//                                    start: event.scheduledTime,
-//                                    allDay : true,
-//                                    id: event.id}
-//                                );
-//                            }
-//                            successCallback(events);
-//                        }
-//                    });
-//                }
             });
             fullCalendar.render();
+            $("div").removeClass("spinner-border");
         }
     });
+
+    getOfficeOptions()
+        .then(function(data){
+            setOfficeOptions(data);
+            $("div").removeClass("spinner-border");
+        })
+        .fail(function(err){
+            console.log(err);
+            swal({
+                title: "Error!",
+                text: "Could not get Offices for drop down\n" + err.responseJSON.message,
+                icon: "error"
+            });
+        });
+
 
     function getOfficeOptions(){
         return $.ajax({
@@ -101,13 +82,9 @@ $(document).ready(function(){
         event.preventDefault();
         let validated = validationCheck();
         if(validated){
-            //reset calaneder events
-            // spinner
-            fullCalendar.removeAllEvents();
             let office = JSON.parse($('#officeSelect').val());
 
             getEventsByOffice(office.id);
-
         }
 
     });
@@ -126,7 +103,6 @@ $(document).ready(function(){
             return false;
         }
         if(form.checkValidity()  === false){
-            event.stopPropagation();
             form.classList.add('was-validated');
             return false;
         }
@@ -141,6 +117,8 @@ $(document).ready(function(){
             url: "/employees/schedules/office/" + officeId,
         }).then(function(data){
             console.log(data);
+            let employeeSchedules = data;
+            setEvents(employeeSchedules);
         }).fail(function(error){
             console.log(error);
             swal({
@@ -150,5 +128,26 @@ $(document).ready(function(){
             });
 
         });
+    }
+
+    function setEvents(employeeSchedules){
+        $("#initialLoad").addClass("spinner-border");
+        $('#officeModal').modal('toggle');
+
+        fullCalendar.removeAllEvents();
+        let events = [];
+
+        for(schedule of employeeSchedules){
+            event = {
+                id: schedule.id,
+                title: schedule.employee.lastName,
+                start: schedule.scheduledTime,
+                allDay : true
+            };
+            events.push(event);
+
+        }
+        fullCalendar.addEventSource(events);
+        $("div").removeClass("spinner-border");
     }
 })
