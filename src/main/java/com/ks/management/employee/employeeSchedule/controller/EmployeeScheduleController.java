@@ -2,6 +2,7 @@ package com.ks.management.employee.employeeSchedule.controller;
 
 import com.ks.management.employee.Employee;
 import com.ks.management.employee.employeeSchedule.EmployeeSchedule;
+import com.ks.management.employee.employeeSchedule.EmployeeScheduleStatus;
 import com.ks.management.employee.employeeSchedule.service.EmployeeScheduleService;
 import com.ks.management.office.Office;
 import com.ks.management.security.UserPrincipal;
@@ -36,6 +37,13 @@ public class EmployeeScheduleController {
 	@DeleteMapping("/{employeeId}/schedules/{employeeScheduleId}")
 	void deleteEmployeeScheduleById(@PathVariable("employeeId") Integer employeeId, @PathVariable("employeeScheduleId") Integer employeeScheduleId){
 		employeeScheduleService.deleteEmployeeScheduleById(employeeScheduleId);
+	}
+
+	@PostMapping("/employee-schedule/{employeeScheduleId}/schedules/status")
+	public EmployeeSchedule setEmployeeScheduleStatus(@PathVariable("employeeScheduleId") Integer employeeScheduleId,
+													  @RequestBody EmployeeScheduleStatus status,
+													  @AuthenticationPrincipal UserPrincipal userPrincipal){
+		return employeeScheduleService.setEmployeeScheduleStatus(employeeScheduleId,status,userPrincipal);
 	}
 
 }

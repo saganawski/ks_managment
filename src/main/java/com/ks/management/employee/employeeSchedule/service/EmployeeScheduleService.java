@@ -2,6 +2,7 @@ package com.ks.management.employee.employeeSchedule.service;
 
 import com.ks.management.employee.Employee;
 import com.ks.management.employee.employeeSchedule.EmployeeSchedule;
+import com.ks.management.employee.employeeSchedule.EmployeeScheduleStatus;
 import com.ks.management.security.UserPrincipal;
 
 import java.time.LocalDateTime;
@@ -15,4 +16,6 @@ public interface EmployeeScheduleService {
     void deleteEmployeeScheduleById(Integer employeeScheduleId);
 
     List<EmployeeSchedule> getEmployeeSchedulesByOffice(Integer office);
+
+    EmployeeSchedule setEmployeeScheduleStatus(Integer employeeScheduleId, EmployeeScheduleStatus status, UserPrincipal userPrincipal);
 }

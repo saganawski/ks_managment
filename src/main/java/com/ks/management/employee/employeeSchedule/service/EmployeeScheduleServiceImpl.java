@@ -3,7 +3,9 @@ package com.ks.management.employee.employeeSchedule.service;
 import com.ks.management.employee.Employee;
 import com.ks.management.employee.dao.JpaEmployeeRepo;
 import com.ks.management.employee.employeeSchedule.EmployeeSchedule;
+import com.ks.management.employee.employeeSchedule.EmployeeScheduleStatus;
 import com.ks.management.employee.employeeSchedule.dao.JpaEmployeeScheduleRepo;
+import com.ks.management.employee.employeeSchedule.dao.JpaEmployeeScheduleStatusRepo;
 import com.ks.management.security.UserPrincipal;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,6 +22,8 @@ public class EmployeeScheduleServiceImpl implements EmployeeScheduleService{
     JpaEmployeeRepo jpaEmployeeRepo;
     @Autowired
     JpaEmployeeScheduleRepo jpaEmployeeScheduleRepo;
+    @Autowired
+    JpaEmployeeScheduleStatusRepo jpaEmployeeScheduleStatusRepo;
 
     @Override
     public Employee createScheduleEmployee(Integer employeeId, List<LocalDateTime> scheduleDates, UserPrincipal userPrincipal) {
@@ -60,5 +64,20 @@ public class EmployeeScheduleServiceImpl implements EmployeeScheduleService{
     @Override
     public List<EmployeeSchedule> getEmployeeSchedulesByOffice(Integer officeId) {
         return jpaEmployeeScheduleRepo.findAllByOffice(officeId);
+    }
+
+    @Override
+    public EmployeeSchedule setEmployeeScheduleStatus(Integer employeeScheduleId, EmployeeScheduleStatus status, UserPrincipal userPrincipal) {
+        final EmployeeScheduleStatus employeeScheduleStatus = jpaEmployeeScheduleStatusRepo.findByCode(status.getCode());
+
+        if(employeeScheduleStatus == null){
+            throw new RuntimeException("Could not find status in database! \n contact tech support!");
+        }
+        final EmployeeSchedule employeeSchedule = jpaEmployeeScheduleRepo.getOne(employeeScheduleId);
+
+        employeeSchedule.setUpdatedBy(userPrincipal.getUserId());
+        employeeSchedule.setEmployeeScheduleStatus(employeeScheduleStatus);
+        jpaEmployeeScheduleRepo.save(employeeSchedule);
+        return  employeeSchedule;
     }
 }

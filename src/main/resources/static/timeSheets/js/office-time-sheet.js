@@ -1,4 +1,7 @@
 $(document).ready(function(){
+    vm = this;
+    vm.scheduleEvent = {};
+
     const main = $('#load-layout').html();
     $('#load-layout').load("/common/_layout.html", function(responseTxt, statusTxt, xhr){
         if(statusTxt == "success"){
@@ -26,10 +29,9 @@ $(document).ready(function(){
 
                 eventClick: function(arg) {
                     console.log(arg);
+                    vm.scheduleEvent = arg.event._def;
                     //set status
-                    // show modal with status
                     $('#statusModal').modal('show');
-                    //set status
                     //color code
                 },
 
@@ -168,5 +170,52 @@ $(document).ready(function(){
 
         fullCalendar.addEventSource(events);
         $("div").removeClass("spinner-border");
+    }
+
+
+    $('#statusFormSubmit').on('click', function(event){
+        event.preventDefault();
+        const form = document.querySelector('#statusForm');
+
+        let status = JSON.parse($('#statusSelect').val());
+
+        if(status == null || status === ""){
+            swal({
+                title: "Error!",
+                text: "Must Select a status!",
+                icon: "error"
+            })
+            form.classList.add('was-validated');
+            return false;
+        }
+
+        setScheduleStatus(vm.scheduleEvent.publicId,status);
+
+    });
+
+    function setScheduleStatus(employeeScheduleId, status){
+        $.ajax({
+            type: "POST",
+            url: "/employees/employee-schedule/" + employeeScheduleId + "/schedules/status",
+            data: JSON.stringify(status),
+            dataType: "json",
+            contentType: "application/json; charset=utf-8"
+        }).then(function(response){
+            swal({
+                title: "Success!",
+                text: "You Set a status for this date",
+                icon: "success",
+                timer: 2000
+            }).then(function(){
+//                location.reload();
+            });
+        }).fail(function(error){
+            console.log(error.responseJSON);
+            swal({
+                title: "Error!",
+                text: "Could not set status for employee! \n" + error.responseJSON.message,
+                icon: "error"
+            });
+        });
     }
 })
