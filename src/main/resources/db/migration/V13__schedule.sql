@@ -11,12 +11,12 @@ CREATE TABLE employee_schedule_status (
 
 insert into employee_schedule_status
     (status,code) VALUES
-    ('Unexcused Absence','UNEXCUSED ABSENCE'),
-    ('Shift Worked','Shift Worked'),
-    ('Double Shift Worked','Double Shift Worked'),
-    ('Excused Absence','Excused Absence'),
-    ('Training Shift','Training Shift'),
-    ('Director or Project Manager','Director or Project Manager');
+    ('Unexcused Absence','UNEXCUSED_ABSENCE'),
+    ('Shift Worked','SHIFT_WORKED'),
+    ('Double Shift Worked','DOUBLE_SHIFT_WORKED'),
+    ('Excused Absence','EXCUSED_ABSENCE'),
+    ('Training Shift','TRAINING_SHIFT'),
+    ('Director or Project Manager','DIRECTOR_OR_PROJECT_MANAGER');
 
 CREATE TABLE employee_schedule (
     id int NOT NULL AUTO_INCREMENT,
