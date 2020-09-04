@@ -1,6 +1,7 @@
 $(document).ready(function(){
     vm = this;
     vm.scheduleEvent = {};
+    vm.office = {};
 
     const main = $('#load-layout').html();
     $('#load-layout').load("/common/_layout.html", function(responseTxt, statusTxt, xhr){
@@ -29,10 +30,9 @@ $(document).ready(function(){
 
                 eventClick: function(arg) {
                     vm.scheduleEvent = arg.event._def;
-                    debugger;
                     //launch modal to set status
                     $('#statusModal').modal('show');
-                    $('#statusTitle').text(vm.scheduleEvent.title);
+                    $('#statusTitle').text(vm.scheduleEvent.title + ", " + vm.scheduleEvent.extendedProps.firstName);
                 },
 
             });
@@ -104,7 +104,7 @@ $(document).ready(function(){
         let validated = validationCheck();
         if(validated){
             let office = JSON.parse($('#officeSelect').val());
-
+            vm.office = office;
             getEventsByOffice(office.id);
         }
 
@@ -152,7 +152,7 @@ $(document).ready(function(){
 
     function setEvents(employeeSchedules){
         $("#initialLoad").addClass("spinner-border");
-        $('#officeModal').modal('toggle');
+        $('#officeModal').modal('hide');
 
         fullCalendar.removeAllEvents();
         let events = [];
@@ -240,6 +240,7 @@ $(document).ready(function(){
                 icon: "success",
                 timer: 2000
             }).then(function(){
+                getEventsByOffice(vm.office.id);
                 $('#statusModal').modal('toggle');
             });
         }).fail(function(error){
