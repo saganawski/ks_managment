@@ -29,6 +29,7 @@ $(document).ready(function(){
 
                 eventClick: function(arg) {
                     vm.scheduleEvent = arg.event._def;
+                    debugger;
                     //launch modal to set status
                     $('#statusModal').modal('show');
                     $('#statusTitle').text(vm.scheduleEvent.title);
@@ -161,16 +162,49 @@ $(document).ready(function(){
                 id: schedule.id,
                 title: schedule.employee.lastName,
                 start: schedule.scheduledTime,
-                allDay : true
+                allDay : true,
+                color : setColorByStatus(schedule.employeeScheduleStatus),
+                extendedProps: {
+                    status: schedule.employeeScheduleStatus,
+                    firstName: schedule.employee.firstName
+                }
             };
             events.push(event);
-
         }
 
         fullCalendar.addEventSource(events);
         $("div").removeClass("spinner-border");
     }
 
+    function setColorByStatus(employeeScheduleStatus){
+        if(employeeScheduleStatus != null){
+            status = employeeScheduleStatus.status;
+            switch(status){
+                case "Unexcused Absence":
+                    return "red";
+                    break;
+                case "Shift Worked":
+                    return "#b7e1cd";
+                    break;
+                case "Double Shift Worked":
+                    return "#045c32";
+                    break;
+                case "Excused Absence":
+                    return "#ffc000";
+                    break;
+                case "Training Shift":
+                    return "#00b0f0";
+                    break;
+                case "Director or Project Manager":
+                    return "#5e1678";
+                    break;
+                default:
+                    return "#007bff";
+            }
+        } else {
+            return "#007bff";
+        }
+    }
 
     $('#statusFormSubmit').on('click', function(event){
         event.preventDefault();
@@ -206,7 +240,7 @@ $(document).ready(function(){
                 icon: "success",
                 timer: 2000
             }).then(function(){
-//                location.reload();
+                $('#statusModal').modal('toggle');
             });
         }).fail(function(error){
             console.log(error.responseJSON);
