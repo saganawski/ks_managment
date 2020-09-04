@@ -28,11 +28,10 @@ $(document).ready(function(){
                 },
 
                 eventClick: function(arg) {
-                    console.log(arg);
                     vm.scheduleEvent = arg.event._def;
-                    //set status
+                    //launch modal to set status
                     $('#statusModal').modal('show');
-                    //color code
+                    $('#statusTitle').text(vm.scheduleEvent.title);
                 },
 
             });
