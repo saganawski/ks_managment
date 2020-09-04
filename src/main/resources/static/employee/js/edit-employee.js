@@ -1,10 +1,124 @@
 $(document).ready(function() {
+    vm = this;
+    vm.employee = {};
+    vm.events = [];
+
     const main = $('#load-layout').html();
     $('#load-layout').load("/common/_layout.html", function(responseTxt, statusTxt, xhr){
         if(statusTxt == "success"){
             $('#load-layout').append(main);
+            var calendarEl = document.getElementById('calendar');
+            var calendar = new FullCalendar.Calendar(calendarEl, {
+                initialView: 'dayGridMonth',
+
+                selectable: true,
+                selectOverlap: false,
+                select: function(info) {
+                    calendar.addEvent({
+                        title: "Working",
+                        start: info.startStr,
+                        end: info.endStr,
+                        allDay: true
+                    });
+                    vm.events = calendar.getEvents();
+                },
+                eventClick: function(arg) {
+                    swal({
+                       title: "Remove this day from employees schedule?",
+                       icon: "warning",
+                       buttons: true,
+                       dangerMode: true,
+                     })
+                     .then((willDelete) => {
+                        if(willDelete){
+                            arg.event.remove();
+                            deleteEmployeeSchedule(vm.employee.id,arg.event._def.publicId);
+                        }
+                     });
+                },
+
+                events: function (info, successCallback, failureCallback){
+                    let searchParams = new URLSearchParams(window.location.search);
+                    let employeeId = searchParams.get('employeeId');
+                    $.ajax({
+                        type: "GET",
+                        url: "/employees/"+ employeeId + "/schedules",
+
+                        success: function(data){
+                            var events = [];
+                            for(event of data){
+                                events.push(
+                                {title: '',
+                                    start: event.scheduledTime,
+                                    allDay : true,
+                                    id: event.id,
+                                    color: setColorByStatus(event.employeeScheduleStatus)
+                                    }
+                                );
+                            }
+                            successCallback(events);
+                        }
+                    });
+                }
+            });
+            calendar.render();
         }
     });
+
+    function setColorByStatus(employeeScheduleStatus){
+        if(employeeScheduleStatus != null){
+            status = employeeScheduleStatus.status;
+            switch(status){
+                case "Unexcused Absence":
+                    return "red";
+                    break;
+                case "Shift Worked":
+                    return "#b7e1cd";
+                    break;
+                case "Double Shift Worked":
+                    return "#045c32";
+                    break;
+                case "Excused Absence":
+                    return "#ffc000";
+                    break;
+                case "Training Shift":
+                    return "#00b0f0";
+                    break;
+                case "Director or Project Manager":
+                    return "#5e1678";
+                    break;
+                default:
+                    return "#007bff";
+            }
+        } else {
+            return "#007bff";
+        }
+    }
+
+    function deleteEmployeeSchedule(employeeId, employeeScheduleId){
+        $.ajax({
+            type: "DELETE",
+            url: "/employees/" + employeeId + "/schedules/" + employeeScheduleId
+        }).then(function(response){
+            swal({
+                title: "Success!",
+                text: "You deleted this schedule day",
+                icon: "success",
+                timer: 2000
+            }).then(function(){
+                location.reload();
+            });
+        }).fail(function(error){
+            console.log(error.responseJSON);
+            swal({
+                title: "Error!",
+                text: "Could not delete scheduled day! \n" + error.responseJSON.message,
+                icon: "error"
+            }).then(function(){
+                location.reload();
+            });
+        });
+    }
 
     getPositionsForDropDown();
         function getPositionsForDropDown(){
@@ -49,6 +163,7 @@ $(document).ready(function() {
                return $.ajax({
                               url:"/employees/"+ employeeId
                           }).then(function(data){
+                              vm.employee = data;
                               return resolve(data);
                           }).fail(function(err){
                               console.log(err);
@@ -121,7 +236,6 @@ $(document).ready(function() {
         }
         const form = document.querySelector('#employee-form');
         if(form.checkValidity()  === false){
-            event.stopPropagation();
             form.classList.add('was-validated');
             return false;
         }
@@ -202,5 +316,53 @@ $(document).ready(function() {
             });
         });
     }
+
+    $('#load-layout').on('click','#scheduleEmployee', function(event){
+        event.preventDefault();
+
+        let eventDates = [];
+        for(event of vm.events){
+            const startDate = event._instance.range.start
+            let endDate = event._instance.range.end;
+            endDate.setDate(endDate.getDate() -1);
+            eventDates.push(startDate);
+
+            if(startDate.getTime() != endDate.getTime()){
+                let nextInRangeDate = new Date(startDate);
+                nextInRangeDate.setDate(startDate.getDate() + 1);
+                while(nextInRangeDate.getTime() != endDate.getTime()){
+                    eventDates.push(nextInRangeDate);
+                    nextInRangeDate = new Date(nextInRangeDate);
+                    nextInRangeDate.setDate(nextInRangeDate.getDate() + 1);
+                }
+                eventDates.push(endDate);
+            }
+        }
+        $.ajax({
+            type: "POST",
+            url: "/employees/" + vm.employee.id + "/schedules",
+            data: JSON.stringify(eventDates),
+            dataType: "json",
+            contentType: "application/json; charset=utf-8"
+        }).then(function(response){
+            swal({
+                title: "Success!",
+                text: "You Set a scheduled date for this employee",
+                icon: "success",
+                timer: 2000
+            }).then(function(){
+                location.reload();
+            });
+        }).fail(function(error){
+            console.log(error.responseJSON);
+            swal({
+                title: "Error!",
+                text: "Could not set schedule for employee! \n" + error.responseJSON.message,
+                icon: "error"
+            }).then(function(){
+                location.reload();
+            });
+        });
+    });
 
 });
