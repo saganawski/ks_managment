@@ -52,7 +52,6 @@ $(document).ready(function () {
 		if(validated){
             var formJson = convertFormToJson($("form").serializeArray());
             var selectedOffices = $('#officeSelect').val();
-            debugger;
             formJson.officeSelections = selectedOffices;
             //Send To controller
             setUpNewEmployee(formJson)
@@ -63,7 +62,6 @@ $(document).ready(function () {
 	});
 
 	function validationCheck(){
-	    debugger;
 	    const offices = $('#officeSelect').val().toString();
         if(offices == null || offices === ""){
             swal({
