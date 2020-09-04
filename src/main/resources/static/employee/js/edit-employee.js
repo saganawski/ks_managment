@@ -51,7 +51,9 @@ $(document).ready(function() {
                                 {title: '',
                                     start: event.scheduledTime,
                                     allDay : true,
-                                    id: event.id}
+                                    id: event.id,
+                                    color: setColorByStatus(event.employeeScheduleStatus)
+                                    }
                                 );
                             }
                             successCallback(events);
@@ -62,6 +64,36 @@ $(document).ready(function() {
             calendar.render();
         }
     });
+
+    function setColorByStatus(employeeScheduleStatus){
+        if(employeeScheduleStatus != null){
+            status = employeeScheduleStatus.status;
+            switch(status){
+                case "Unexcused Absence":
+                    return "red";
+                    break;
+                case "Shift Worked":
+                    return "#b7e1cd";
+                    break;
+                case "Double Shift Worked":
+                    return "#045c32";
+                    break;
+                case "Excused Absence":
+                    return "#ffc000";
+                    break;
+                case "Training Shift":
+                    return "#00b0f0";
+                    break;
+                case "Director or Project Manager":
+                    return "#5e1678";
+                    break;
+                default:
+                    return "#007bff";
+            }
+        } else {
+            return "#007bff";
+        }
+    }
 
     function deleteEmployeeSchedule(employeeId, employeeScheduleId){
         $.ajax({
