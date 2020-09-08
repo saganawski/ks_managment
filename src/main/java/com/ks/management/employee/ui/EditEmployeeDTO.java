@@ -12,6 +12,7 @@ public class EditEmployeeDTO {
     private String email;
     private String phoneNumber;
     private String position;
+    private Boolean deleted;
     private Integer updatedBy;
     private Date updatedDate;
     private Integer createdBy;
@@ -32,7 +33,19 @@ public class EditEmployeeDTO {
         this.officeSelection = officeSelection;
     }
 
-    public EditEmployeeDTO(Integer id, String firstName, String lastName, String alias, String email, String phoneNumber, String position, Integer updatedBy, Date updatedDate, Integer createdBy, Date createdDate, List<Integer> officeSelection) {
+    public EditEmployeeDTO(Integer id, String firstName, String lastName, String alias, String email, String phoneNumber, String position, Boolean deleted, List<Integer> officeSelection) {
+        this.id = id;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.alias = alias;
+        this.email = email;
+        this.phoneNumber = phoneNumber;
+        this.position = position;
+        this.deleted = deleted;
+        this.officeSelection = officeSelection;
+    }
+
+    public EditEmployeeDTO(Integer id, String firstName, String lastName, String alias, String email, String phoneNumber, String position, Boolean deleted, Integer updatedBy, Date updatedDate, Integer createdBy, Date createdDate, List<Integer> officeSelection) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -101,6 +114,14 @@ public class EditEmployeeDTO {
 
     public void setPosition(String position) {
         this.position = position;
+    }
+
+    public Boolean getDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(Boolean deleted) {
+        this.deleted = deleted;
     }
 
     public Integer getUpdatedBy() {
