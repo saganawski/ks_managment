@@ -154,6 +154,7 @@ public class EmployeeServiceImpl implements EmployeeService{
         final Integer userId = Optional.ofNullable(userPrincipal.getUserId()).orElse(-1);
         employee.setUpdatedBy(userId);
         employee.setCreatedBy(userId);
+        employee.setDeleted(false);
 
         return repo.save(employee);
     }
