@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.validation.constraints.NotNull;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -66,7 +67,9 @@ public class EmployeeServiceImpl implements EmployeeService{
 
     @Override
     public List<Employee> getAllEmployees() {
-        return repo.findAll();
+        return repo.findAll().stream()
+                .filter(e -> !e.getDeleted())
+                .collect(Collectors.toList());
     }
 
     @Override
