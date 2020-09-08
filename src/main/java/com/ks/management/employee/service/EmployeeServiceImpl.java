@@ -55,6 +55,7 @@ public class EmployeeServiceImpl implements EmployeeService{
                 .email(email)
                 .phoneNumber(phoneNumber)
                 .position(position)
+                .deleted(false)
                 .updatedBy(userId)
                 .createdBy(userId)
                 .build();
