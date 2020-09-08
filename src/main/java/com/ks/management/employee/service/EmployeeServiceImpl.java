@@ -116,8 +116,17 @@ public class EmployeeServiceImpl implements EmployeeService{
     }
 
     @Override
-    public void deleteEmployee(Integer employeeId) {
-        repo.deleteById(employeeId);
+    public void deleteEmployee(Integer employeeId, UserPrincipal userPrincipal) {
+        final Employee employee = repo.getOne(employeeId);
+
+        if(employee == null){
+            throw new RuntimeException("Unable to find employee with id: " + employeeId);
+        }
+
+        final Integer userId = userPrincipal.getUserId();
+        employee.setUpdatedBy(userId);
+        employee.setDeleted(true);
+        repo.save(employee);
     }
 
     @Override

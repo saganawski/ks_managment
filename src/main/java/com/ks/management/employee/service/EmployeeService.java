@@ -18,7 +18,7 @@ public interface EmployeeService {
 
     Employee updateEmployee(EditEmployeeDTO employeeDTO, UserPrincipal userPrincipal);
 
-    void deleteEmployee(Integer employeeId);
+    void deleteEmployee(Integer employeeId, UserPrincipal userPrincipal);
 
     Employee createNewEmployee(Employee employee, UserPrincipal userPrincipal);
 
