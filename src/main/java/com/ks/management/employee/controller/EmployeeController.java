@@ -45,8 +45,8 @@ public class EmployeeController {
 	}
 
 	@DeleteMapping("/{employeeId}")
-	public void deleteEmployee(@PathVariable("employeeId") Integer employeeId){
-		employeeService.deleteEmployee(employeeId);
+	public void deleteEmployee(@PathVariable("employeeId") Integer employeeId, @AuthenticationPrincipal UserPrincipal userPrincipal){
+		employeeService.deleteEmployee(employeeId, userPrincipal);
 	}
 
 	@PostMapping("/new")

@@ -47,6 +47,9 @@ public class Employee {
 	@JoinColumn(name = "position_id")
 	@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 	private Position position;
+
+	@Column(name="deleted")
+	private Boolean deleted;
 	
 	@Column(name = "updated_by")
 	private Integer updatedBy;

@@ -9,7 +9,7 @@ import java.util.Set;
 public interface JpaEmployeeRepo extends JpaRepository<Employee, Integer> {
     @Query(value = "Select e.* FROM employee as e " +
             "JOIN position as p ON p.id = e.position_id " +
-            "WHERE p.code != 'CANVASSER'",
+            "WHERE p.code != 'CANVASSER' AND e.deleted IS FALSE ",
             nativeQuery = true)
     Set<Employee> findAllNonCanvassers();
 

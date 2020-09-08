@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.validation.constraints.NotNull;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -54,6 +55,7 @@ public class EmployeeServiceImpl implements EmployeeService{
                 .email(email)
                 .phoneNumber(phoneNumber)
                 .position(position)
+                .deleted(false)
                 .updatedBy(userId)
                 .createdBy(userId)
                 .build();
@@ -66,7 +68,9 @@ public class EmployeeServiceImpl implements EmployeeService{
 
     @Override
     public List<Employee> getAllEmployees() {
-        return repo.findAll();
+        return repo.findAll().stream()
+                .filter(e -> !e.getDeleted())
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -105,6 +109,7 @@ public class EmployeeServiceImpl implements EmployeeService{
                 .email(email)
                 .phoneNumber(phoneNumber)
                 .position(position)
+                .deleted(false)
                 .updatedBy(updatedById)
                 .build();
 
@@ -116,8 +121,17 @@ public class EmployeeServiceImpl implements EmployeeService{
     }
 
     @Override
-    public void deleteEmployee(Integer employeeId) {
-        repo.deleteById(employeeId);
+    public void deleteEmployee(Integer employeeId, UserPrincipal userPrincipal) {
+        final Employee employee = repo.getOne(employeeId);
+
+        if(employee == null){
+            throw new RuntimeException("Unable to find employee with id: " + employeeId);
+        }
+
+        final Integer userId = userPrincipal.getUserId();
+        employee.setUpdatedBy(userId);
+        employee.setDeleted(true);
+        repo.save(employee);
     }
 
     @Override
@@ -140,6 +154,7 @@ public class EmployeeServiceImpl implements EmployeeService{
         final Integer userId = Optional.ofNullable(userPrincipal.getUserId()).orElse(-1);
         employee.setUpdatedBy(userId);
         employee.setCreatedBy(userId);
+        employee.setDeleted(false);
 
         return repo.save(employee);
     }
