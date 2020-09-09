@@ -126,7 +126,6 @@ $(document).ready(function () {
 
             function setOfficeOptions(offices){
                 for(office of offices){
-                    delete office.location;
                     $('#office').append("<option value='"+JSON.stringify(office)+"'>"+ office.name +"</option>")
                 }
             }
