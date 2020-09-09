@@ -126,7 +126,6 @@ $(document).ready(function () {
 
             function setOfficeOptions(offices){
                 for(office of offices){
-                    delete office.location;
                     $('#office').append("<option value='"+JSON.stringify(office)+"'>"+ office.name +"</option>")
                 }
             }
@@ -169,7 +168,6 @@ $(document).ready(function () {
             $('#callBackDate').val(application.callBackDate.substr(0,10));
         }
         if(application.office != null ){
-            delete application.office.location;
             $('#office').val(JSON.stringify(application.office));
         }
         $('#applicationContactType').val(JSON.stringify(application.applicationContactType));

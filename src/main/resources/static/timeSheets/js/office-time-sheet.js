@@ -65,8 +65,6 @@ $(document).ready(function(){
 
     function setOfficeOptions(offices){
         for(office of offices){
-//            delete office.location;
-//            TODO: this has got to be my bug in application-edit
             $('#officeSelect').append("<option value='"+JSON.stringify(office)+"'>"+ office.name +"</option>");
             $('#officeSelect').selectpicker('refresh');
         }
