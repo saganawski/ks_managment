@@ -11,8 +11,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
+import javax.persistence.criteria.CriteriaBuilder;
+import java.time.*;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Locale;
 import java.util.stream.Collectors;
 
 @Service
@@ -79,5 +82,15 @@ public class EmployeeScheduleServiceImpl implements EmployeeScheduleService{
         employeeSchedule.setEmployeeScheduleStatus(employeeScheduleStatus);
         jpaEmployeeScheduleRepo.save(employeeSchedule);
         return  employeeSchedule;
+    }
+
+    @Override
+    public List<EmployeeSchedule> getEmployeeSchedulesByOfficeForTimePeriod(Integer officeId, String startDate, String endDate) {
+        final Instant startInstance = Instant.parse(startDate);
+        final Instant endInstance = Instant.parse(endDate);
+        final LocalDateTime startDateParam = LocalDateTime.ofInstant(startInstance, ZoneId.of(ZoneOffset.UTC.getId()));
+        final LocalDateTime endDateParam = LocalDateTime.ofInstant(endInstance,ZoneId.of(ZoneOffset.UTC.getId()));
+
+        return jpaEmployeeScheduleRepo.findAllByOfficeForTimePeriod(officeId,startDateParam.with(LocalTime.MIN),endDateParam);
     }
 }

@@ -25,10 +25,17 @@ public class EmployeeScheduleController {
 		return  employeeScheduleService.getEmployeeSchedulesByOffice(officeId);
 	}
 
+	@GetMapping("/schedules/office/{officeId}/startDate/{startDate}/endDate/{endDate}")
+	public List<EmployeeSchedule> getScheduleForOfficeByTimePeriod(@PathVariable("officeId") Integer officeId, @PathVariable("startDate") String startDate,
+														   @PathVariable("endDate") String endDate){
+		return employeeScheduleService.getEmployeeSchedulesByOfficeForTimePeriod(officeId,startDate,endDate);
+	}
+
 	@GetMapping("/{employeeId}/schedules")
 	public List<EmployeeSchedule> getSchedule(@PathVariable("employeeId") Integer employeeId){
 		return employeeScheduleService.getSchedules(employeeId);
 	}
+
 	@PostMapping("/{employeeId}/schedules")
 	public Employee createNewEmployee(@PathVariable("employeeId") Integer employeeId, @RequestBody List<LocalDateTime> scheduleDates, @AuthenticationPrincipal UserPrincipal userPrincipal) {
 		return employeeScheduleService.createScheduleEmployee(employeeId,scheduleDates,userPrincipal);

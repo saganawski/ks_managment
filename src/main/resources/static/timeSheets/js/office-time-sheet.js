@@ -19,6 +19,7 @@ $(document).ready(function(){
                     center: 'title',
                     right: 'prev,next'
                   },
+
                 customButtons: {
                     myCustomButton: {
                         text: 'Choose Office',
@@ -131,9 +132,15 @@ $(document).ready(function(){
     }
 
     function getEventsByOffice(officeId){
+        let today = new Date();
+        let year = today.getFullYear();
+        let month = today.getMonth();
+        let startOfMonth = new Date(year,month,1);
+        let endOfMonth = new Date(year,month + 1, 0);
+
         $.ajax({
             type: "Get",
-            url: "/employees/schedules/office/" + officeId,
+            url: "/employees/schedules/office/" + officeId +"/startDate/" + startOfMonth.toISOString()+ "/endDate/" + endOfMonth.toISOString(),
         }).then(function(data){
             let employeeSchedules = data;
             setEvents(employeeSchedules);
