@@ -19,6 +19,7 @@ $(document).ready(function(){
                     center: 'title',
                     right: 'prev,next'
                   },
+
                 customButtons: {
                     myCustomButton: {
                         text: 'Choose Office',
@@ -35,11 +36,68 @@ $(document).ready(function(){
                     $('#statusTitle').text(vm.scheduleEvent.title + ", " + vm.scheduleEvent.extendedProps.firstName);
                 },
 
+
             });
             fullCalendar.render();
             $("div").removeClass("spinner-border");
+            //Add pagination to the next button
+            document.querySelector("#calendar > div.fc-header-toolbar.fc-toolbar.fc-toolbar-ltr > div:nth-child(3) > div > button.fc-next-button.fc-button.fc-button-primary").addEventListener('click',function(){
+                if(!jQuery.isEmptyObject(vm.office)){
+                    startOfMonth = fullCalendar.getDate();
+                    let year = startOfMonth.getFullYear();
+                    let month = startOfMonth.getMonth();
+                    let endOfMonth = new Date(year,month + 1, 0);
+
+                    $.ajax({
+                        type: "Get",
+                        url: "/employees/schedules/office/" + vm.office.id +"/startDate/" + startOfMonth.toISOString()+ "/endDate/" + endOfMonth.toISOString(),
+                    }).then(function(data){
+                        let employeeSchedules = data;
+                        setEvents(employeeSchedules);
+                    }).fail(function(error){
+                        console.log(error);
+                        swal({
+                            title: "Error!",
+                            text: "Could not employee schedules for this office! \n" + error.responseJSON.message,
+                            icon: "error"
+                        });
+
+                    });
+                }
+            });
+            //ADD pagination to the previous button
+            document.querySelector("#calendar > div.fc-header-toolbar.fc-toolbar.fc-toolbar-ltr > div:nth-child(3) > div > button.fc-prev-button.fc-button.fc-button-primary > span").addEventListener('click',function(){
+                if(!jQuery.isEmptyObject(vm.office)){
+                    startOfMonth = fullCalendar.getDate();
+                    startOfMonth.setMonth(startOfMonth.getMonth() -1);
+                    
+                    let year = startOfMonth.getFullYear();
+                    let month = startOfMonth.getMonth();
+                    let endOfMonth = new Date(year,month + 1, 0);
+
+                    $.ajax({
+                        type: "Get",
+                        url: "/employees/schedules/office/" + vm.office.id +"/startDate/" + startOfMonth.toISOString()+ "/endDate/" + endOfMonth.toISOString(),
+                    }).then(function(data){
+                        let employeeSchedules = data;
+                        setEvents(employeeSchedules);
+                        fullCal
+                    }).fail(function(error){
+                        console.log(error);
+                        swal({
+                            title: "Error!",
+                            text: "Could not employee schedules for this office! \n" + error.responseJSON.message,
+                            icon: "error"
+                        });
+
+                    });
+                }
+            });
+
+
         }
     });
+
 
     getOfficeOptions()
         .then(function(data){
@@ -131,9 +189,15 @@ $(document).ready(function(){
     }
 
     function getEventsByOffice(officeId){
+        let today = new Date();
+        let year = today.getFullYear();
+        let month = today.getMonth();
+        let startOfMonth = new Date(year,month,1);
+        let endOfMonth = new Date(year,month + 1, 0);
+
         $.ajax({
             type: "Get",
-            url: "/employees/schedules/office/" + officeId,
+            url: "/employees/schedules/office/" + officeId +"/startDate/" + startOfMonth.toISOString()+ "/endDate/" + endOfMonth.toISOString(),
         }).then(function(data){
             let employeeSchedules = data;
             setEvents(employeeSchedules);
