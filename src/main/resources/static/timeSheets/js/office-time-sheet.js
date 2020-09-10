@@ -65,6 +65,36 @@ $(document).ready(function(){
                     });
                 }
             });
+            //ADD pagination to the previous button
+            document.querySelector("#calendar > div.fc-header-toolbar.fc-toolbar.fc-toolbar-ltr > div:nth-child(3) > div > button.fc-prev-button.fc-button.fc-button-primary > span").addEventListener('click',function(){
+                if(!jQuery.isEmptyObject(vm.office)){
+                    startOfMonth = fullCalendar.getDate();
+                    startOfMonth.setMonth(startOfMonth.getMonth() -1);
+                    
+                    let year = startOfMonth.getFullYear();
+                    let month = startOfMonth.getMonth();
+                    let endOfMonth = new Date(year,month + 1, 0);
+
+                    $.ajax({
+                        type: "Get",
+                        url: "/employees/schedules/office/" + vm.office.id +"/startDate/" + startOfMonth.toISOString()+ "/endDate/" + endOfMonth.toISOString(),
+                    }).then(function(data){
+                        let employeeSchedules = data;
+                        setEvents(employeeSchedules);
+                        fullCal
+                    }).fail(function(error){
+                        console.log(error);
+                        swal({
+                            title: "Error!",
+                            text: "Could not employee schedules for this office! \n" + error.responseJSON.message,
+                            icon: "error"
+                        });
+
+                    });
+                }
+            });
+
+
         }
     });
 
