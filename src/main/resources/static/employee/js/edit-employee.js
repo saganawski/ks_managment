@@ -8,7 +8,7 @@ $(document).ready(function() {
         if(statusTxt == "success"){
             $('#load-layout').append(main);
             var calendarEl = document.getElementById('calendar');
-            var calendar = new FullCalendar.Calendar(calendarEl, {
+            calendar = new FullCalendar.Calendar(calendarEl, {
                 initialView: 'dayGridMonth',
 
                 selectable: true,
@@ -321,16 +321,17 @@ $(document).ready(function() {
         event.preventDefault();
 
         let eventDates = [];
+
         for(event of vm.events){
             const startDate = event._instance.range.start
             let endDate = event._instance.range.end;
             endDate.setDate(endDate.getDate() -1);
             eventDates.push(startDate);
 
-            if(startDate.getTime() != endDate.getTime()){
+            if(startDate.getTime() < endDate.getTime()){
                 let nextInRangeDate = new Date(startDate);
                 nextInRangeDate.setDate(startDate.getDate() + 1);
-                while(nextInRangeDate.getTime() != endDate.getTime()){
+                while(nextInRangeDate.getTime() != endDate.getTime() && nextInRangeDate.getTime() < endDate.getTime()){
                     eventDates.push(nextInRangeDate);
                     nextInRangeDate = new Date(nextInRangeDate);
                     nextInRangeDate.setDate(nextInRangeDate.getDate() + 1);
