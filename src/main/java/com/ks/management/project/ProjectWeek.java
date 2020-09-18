@@ -1,5 +1,6 @@
 package com.ks.management.project;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;
@@ -43,6 +44,11 @@ public class ProjectWeek {
 
     @Column(name = "shifts_needed")
     private Integer shiftsNeeded;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="project_id", nullable = false)
+    @JsonIgnore
+    private Project project;
 
     @Column(name = "updated_by")
     private Integer updatedBy;

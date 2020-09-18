@@ -59,7 +59,7 @@ public class Project {
     private Date createdDate;
 
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-    @OneToMany(mappedBy = "project_week",fetch = FetchType.LAZY,cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "project",fetch = FetchType.LAZY,cascade = CascadeType.ALL)
     private Set<ProjectWeek> projectWeeks = new HashSet<>();
 
 
