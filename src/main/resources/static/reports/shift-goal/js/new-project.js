@@ -57,8 +57,7 @@ $(document).ready(function () {
             contentType: "application/json; charset=utf-8"
         }).then(function(data){
             swal("Success!","You created a new project","success");
-            debugger;
-//            window.location.href = "/employee/employee.html";
+            window.location.href = "/reports/shift-goal/project-details.html?projectId=" + data.id;
         }).fail(function(error){
             console.log(error);
             swal("ERROR", "Could not create project! \n" + error.responseJSON.error,"error");
