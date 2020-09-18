@@ -23,10 +23,11 @@ $(document).ready(function () {
                     "defaultContent": ""},
                 {"data" : "name",
                     "defaultContent":""},
+                {"data" : "office.name",
+                    "defaultContent":""},
                 {   "targets": -1,
                     "data": function(data, type,row,meta){
-//                        return '<a class="btn btn-warning" href="/employee/employee-details.html?employeeId='+ data.id +'">Details</a>'
-                        return '<a class="btn btn-warning" href="#">Details</a>'
+                        return '<a class="btn btn-warning" href="/reports/shift-goal/project-details.html?projectId= '+data.id+ '  ">Details</a>'
                     }
                 }
             ]
