@@ -37,13 +37,13 @@ public class ProjectWeek {
     private Integer shiftsScheduled;
 
     @Column(name = "shifts_completed")
-    private Integer shiftCompleted;
+    private Integer shiftsCompleted;
 
     @Column(name = "remaining_working_days")
     private Integer remainingWorkingDays;
 
     @Column(name = "shifts_needed")
-    private Integer shiftsNeeded;
+    private Double shiftsNeeded;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="project_id", nullable = false)

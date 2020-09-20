@@ -2,9 +2,12 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Employee Details</title>
+    <title>Project Details</title>
     <!-- JQUERY -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <!-- Data Tables -->
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.20/css/jquery.dataTables.css">
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.js"></script>
     <!-- BootStrap -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
@@ -15,112 +18,107 @@
     <!--	bootstrap-select-->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.18/dist/css/bootstrap-select.min.css">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.18/dist/js/bootstrap-select.min.js"></script>
-<!--    Full Calendar-->
-    <link href='https://cdn.jsdelivr.net/npm/fullcalendar@5.3.0/main.css' rel='stylesheet' />
-    <script src='https://cdn.jsdelivr.net/npm/fullcalendar@5.3.0/main.min.js'></script>
 
     <link rel="stylesheet" href="/common/style.css">
-    <script src="/employee/js/edit-employee.js"></script>
+    <script src="/reports/shift-goal/js/project-details.js"></script>
 </head>
 <body>
     <div id="load-layout">
         <main>
             <div class="card col-lg-10" style="margin:15px;">
-                <div class="card-header">
-                    Employee Details
+                <div class="card-header" style="text-align: center;">
+                    Project Details
                 </div>
                 <div class="card-body">
                     <div class="container">
-                        <form id="employee-form" class="needs-validation" novalidate>
-                            <div class="form-group">
-                                <label>ID</label>
-                                <input type="text" id="id"  class="form-control" name="id" readonly />
+                        <div class="text-center">
+                            <div id="initialLoad" class="spinner-border" role="status">
+                                <span class="sr-only">Loading...</span>
                             </div>
-                            <div class="form-row">
-                                <div class="form-group col-md-3">
-                                    <label>First Name</label>
-                                    <input type="text" id="firstName" name="firstName" class="form-control" required/>
-                                    <div class="invalid-feedback">
-                                        Field is Required!
-                                    </div>
-                                </div>
-                                <div class="form-group col-md-3">
-                                    <label>Last Name</label>
-                                    <input type="text" id="lastName" name="lastName" class="form-control" required/>
-                                    <div class="invalid-feedback">
-                                        Field is Required!
-                                    </div>
-                                </div>
-                                <div class="form-group col-md-3">
-                                    <label>Alias</label>
-                                    <input type="text" id="alias" name="alias" class="form-control"/>
-                                </div>
-                            </div>
-
-                            <div class="form-row">
-                                <div class="form-group col-md-3">
-                                    <label>Email</label>
-                                    <input type="email" id="email" name="email" class="form-control" required/>
-                                    <div class="invalid-feedback">
-                                        Field is Required!
-                                    </div>
-                                </div>
-                                <div class="form-group col-md-3">
-                                    <label>Phone Number</label>
-                                    <input type="text" id="phoneNumber" name="phoneNumber" class="form-control"/>
-                                </div>
-                                <div class="form-group col-md-3">
-                                    <label>Position</label>
-                                    <select id="position" name="position" class="custom-select" required>
-                                        <option value="" selected>Choose Position</option>
-                                    </select>
-                                    <div class="invalid-feedback">
-                                        Field is Required!
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="form-group col-md-3">
-                                <label>Office</label>
-                                <select id="officeSelect" name="officeSelection"  class="form-control" multiple data-live-search="true" required>
-                                </select>
-                                <div class="invalid-feedback">
-                                    Field is Required!
-                                </div>
-                            </div>
-
-                            <button id="editEmployee" value="send" type="submit" class="btn btn-primary">Save changes</button>
-                            <button id="deleteEmployee" value="send" type="submit" class="btn btn-danger">Delete Employee</button>
-                        </form>
+                        </div>
+                        <a id="newProjectWeek" class="btn btn-success" href="#" role="button" style="margin-bottom: 5px">Add Project Week</a>
+                        <table id="project-table" class="display">
+                            <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Original Shift Goal</th>
+                                <th>Week Beginning</th>
+                                <th>Week Ending</th>
+                                <th>Current Shift Goal</th>
+                                <th>Shifts Scheduled</th>
+                                <th>Scheduled VS Goal</th>
+                                <th>Scheduled Completed</th>
+                                <th>Shifts VS Goal</th>
+                                <th>Remaining Work Days</th>
+                                <th>Shifts Needed Per Day</th>
+                                <th>Actions</th>
+                            </tr>
+                            </thead>
+                        </table>
                     </div>
                 </div>
             </div>
-            <div class="card col-lg-10" style="margin:15px;">
-                <div class="card-header">
-                    Schedule Details
-                </div>
-                <div class="card-body">
-                    <div class="container">
-                        <div id="calendar"></div>
-
-                        <form id="schedule-form">
-                            <button id="scheduleEmployee" value="send" type="submit" class="btn btn-primary">Update Schedule</button>
-                        </form>
-                    </div>
-                </div>
-                <div class="card-footer text-center">
-                    <h5>Legend</h5>
-                    <button style="background-color:#007bff;">Scheduled</button>
-                    <button style="background-color:red;">Unexcused Absence</button>
-                    <button style="background-color:#ffc000;">Excused Absence</button>
-                    <button style="background-color:#b7e1cd;">Shift Worked</button>
-                    <button style="background-color:#045c32;">Double Shift Worked</button>
-                    <button style="background-color:#00b0f0;">Training Shift</button>
-                    <button style="background-color:#5e1678;">Director / Project Manager</button>
-                </div>
-            </div>
-
         </main>
+    </div>
+<!--    Edit week (row) Modal-->
+    <div class="modal fade" id="weekModal" tabindex="-1" role="dialog" aria-labelledby="weekModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="weekModalLabel">Update Week</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="weekForm" class="needs-validation" novalidate>
+                        <div class="form-group col-md-3 col-lg-9">
+                            <label>ID</label>
+                            <input type="text" id="id"  class="form-control" name="id" readonly />
+                        </div>
+                        <div class="form-group col-md-3 col-lg-9">
+                            <label>Original Shift Goal</label>
+                            <input type="number" min="0" id="originalShiftGoal"  class="form-control" name="originalShiftGoal" required/>
+                            <div class="invalid-feedback">
+                                Field is Required!
+                            </div>
+                        </div>
+                        <div class="form-group col-md-3 col-lg-9">
+                            <label>Week Beginning</label>
+                            <input type="date" id="startDate"  class="form-control" name="startDate" required/>
+                            <div class="invalid-feedback">
+                                Field is Required!
+                            </div>
+                        </div>
+                        <div class="form-group col-md-3 col-lg-9">
+                            <label>Week Beginning</label>
+                            <input type="date" id="endDate"  class="form-control" name="endDate" required/>
+                            <div class="invalid-feedback">
+                                Field is Required!
+                            </div>
+                        </div>
+                        <div class="form-group col-md-3 col-lg-9">
+                            <label>Current Shift Goal</label>
+                            <input type="number" min="0" id="currentShiftGoal"  class="form-control" name="currentShiftGoal" required/>
+                            <div class="invalid-feedback">
+                                Field is Required!
+                            </div>
+                        </div>
+                        <div class="form-group col-md-3 col-lg-9">
+                            <label>Remaining Working Days</label>
+                            <input type="number" min="0" id="remainingWorkingDays"  class="form-control" name="remainingWorkingDays" required/>
+                            <div class="invalid-feedback">
+                                Field is Required!
+                            </div>
+                        </div>
 
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button id="weekFormSubmit" class="btn btn-primary" value="send" type="submit">Save changes</button>
+
+                    </form>
+                </div>
+            </div>
+        </div>
     </div>
 </body>
 </html>
