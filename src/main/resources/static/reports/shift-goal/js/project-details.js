@@ -64,7 +64,7 @@ $(document).ready(function(){
                     "defaultContent":""},
                 {   "targets": -1,
                     "data": function(data, type,row,meta){
-                        return '<a class="btn btn-warning" href="#">Details</a>'
+                        return '<a class="btn btn-primary" href="#">UPDATE</a>'
                     }
                 }
             ]
@@ -98,8 +98,6 @@ $(document).ready(function(){
     });
 
     $('#load-layout').on('click', '#project-table tbody a', function () {
-            //TODO: launch modal
-            // project goals?
             let data = table.row( $(this).closest('tr')).data();
 
             $('#id').val(data.id);
