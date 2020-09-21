@@ -87,7 +87,7 @@ public class ProjectServiceImpl implements ProjectService{
 
                         final Integer shiftGoalRemainder = wk.getCurrentShiftGoal() - shiftsCompleted;
                         Double shiftsNeededPerDay =  (shiftGoalRemainder.doubleValue()/ wk.getRemainingWorkingDays().doubleValue());
-                        if(shiftsNeededPerDay.isNaN()){
+                        if(shiftsNeededPerDay.isNaN() || shiftsNeededPerDay.isInfinite()){
                             shiftsNeededPerDay = 0.00;
                         }
                         wk.setShiftsNeeded(shiftsNeededPerDay);
@@ -208,7 +208,7 @@ public class ProjectServiceImpl implements ProjectService{
 
             final Integer shiftGoalRemainder = currentShiftGoal - shiftsCompleted;
             Double shiftsNeededPerDay =  (shiftGoalRemainder.doubleValue()/ remainingWorkDays.doubleValue());
-            if(shiftsNeededPerDay.isNaN()){
+            if(shiftsNeededPerDay.isNaN() || shiftsNeededPerDay.isInfinite()){
                 shiftsNeededPerDay = 0.00;
             }
             updatedProjectWeek.setShiftsNeeded(shiftsNeededPerDay);
