@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Project Details</title>
+    <!-- JQUERY -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <!-- Data Tables -->
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.20/css/jquery.dataTables.css">
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.js"></script>
+    <!-- BootStrap -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
+    <!--    sweetAlert-->
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
+    <!--	bootstrap-select-->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.18/dist/css/bootstrap-select.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.18/dist/js/bootstrap-select.min.js"></script>
+
+    <link rel="stylesheet" href="/common/style.css">
+    <script src="/reports/shift-goal/js/project-details.js"></script>
+</head>
+<body>
+    <div id="load-layout">
+        <main>
+            <div class="card col-lg-10" style="margin:15px;">
+                <div class="card-header" style="text-align: center;">
+                    Project Details
+                </div>
+                <div class="card-body">
+                    <div class="container">
+                        <div class="text-center">
+                            <div id="initialLoad" class="spinner-border" role="status">
+                                <span class="sr-only">Loading...</span>
+                            </div>
+                        </div>
+                        <a id="newProjectWeek" class="btn btn-success" href="#" role="button" style="margin-bottom: 5px">Add Project Week</a>
+                        <a id="projectCompleteBtn" class="btn btn-warning" href="#" role="button" style="margin-bottom: 5px">Mark Project Complete</a>
+                        <table id="project-table" class="display">
+                            <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Original Shift Goal</th>
+                                <th>Week Beginning</th>
+                                <th>Week Ending</th>
+                                <th>Current Shift Goal</th>
+                                <th>Shifts Scheduled</th>
+                                <th>Scheduled VS Goal</th>
+                                <th>Shifts Completed</th>
+                                <th>Shifts VS Goal</th>
+                                <th>Remaining Work Days</th>
+                                <th>Shifts Needed Per Day</th>
+                                <th>Actions</th>
+                            </tr>
+                            </thead>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card col-lg-10" style="margin:15px;">
+                <div class="card-header" style="text-align: center;">
+                    Totals
+                </div>
+                <div class="card-body">
+                    <div class="container">
+                        <div class="form-row">
+                            <div class="form-group col-md-3">
+                                <label>Original Shift Goal</label>
+                                <input type="text" id="totalOriginalShiftGoal" class="form-control" readonly/>
+                            </div>
+                            <div class="form-group col-md-3">
+                                <label>Current Shift Goal</label>
+                                <input type="text" id="totalCurrentShiftGoal" class="form-control" readonly/>
+                            </div>
+                            <div class="form-group col-md-3">
+                                <label>Shifts Scheduled</label>
+                                <input type="text" id="totalShiftsScheduled"  class="form-control" readonly/>
+                            </div>
+                            <div class="form-group col-md-3">
+                                <label>Scheduled VS Goal</label>
+                                <input type="text" id="totalScheduledVsGoal" class="form-control" readonly/>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group col-md-3">
+                                <label>Shifts Completed</label>
+                                <input type="text" id="totalShiftsCompleted" class="form-control" readonly/>
+                            </div>
+                            <div class="form-group col-md-3">
+                                <label>Shifts VS Goals</label>
+                                <input type="text" id="totalShiftGoal" class="form-control" readonly/>
+                            </div>
+                            <div class="form-group col-md-3">
+                                <label>Remaining Working Days</label>
+                                <input type="text" id="totalRemainingWorkingsDays"  class="form-control" readonly/>
+                            </div>
+                            <div class="form-group col-md-3">
+                                <label>Shifts Needed Per Day</label>
+                                <input type="text" id="totalShiftsNeededPerDay" class="form-control" readonly/>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+<!--    Edit week (row) Modal-->
+    <div class="modal fade" id="weekModal" tabindex="-1" role="dialog" aria-labelledby="weekModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="weekModalLabel">Update Week</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="weekForm" class="needs-validation" novalidate>
+                        <div class="form-group col-md-3 col-lg-9">
+                            <label>ID</label>
+                            <input type="text" id="id"  class="form-control" name="id" readonly />
+                        </div>
+                        <div class="form-group col-md-3 col-lg-9">
+                            <label>Original Shift Goal</label>
+                            <input type="number" min="0" id="originalShiftGoal"  class="form-control" name="originalShiftGoal" required/>
+                            <div class="invalid-feedback">
+                                Field is Required!
+                            </div>
+                        </div>
+                        <div class="form-group col-md-3 col-lg-9">
+                            <label>Week Beginning</label>
+                            <input type="date" id="startDate"  class="form-control" name="startDate" required/>
+                            <div class="invalid-feedback">
+                                Field is Required!
+                            </div>
+                        </div>
+                        <div class="form-group col-md-3 col-lg-9">
+                            <label>Week Beginning</label>
+                            <input type="date" id="endDate"  class="form-control" name="endDate" required/>
+                            <div class="invalid-feedback">
+                                Field is Required!
+                            </div>
+                        </div>
+                        <div class="form-group col-md-3 col-lg-9">
+                            <label>Current Shift Goal</label>
+                            <input type="number" min="0" id="currentShiftGoal"  class="form-control" name="currentShiftGoal" required/>
+                            <div class="invalid-feedback">
+                                Field is Required!
+                            </div>
+                        </div>
+                        <div class="form-group col-md-3 col-lg-9">
+                            <label>Remaining Working Days</label>
+                            <input type="number" min="0" id="remainingWorkingDays"  class="form-control" name="remainingWorkingDays" required/>
+                            <div class="invalid-feedback">
+                                Field is Required!
+                            </div>
+                        </div>
+
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button id="weekFormSubmit" class="btn btn-primary" value="send" type="submit">Save changes</button>
+                        <button id="deleteWeek" type="button" class="btn btn-danger">Remove Week</button>
+
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
