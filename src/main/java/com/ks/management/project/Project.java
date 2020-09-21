@@ -25,20 +25,8 @@ public class Project {
     @Column(name="name")
     private String name;
 
-    @Column(name = "shift_goal")
-    private Integer shiftGoal;
-
-    @Column(name = "shifts_scheduled")
-    private Integer shiftsScheduled;
-
-    @Column(name = "shifts_completed")
-    private Integer shiftCompleted;
-
-    @Column(name = "remaining_working_days")
-    private Integer remainingWorkingDays;
-
-    @Column(name = "shifts_needed")
-    private Integer shiftsNeeded;
+    @Column(name = "completed")
+    private Boolean completed;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
     @JoinColumn(name = "office_id")

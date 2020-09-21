@@ -17,4 +17,6 @@ public interface ProjectService {
     ProjectDTO createNewWeekForProject(Integer projectId, UserPrincipal userPrincipal);
 
     ProjectWeek updateProjectWeek(Integer projectId, UserPrincipal userPrincipal, ProjectWeek projectWeek);
+
+    Project markComplete(Integer projectId, UserPrincipal userPrincipal);
 }

@@ -1,11 +1,7 @@
 CREATE TABLE project (
   id int NOT NULL AUTO_INCREMENT,
   name varchar(255) DEFAULT NULL,
-  shift_goal int(11) DEFAULT NULL,
-  shifts_scheduled int(11) DEFAULT NULL,
-  shifts_completed int(11) DEFAULT NULL,
-  remaining_working_days int(11) DEFAULT NULL,
-  shifts_needed int(11) DEFAULT NULL,
+  completed tinyInt(1) DEFAULT FALSE,
   office_id int(11) DEFAULT NULL,
   created_by int(11) DEFAULT '-1',
   created_date datetime DEFAULT CURRENT_TIMESTAMP,

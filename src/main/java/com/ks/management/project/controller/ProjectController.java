@@ -42,4 +42,9 @@ public class ProjectController {
         return projectService.updateProjectWeek(projectId,userPrincipal,projectWeek);
     }
 
+    @PatchMapping("/{projectId}/complete")
+    public Project markComplete(@PathVariable("projectId") Integer projectId,@AuthenticationPrincipal UserPrincipal userPrincipal){
+        return  projectService.markComplete(projectId,userPrincipal);
+    }
+
 }

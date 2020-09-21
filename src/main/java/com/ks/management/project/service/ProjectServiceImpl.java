@@ -38,6 +38,7 @@ public class ProjectServiceImpl implements ProjectService{
         final Integer userId = userPrincipal.getUserId();
         project.setCreatedBy(userId);
         project.setUpdatedBy(userId);
+        project.setCompleted(false);
 
         return jpaProjectRepo.save(project);
     }
@@ -217,5 +218,18 @@ public class ProjectServiceImpl implements ProjectService{
         jpaProjectWeekRepo.save(updatedProjectWeek);
 
         return updatedProjectWeek;
+    }
+
+    @Override
+    public Project markComplete(Integer projectId, UserPrincipal userPrincipal) {
+        final Project project = jpaProjectRepo.findById(projectId).get();
+        if(project == null){
+            throw new RuntimeException("No project found with id " + projectId);
+        }
+        final Integer userId = userPrincipal.getUserId();
+        project.setUpdatedBy(userId);
+        project.setCompleted(true);
+
+        return jpaProjectRepo.save(project);
     }
 }

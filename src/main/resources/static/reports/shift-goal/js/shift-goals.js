@@ -25,6 +25,13 @@ $(document).ready(function () {
                     "defaultContent":""},
                 {"data" : "office.name",
                     "defaultContent":""},
+                {"data" : function(data,type,row,meta){
+                        if(data.completed == false){
+                            return "In Progress";
+                        }
+                        return "Completed";
+                    }
+                },
                 {   "targets": -1,
                     "data": function(data, type,row,meta){
                         return '<a class="btn btn-warning" href="/reports/shift-goal/project-details.html?projectId= '+data.id+ '  ">Details</a>'

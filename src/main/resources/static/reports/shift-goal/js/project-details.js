@@ -115,7 +115,31 @@ $(document).ready(function(){
                 icon: "error"
             });
         });
+    });
 
+    $('#load-layout').on('click', '#projectCompleteBtn',function(event){
+        event.preventDefault();
+
+        $.ajax({
+            type: "PATCH",
+            url:"/projects/" + vm.projectDto.id +"/complete",
+        }).then(function(response){
+            swal({
+                title: "Success!",
+                text: "You marked Project Complete",
+                icon: "success",
+                timer: 2000
+            }).then(function(){
+                location.reload();
+            });
+        }).fail(function(err){
+            console.log(err);
+            swal({
+                title: "Error!",
+                text: "Failure to mark project complete! \n" + err.responseJSON.message,
+                icon: "error"
+            });
+        });
     });
 
     $('#load-layout').on('click', '#project-table tbody a', function () {
