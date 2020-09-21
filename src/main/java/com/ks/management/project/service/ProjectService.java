@@ -19,4 +19,6 @@ public interface ProjectService {
     ProjectWeek updateProjectWeek(Integer projectId, UserPrincipal userPrincipal, ProjectWeek projectWeek);
 
     Project markComplete(Integer projectId, UserPrincipal userPrincipal);
+
+    void deleteProjectWeek(Integer projectId, Integer projectWeekId, UserPrincipal userPrincipal);
 }

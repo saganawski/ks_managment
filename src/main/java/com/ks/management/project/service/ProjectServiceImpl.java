@@ -232,4 +232,9 @@ public class ProjectServiceImpl implements ProjectService{
 
         return jpaProjectRepo.save(project);
     }
+
+    @Override
+    public void deleteProjectWeek(Integer projectId, Integer projectWeekId, UserPrincipal userPrincipal) {
+        jpaProjectWeekRepo.deleteById(projectWeekId);
+    }
 }

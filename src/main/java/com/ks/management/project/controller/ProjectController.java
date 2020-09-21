@@ -47,4 +47,12 @@ public class ProjectController {
         return  projectService.markComplete(projectId,userPrincipal);
     }
 
+    @DeleteMapping("/{projectId}/projectWeeks/{projectWeekId}")
+    public void deleteProjectWeek(@PathVariable("projectId") Integer projectId,
+                                  @PathVariable("projectWeekId") Integer projectWeekId,
+                                  @AuthenticationPrincipal UserPrincipal userPrincipal){
+        projectService.deleteProjectWeek(projectId,projectWeekId, userPrincipal);
+    }
+
+
 }

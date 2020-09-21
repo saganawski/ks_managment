@@ -142,6 +142,48 @@ $(document).ready(function(){
         });
     });
 
+    $('#deleteWeek').on('click', function(event){
+         event.preventDefault();
+
+         let weekId = $('#id').val();
+
+         swal({
+           title: "Are you sure?",
+           text: "Once deleted, you will not be able to recover this record!",
+           icon: "warning",
+           buttons: true,
+           dangerMode: true,
+         })
+         .then((willDelete) => {
+            if(willDelete){
+                deleteWeek(weekId);
+            }
+         });
+     });
+
+     function deleteWeek(weekId){
+         $.ajax({
+             type: "DELETE",
+             url: "/projects/" + vm.projectDto.id + "/projectWeeks/" + weekId
+         }).then(function(response){
+             swal({
+                 title: "Success!",
+                 text: "You deleted this project week",
+                 icon: "success",
+                 timer: 2000
+             }).then(function(){
+                location.reload();
+             });
+         }).fail(function(error){
+             console.log(error);
+             swal({
+                 title: "Error!",
+                 text: "Could NOT delete Project Week! \n" + error.responseJSON.message,
+                 icon: "error"
+             });
+         });
+     }
+
     $('#load-layout').on('click', '#project-table tbody a', function () {
             let data = table.row( $(this).closest('tr')).data();
 
