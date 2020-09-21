@@ -23,7 +23,7 @@ $(document).ready(function(){
             console.log(err);
             swal({
                 title: "Error!",
-                text: "Failure to retrieve training! \n" + err.responseJSON.message,
+                text: "Failure to retrieve project! \n" + err.responseJSON.message,
                 icon: "error"
             });
         });
@@ -42,7 +42,7 @@ $(document).ready(function(){
         $('#totalShiftsCompleted').val(project.shiftsCompleted);
         $('#totalShiftGoal').val(project.shiftsVsGoal);
         $('#totalRemainingWorkingsDays').val(project.remainingWorkingDays);
-        $('#totalShiftsNeededPerDay').val(project.shiftsNeeded);
+        $('#totalShiftsNeededPerDay').val(Number(project.shiftsNeeded).toFixed(2));
     }
 
     function setTableData(projectDto){
@@ -76,8 +76,13 @@ $(document).ready(function(){
                 },
                 {"data" : "remainingWorkingDays",
                     "defaultContent":""},
-                {"data" : "shiftsNeeded",
-                    "defaultContent":""},
+                {"data" : function(data,type,row,meta){
+                        if(data.shiftsNeeded == null){
+                            return 0;
+                        }
+                        return Number(data.shiftsNeeded).toFixed(2);
+                    }
+                },
                 {   "targets": -1,
                     "data": function(data, type,row,meta){
                         return '<a class="btn btn-primary" href="#">UPDATE</a>'

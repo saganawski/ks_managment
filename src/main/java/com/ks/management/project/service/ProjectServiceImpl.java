@@ -60,6 +60,41 @@ public class ProjectServiceImpl implements ProjectService{
 
         final Set<ProjectWeek> weeks = project.map(p -> p.getProjectWeeks()).orElse(Collections.EMPTY_SET);
 
+        if(office != null){
+            weeks.stream()
+                    .filter(wk -> wk.getStartDate() != null)
+                    .forEach(wk -> {
+                        final List<EmployeeSchedule> employeeSchedules = jpaEmployeeScheduleRepo
+                                .findAllByOfficeForTimePeriod(office.getId(), wk.getStartDate().atStartOfDay(), wk.getEndDate().atStartOfDay());
+
+                        final Integer shiftCount = employeeSchedules.size();
+                        final Integer doubleShiftCount = (int) employeeSchedules.stream()
+                                .filter(es -> es.getEmployeeScheduleStatus() != null)
+                                .filter(es -> es.getEmployeeScheduleStatus().getCode().equalsIgnoreCase("DOUBLE_SHIFT_WORKED"))
+                                .count();
+
+                        wk.setShiftsScheduled(shiftCount + doubleShiftCount);
+
+                        final Integer shiftsWorked = (int) employeeSchedules.stream()
+                                .filter(es -> es.getEmployeeScheduleStatus() != null)
+                                .filter(es -> !es.getEmployeeScheduleStatus().getCode().equalsIgnoreCase("UNEXCUSED_ABSENCE"))
+                                .filter(es -> !es.getEmployeeScheduleStatus().getCode().equalsIgnoreCase("EXCUSED_ABSENCE"))
+                                .count();
+                        final Integer shiftsCompleted = shiftsWorked + doubleShiftCount;
+
+                        wk.setShiftsCompleted(shiftsCompleted);
+
+                        final Integer shiftGoalRemainder = wk.getCurrentShiftGoal() - shiftsCompleted;
+                        Double shiftsNeededPerDay =  (shiftGoalRemainder.doubleValue()/ wk.getRemainingWorkingDays().doubleValue());
+                        if(shiftsNeededPerDay.isNaN()){
+                            shiftsNeededPerDay = 0.00;
+                        }
+                        wk.setShiftsNeeded(shiftsNeededPerDay);
+
+                        jpaProjectWeekRepo.save(wk);
+                    });
+        }
+
         final ProjectDTO projectDTO = ProjectDTO.builder()
                 .id(id)
                 .name(name)
@@ -111,7 +146,6 @@ public class ProjectServiceImpl implements ProjectService{
         final Date createdDate = project.map(p -> p.getCreatedDate()).orElse(null);
 
         final Set<ProjectWeek> weeks = project.map(p -> p.getProjectWeeks()).orElse(Collections.EMPTY_SET);
-
 
         final ProjectDTO projectDTO = ProjectDTO.builder()
                 .id(id)
@@ -172,7 +206,10 @@ public class ProjectServiceImpl implements ProjectService{
             updatedProjectWeek.setShiftsCompleted(shiftsCompleted);
 
             final Integer shiftGoalRemainder = currentShiftGoal - shiftsCompleted;
-            final Double shiftsNeededPerDay =  (shiftGoalRemainder.doubleValue()/ remainingWorkDays.doubleValue());
+            Double shiftsNeededPerDay =  (shiftGoalRemainder.doubleValue()/ remainingWorkDays.doubleValue());
+            if(shiftsNeededPerDay.isNaN()){
+                shiftsNeededPerDay = 0.00;
+            }
             updatedProjectWeek.setShiftsNeeded(shiftsNeededPerDay);
         }
 
