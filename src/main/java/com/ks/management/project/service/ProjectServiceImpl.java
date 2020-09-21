@@ -60,15 +60,17 @@ public class ProjectServiceImpl implements ProjectService{
 
         final Set<ProjectWeek> weeks = project.map(p -> p.getProjectWeeks()).orElse(Collections.EMPTY_SET);
 
-
         final ProjectDTO projectDTO = ProjectDTO.builder()
                 .id(id)
                 .name(name)
-                .shiftGoal(-1)
-                .shiftsScheduled(-1)
-                .shiftCompleted(-1)
-                .remainingWorkingDays(-1)
-                .shiftsNeeded(-1)
+                .originalShiftGoal(0)
+                .currentShiftGoal(0)
+                .shiftsScheduled(0)
+                .shiftsCompleted(0)
+                .remainingWorkingDays(0)
+                .shiftsNeeded(0.0)
+                .scheduledVsGoal(0)
+                .shiftsVsGoal(0)
                 .office(office)
                 .updatedBy(updatedBy)
                 .updatedDate(updateDate)
@@ -76,6 +78,8 @@ public class ProjectServiceImpl implements ProjectService{
                 .createdDate(createdDate)
                 .projectWeeks(weeks)
                 .build();
+
+        projectDTO.setWeekTotals();
 
         return projectDTO;
     }
@@ -112,11 +116,6 @@ public class ProjectServiceImpl implements ProjectService{
         final ProjectDTO projectDTO = ProjectDTO.builder()
                 .id(id)
                 .name(name)
-                .shiftGoal(-1)
-                .shiftsScheduled(-1)
-                .shiftCompleted(-1)
-                .remainingWorkingDays(-1)
-                .shiftsNeeded(-1)
                 .office(office)
                 .updatedBy(updatedBy)
                 .updatedDate(updateDate)

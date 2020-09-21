@@ -17,6 +17,8 @@ $(document).ready(function(){
         }).then(function(data){
             vm.projectDto = data;
             setTableData(data);
+            addProjectNameToCardHeader(data.name);
+            setProjectWeekTotals(data);
         }).fail(function(err){
             console.log(err);
             swal({
@@ -27,6 +29,20 @@ $(document).ready(function(){
         });
     }else{
        swal("Error:", "no ID provided!","error");
+    }
+
+    function addProjectNameToCardHeader(name){
+        $('.card-header').append(" - " + name);
+    }
+    function setProjectWeekTotals(project){
+        $('#totalOriginalShiftGoal').val(project.originalShiftGoal);
+        $('#totalCurrentShiftGoal').val(project.currentShiftGoal);
+        $('#totalShiftsScheduled').val(project.shiftsScheduled);
+        $('#totalScheduledVsGoal').val(project.scheduledVsGoal);
+        $('#totalShiftsCompleted').val(project.shiftsCompleted);
+        $('#totalShiftGoal').val(project.shiftsVsGoal);
+        $('#totalRemainingWorkingsDays').val(project.remainingWorkingDays);
+        $('#totalShiftsNeededPerDay').val(project.shiftsNeeded);
     }
 
     function setTableData(projectDto){
