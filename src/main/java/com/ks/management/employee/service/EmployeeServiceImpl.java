@@ -1,6 +1,7 @@
 package com.ks.management.employee.service;
 
 import com.ks.management.employee.Employee;
+import com.ks.management.employee.EmployeeNote;
 import com.ks.management.employee.dao.JpaEmployeeRepo;
 import com.ks.management.employee.ui.EditEmployeeDTO;
 import com.ks.management.employee.ui.NewEmployeeDTO;
@@ -8,6 +9,7 @@ import com.ks.management.office.Office;
 import com.ks.management.office.dao.JpaOfficeRepo;
 import com.ks.management.position.Position;
 import com.ks.management.position.dao.JpaPositionRepo;
+import com.ks.management.recruitment.training.TrainingNote;
 import com.ks.management.security.UserPrincipal;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.crossstore.ChangeSetPersister;
@@ -15,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.validation.constraints.NotNull;
+import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -23,12 +26,13 @@ import java.util.stream.Collectors;
 public class EmployeeServiceImpl implements EmployeeService{
     @Autowired
     private JpaEmployeeRepo repo;
-
     @Autowired
     private JpaOfficeRepo officeRepo;
-
     @Autowired
     private JpaPositionRepo positionRepo;
+    @Autowired
+    private JpaEmployeeNoteRepo jpaEmployeeNoteRepo;
+
 
     @Override
     @NotNull
@@ -92,6 +96,7 @@ public class EmployeeServiceImpl implements EmployeeService{
                 offices.add(office);
             }
         }
+        final Integer userId = userPrincipal.getUserId();
 
         final Position position = positionRepo.findByCode(employeeDTO.getPosition());
         final String firstName = Optional.ofNullable(employeeDTO.getFirstName()).orElse("");
@@ -100,7 +105,11 @@ public class EmployeeServiceImpl implements EmployeeService{
         final String email = Optional.ofNullable(employeeDTO.getEmail()).orElse("");
         final String phoneNumber = Optional.ofNullable(employeeDTO.getPhoneNumber()).orElse("");
         final Integer id = Optional.ofNullable(employeeDTO.getId()).orElse(-1);
-        final Integer updatedById = Optional.ofNullable(userPrincipal.getUserId()).orElse(-1);
+
+        final LocalDate startDate = Optional.ofNullable(employeeDTO.getStartDate()).orElse(null);
+        final LocalDate endDate = Optional.ofNullable(employeeDTO.getEndDate()).orElse(null);
+        final Boolean voluntary = Optional.ofNullable(employeeDTO.getVoluntary()).orElse(null);
+
         final Employee employee = Employee.builder()
                 .id(id)
                 .firstName(firstName)
@@ -110,11 +119,22 @@ public class EmployeeServiceImpl implements EmployeeService{
                 .phoneNumber(phoneNumber)
                 .position(position)
                 .deleted(false)
-                .updatedBy(updatedById)
+                .startDate(startDate)
+                .endDate(endDate)
+                .voluntary(voluntary)
+                .updatedBy(userId)
                 .build();
 
         for (Office office : offices){
             employee.addOffice(office);
+        }
+
+        if(employeeDTO.getEmployeeNotes() != null){
+            final EmployeeNote note = employeeDTO.getEmployeeNotes().get(0);
+            note.setCreatedBy(userId);
+            note.setUpdatedBy(userId);
+            note.setEmployee(employee);
+            employee.addEmployeeNote(note);
         }
         
         return repo.save(employee);
@@ -172,6 +192,11 @@ public class EmployeeServiceImpl implements EmployeeService{
     @Override
     public Set<Employee> getAllEmployeesNonCanvassers() {
         return repo.findAllNonCanvassers();
+    }
+
+    @Override
+    public void deleteNote(int noteId) {
+        jpaEmployeeNoteRepo.deleteById(noteId);
     }
 
 }

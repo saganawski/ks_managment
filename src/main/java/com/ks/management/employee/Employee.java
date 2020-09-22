@@ -7,9 +7,11 @@ import com.ks.management.office.Office;
 import com.ks.management.position.Position;
 import com.ks.management.recruitment.application.ApplicationNote;
 import com.ks.management.recruitment.interview.Interview;
+import com.ks.management.recruitment.training.TrainingNote;
 import lombok.*;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -50,7 +52,16 @@ public class Employee {
 
 	@Column(name="deleted")
 	private Boolean deleted;
-	
+
+	@Column(name="start_date")
+	private LocalDate startDate;
+
+	@Column(name="end_date")
+	private LocalDate endDate;
+
+	@Column(name="voluntary")
+	private Boolean voluntary;
+
 	@Column(name = "updated_by")
 	private Integer updatedBy;
 
@@ -86,16 +97,19 @@ public class Employee {
 		this.offices = new ArrayList<>();
 	}
 
-	/*@ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE,
-			CascadeType.DETACH, CascadeType.REFRESH})
-	@JoinTable(
-			name= "interview_director",
-			joinColumns = @JoinColumn(name="employee_id"),
-			inverseJoinColumns = @JoinColumn(name="interview_id")
-	)
-	private List<Interview> interviews = new ArrayList<>();*/
-
 	@JsonIgnore
 	@OneToMany(mappedBy = "employee",fetch = FetchType.LAZY,cascade = CascadeType.ALL)
 	private List<EmployeeSchedule> schedules = new ArrayList<>();
+
+
+	@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+	@OneToMany(mappedBy = "employee",fetch = FetchType.LAZY,cascade = CascadeType.ALL)
+	private List<EmployeeNote> employeeNotes = new ArrayList<>();
+
+	public void addEmployeeNote(EmployeeNote note){
+		if(employeeNotes == null){
+			employeeNotes = new ArrayList<>();
+		}
+		employeeNotes.add(note);
+	}
 }

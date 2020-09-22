@@ -176,14 +176,18 @@ $(document).ready(function() {
        });
 
        async function setFieldValuesForEmployee(data){
-           employeeId = data.id;
-           firstName = data.firstName;
-           lastName = data.lastName;
-           alias = data.alias;
-           email = data.email;
-           phoneNumber = data.phoneNumber;
-           position = data.position;
-           offices = data.offices;
+           let employeeId = data.id;
+           let firstName = data.firstName;
+           let lastName = data.lastName;
+           let alias = data.alias;
+           let email = data.email;
+           let phoneNumber = data.phoneNumber;
+           let position = data.position;
+           let offices = data.offices;
+           let employeeNotes = data.employeeNotes;
+           let startDate = data.startDate;
+           let endDate = data.endDate;
+           let voluntary = data.voluntary;
 
            $("#id").val(employeeId);
            $("#firstName").val(firstName);
@@ -191,9 +195,24 @@ $(document).ready(function() {
            $("#alias").val(alias);
            $("#email").val(email);
            $("#phoneNumber").val(phoneNumber);
+           $("#startDate").val(startDate);
+           $("#endDate").val(endDate);
+           if(voluntary != null){
+            $("#voluntary").val(voluntary.toString());
+           }
            if(position != null){
                 $("#position").val(position.code);
            }
+
+           for(note of data.employeeNotes){
+                let message = note.note;
+                let val = JSON.stringify(note);
+
+                $("<textarea name='employeeNotes' class='form-control' value='"+ val + "' readonly>"+ message +
+                    "</textarea> <div class='text-left'><a href='/employees/"+ vm.employee.id +"/notes/"+note.id+"' class='delete-note btn btn-danger'>Delete Note</a></div>").prependTo('#note-body');
+
+           }
+
    //            Refresh multiselect with office ids
            var officeIds = [];
            for(office of offices){
@@ -218,7 +237,10 @@ $(document).ready(function() {
             let formJson = convertFormToJson($("form").serializeArray());
             let selectedOffices = $('#officeSelect').val();
             formJson.officeSelection = selectedOffices;
-
+            if(formJson.employeeNotes != null){
+                note = [{id:null,note:formJson.employeeNotes}];
+                formJson.employeeNotes = note;
+            }
             sendEmployeeToController(formJson);
         }
     });
@@ -365,5 +387,42 @@ $(document).ready(function() {
             });
         });
     });
+
+
+    $('#load-layout').on("click","a.delete-note",function(event){
+        event.preventDefault();
+        let url = event.target.href;
+        swal({
+           title: "Are you sure?",
+           text: "Once deleted, you will not be able to recover this note!",
+           icon: "warning",
+           buttons: true,
+           dangerMode: true,
+         }).then((willDelete) => {
+            if(willDelete){
+                $.ajax({
+                    type:"DELETE",
+                    url: url
+                }).then(function(response){
+                    swal({
+                         title: "Success!",
+                         text: "You deleted a note",
+                         icon: "success",
+                         timer: 2000
+                     }).then(function(){
+                        location.reload();
+                     });
+                }).fail(function(error){
+                    console.log(error);
+                    swal({
+                        title: "Error!",
+                        text: "Could NOT remove note! \n" + error.responseJSON.message,
+                        icon: "error"
+                    });
+                });
+            }
+         });
+     });
+
 
 });
