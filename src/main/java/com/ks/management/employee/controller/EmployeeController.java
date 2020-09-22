@@ -35,8 +35,7 @@ public class EmployeeController {
 
 	@GetMapping("/{employeeId}")
 	public Employee getEmployee(@PathVariable("employeeId") Integer employeeId) {
-		return employeeService.
-				getEmployee(employeeId);
+		return employeeService.getEmployee(employeeId);
 	}
 
 	@PutMapping("/{employeeId}")
@@ -57,6 +56,11 @@ public class EmployeeController {
 	@GetMapping("/lastname/{lastname}/email/{email}")
 	public Boolean checkIfEmployeeExists(@PathVariable("lastname")String lastName, @PathVariable("email")String email){
 		return employeeService.checkIfEmployeeExists(lastName,email);
+	}
+
+	@DeleteMapping("/{employeeId}/notes/{noteId}")
+	public void deleteNotes(@PathVariable("employeeId") int employeeId, @PathVariable("noteId") int noteId){
+		employeeService.deleteNote(noteId);
 	}
 
 }

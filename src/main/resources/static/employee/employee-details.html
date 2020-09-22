@@ -79,12 +79,41 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="form-group col-md-3">
-                                <label>Office</label>
-                                <select id="officeSelect" name="officeSelection"  class="form-control" multiple data-live-search="true" required>
-                                </select>
-                                <div class="invalid-feedback">
-                                    Field is Required!
+                            <div class="form-row">
+                                <div class="form-group col-md-3">
+                                    <label>Office</label>
+                                    <select id="officeSelect" name="officeSelection"  class="form-control" multiple data-live-search="true" required>
+                                    </select>
+                                    <div class="invalid-feedback">
+                                        Field is Required!
+                                    </div>
+                                </div>
+
+                                <div class="form-group col-md-3">
+                                    <label>Start Date</label>
+                                    <input id="startDate" type="date" name="startDate"  class="form-control" >
+                                </div>
+                                <div class="form-group col-md-3">
+                                    <label>Start Date</label>
+                                    <input id="endDate" type="date" name="endDate"  class="form-control" >
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group col-md-3">
+                                    <label>Voluntary</label>
+                                    <select id="voluntary" name="voluntary" class="custom-select">
+                                        <option value="" selected>Choose Position</option>
+                                        <option value="true">Yes</option>
+                                        <option value="false">No</option>
+                                    </select>
+                                </div>
+                                <div class="card col-lg-6">
+                                    <div class="card-header">
+                                        Notes
+                                    </div>
+                                    <div id="note-body" class="card-body">
+                                        <textarea id="new-note" name="employeeNotes"class="form-control" placeholder="Add a note"></textarea>
+                                    </div>
                                 </div>
                             </div>
 

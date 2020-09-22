@@ -25,4 +25,6 @@ public interface EmployeeService {
     Boolean checkIfEmployeeExists(String lastName, String email);
 
     Set<Employee> getAllEmployeesNonCanvassers();
+
+    void deleteNote(int noteId);
 }
