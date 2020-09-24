@@ -2,6 +2,7 @@ $(document).ready(function(){
     vm = this;
     vm.scheduleEvent = {};
     vm.office = {};
+    vm.employeeSchedule = {};
 
     const main = $('#load-layout').html();
     $('#load-layout').load("/common/_layout.html", function(responseTxt, statusTxt, xhr){
@@ -31,6 +32,7 @@ $(document).ready(function(){
 
                 eventClick: function(arg) {
                     vm.scheduleEvent = arg.event._def;
+                    vm.employeeSchedule = vm.scheduleEvent.extendedProps.employeeSchedule;
                     //launch modal to set status
                     $('#statusModal').modal('show');
                     $('#statusTitle').text(vm.scheduleEvent.title + ", " + vm.scheduleEvent.extendedProps.firstName);
@@ -228,7 +230,8 @@ $(document).ready(function(){
                 color : setColorByStatus(schedule.employeeScheduleStatus),
                 extendedProps: {
                     status: schedule.employeeScheduleStatus,
-                    firstName: schedule.employee.firstName
+                    firstName: schedule.employee.firstName,
+                    employeeSchedule: schedule
                 }
             };
             events.push(event);
@@ -272,7 +275,7 @@ $(document).ready(function(){
         event.preventDefault();
         const form = document.querySelector('#statusForm');
 
-        let status = JSON.parse($('#statusSelect').val());
+        let employeeScheduleStatus = JSON.parse($('#statusSelect').val());
 
         if(status == null || status === ""){
             swal({
@@ -283,12 +286,50 @@ $(document).ready(function(){
             form.classList.add('was-validated');
             return false;
         }
+        let jsonForm = convertFormToJson($("#statusForm").serializeArray());
 
-        setScheduleStatus(vm.scheduleEvent.publicId,status);
+        vm.employeeSchedule.employeeScheduleStatus = employeeScheduleStatus;
+        let payRate = jsonForm.payRate;
+        let timeIn = jsonForm.timeIn;
+        let timeOut = jsonForm.timeOut;
+        let mileage = jsonForm.mileage;
+        let employeeSchedulePayroll = {id:null,payRate:payRate,timeIn:timeIn,timeOut:timeOut,mileage:mileage}
+        vm.employeeSchedule.employeeSchedulePayroll = employeeSchedulePayroll;
+        debugger;
+
+        setEmployeeScheduleStatusAndPayRoll(vm.employeeSchedule);
+//        setScheduleStatus(vm.scheduleEvent.publicId,employeeScheduleStatus);
 
     });
 
-    function setScheduleStatus(employeeScheduleId, status){
+    function setEmployeeScheduleStatusAndPayRoll(employeeSchedule){
+        $.ajax({
+            type: "POST",
+            url: "/employees/employee-schedule/" + employeeSchedule.id + "/status-payroll",
+            data: JSON.stringify(employeeSchedule),
+            dataType: "json",
+            contentType: "application/json; charset=utf-8"
+        }).then(function(response){
+            swal({
+                title: "Success!",
+                text: "You updated this Employees Schedule date",
+                icon: "success",
+                timer: 2000
+            }).then(function(){
+                getEventsByOffice(vm.office.id);
+                $('#statusModal').modal('toggle');
+            });
+        }).fail(function(error){
+            console.log(error.responseJSON);
+            swal({
+                title: "Error!",
+                text: "Could not update employee schedule! \n" + error.responseJSON.message,
+                icon: "error"
+            });
+        });
+    }
+
+    function setScheduleStatus(employeeScheduleId, employeeScheduleStatus){
         $.ajax({
             type: "POST",
             url: "/employees/employee-schedule/" + employeeScheduleId + "/schedules/status",
@@ -313,5 +354,13 @@ $(document).ready(function(){
                 icon: "error"
             });
         });
+    }
+
+    function convertFormToJson(form){
+        var json = {}
+        for(let j of form){
+            json[j.name] = j.value || null;
+        }
+        return json;
     }
 })
