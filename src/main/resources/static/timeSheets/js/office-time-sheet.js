@@ -33,9 +33,8 @@ $(document).ready(function(){
                 eventClick: function(arg) {
                     vm.scheduleEvent = arg.event._def;
                     vm.employeeSchedule = vm.scheduleEvent.extendedProps.employeeSchedule;
-                    //launch modal to set status
-                    $('#statusModal').modal('show');
-                    $('#statusTitle').text(vm.scheduleEvent.title + ", " + vm.scheduleEvent.extendedProps.firstName);
+
+                    setEventModalFields(vm.employeeSchedule);
                 },
 
 
@@ -100,6 +99,40 @@ $(document).ready(function(){
         }
     });
 
+    function setEventModalFields(employeeSchedule){
+        $('#statusForm').trigger('reset');
+
+        $('#statusModal').modal('show');
+        $('#statusTitle').text(vm.scheduleEvent.title + ", " + vm.scheduleEvent.extendedProps.firstName);
+
+
+        delete employeeSchedule.employeeScheduleStatus.hibernateLazyInitializer;
+        delete employeeSchedule.employeeScheduleStatus.id;
+
+        $('#statusSelect').val(JSON.stringify(employeeSchedule.employeeScheduleStatus));
+
+        if(employeeSchedule.employeeSchedulePayroll != null){
+            let payRate = employeeSchedule.employeeSchedulePayroll.payRate;
+            if(payRate !=null){
+                $('#payRateSelect').val(payRate);
+            }
+
+            let timeIn = employeeSchedule.employeeSchedulePayroll.timeIn;
+            if(timeIn != null){
+                $('#timeIn').val(timeIn);
+            }
+
+            let timeOut = employeeSchedule.employeeSchedulePayroll.timeOut;
+            if(timeOut != null){
+                $('#timeOut').val(timeOut);
+            }
+
+            let mileage = employeeSchedule.employeeSchedulePayroll.mileage;
+            if(mileage != null){
+                $('#mileage').val(mileage);
+            }
+        }
+    }
 
     getOfficeOptions()
         .then(function(data){
@@ -152,9 +185,9 @@ $(document).ready(function(){
 
     function setStatusOptions(statuses){
         statuses.forEach(status => {
+            delete status._links;
             $('#statusSelect').append("<option value='"+JSON.stringify(status)+"'>"+ status.status +"</option>");
         });
-        $('#statusSelect').selectpicker('refresh');
     }
 
     $('#officeFormSubmit').on('click', function(event){
@@ -277,12 +310,12 @@ $(document).ready(function(){
 
         let employeeScheduleStatus = JSON.parse($('#statusSelect').val());
 
-        if(status == null || status === ""){
+        if(employeeScheduleStatus == null || employeeScheduleStatus === ""){
             swal({
                 title: "Error!",
                 text: "Must Select a status!",
                 icon: "error"
-            })
+            });
             form.classList.add('was-validated');
             return false;
         }
@@ -293,9 +326,16 @@ $(document).ready(function(){
         let timeIn = jsonForm.timeIn;
         let timeOut = jsonForm.timeOut;
         let mileage = jsonForm.mileage;
-        let employeeSchedulePayroll = {id:null,payRate:payRate,timeIn:timeIn,timeOut:timeOut,mileage:mileage}
-        vm.employeeSchedule.employeeSchedulePayroll = employeeSchedulePayroll;
-        debugger;
+
+        if(vm.employeeSchedule.employeeSchedulePayroll != null){
+            vm.employeeSchedule.employeeSchedulePayroll.payRate = payRate;
+            vm.employeeSchedule.employeeSchedulePayroll.timeIn = timeIn;
+            vm.employeeSchedule.employeeSchedulePayroll.timeOut = timeOut;
+            vm.employeeSchedule.employeeSchedulePayroll.mileage = mileage;
+        }else{
+            let employeeSchedulePayroll = {id:null,payRate:payRate,timeIn:timeIn,timeOut:timeOut,mileage:mileage}
+            vm.employeeSchedule.employeeSchedulePayroll = employeeSchedulePayroll;
+        }
 
         setEmployeeScheduleStatusAndPayRoll(vm.employeeSchedule);
 //        setScheduleStatus(vm.scheduleEvent.publicId,employeeScheduleStatus);
@@ -317,7 +357,7 @@ $(document).ready(function(){
                 timer: 2000
             }).then(function(){
                 getEventsByOffice(vm.office.id);
-                $('#statusModal').modal('toggle');
+                $('#statusModal').modal('hide');
             });
         }).fail(function(error){
             console.log(error.responseJSON);

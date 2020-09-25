@@ -122,7 +122,7 @@ public class EmployeeScheduleServiceImpl implements EmployeeScheduleService{
             }else {
                 employeeSchedulePayRoll = givenEmployeeSchedule.getEmployeeSchedulePayroll();
             }
-            
+
             employeeSchedulePayRoll.setCreatedBy(userId);
             employeeSchedulePayRoll.setUpdatedBy(userId);
 
