@@ -119,6 +119,15 @@ public class EmployeeScheduleServiceImpl implements EmployeeScheduleService{
             EmployeeSchedulePayroll employeeSchedulePayRoll = null;
             if(employeeSchedulePayrollId != null){
                 employeeSchedulePayRoll = jpaEmployeeSchedulePayroll.getOne(employeeSchedulePayrollId);
+
+                final LocalTime timeIn = givenEmployeeSchedule.getEmployeeSchedulePayroll().getTimeIn();
+                final LocalTime timeOut = givenEmployeeSchedule.getEmployeeSchedulePayroll().getTimeOut();
+                final Integer mileage = givenEmployeeSchedule.getEmployeeSchedulePayroll().getMileage();
+
+                employeeSchedulePayRoll.setTimeIn(timeIn);
+                employeeSchedulePayRoll.setTimeOut(timeOut);
+                employeeSchedulePayRoll.setMileage(mileage);
+
             }else {
                 employeeSchedulePayRoll = givenEmployeeSchedule.getEmployeeSchedulePayroll();
             }
