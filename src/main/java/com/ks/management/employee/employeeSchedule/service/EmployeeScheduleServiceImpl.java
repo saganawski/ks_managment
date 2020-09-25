@@ -114,14 +114,21 @@ public class EmployeeScheduleServiceImpl implements EmployeeScheduleService{
         final EmployeeScheduleStatus employeeScheduleStatus = jpaEmployeeScheduleStatusRepo.findByCode(statusCode);
         employeeSchedule.setEmployeeScheduleStatus(employeeScheduleStatus);
 
-        final EmployeeSchedulePayroll employeeSchedulePayRoll = givenEmployeeSchedule.getEmployeeSchedulePayroll();
-        employeeSchedulePayRoll.setCreatedBy(userId);
-        employeeSchedulePayRoll.setUpdatedBy(userId);
+        if(givenEmployeeSchedule.getEmployeeSchedulePayroll() != null){
+            final Integer employeeSchedulePayrollId = givenEmployeeSchedule.getEmployeeSchedulePayroll().getId();
+            EmployeeSchedulePayroll employeeSchedulePayRoll = null;
+            if(employeeSchedulePayrollId != null){
+                employeeSchedulePayRoll = jpaEmployeeSchedulePayroll.getOne(employeeSchedulePayrollId);
+            }else {
+                employeeSchedulePayRoll = givenEmployeeSchedule.getEmployeeSchedulePayroll();
+            }
+            
+            employeeSchedulePayRoll.setCreatedBy(userId);
+            employeeSchedulePayRoll.setUpdatedBy(userId);
 
-        // save roll update sche
-        jpaEmployeeSchedulePayroll.save(employeeSchedulePayRoll);
-
-        employeeSchedule.setEmployeeSchedulePayroll(employeeSchedulePayRoll);
+            jpaEmployeeSchedulePayroll.save(employeeSchedulePayRoll);
+            employeeSchedule.setEmployeeSchedulePayroll(employeeSchedulePayRoll);
+        }
 
         return jpaEmployeeScheduleRepo.save(employeeSchedule);
     }
