@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.*;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -118,27 +119,49 @@ public class EmployeeScheduleServiceImpl implements EmployeeScheduleService{
             final Integer employeeSchedulePayrollId = givenEmployeeSchedule.getEmployeeSchedulePayroll().getId();
             EmployeeSchedulePayroll employeeSchedulePayRoll = null;
             if(employeeSchedulePayrollId != null){
+
                 employeeSchedulePayRoll = jpaEmployeeSchedulePayroll.getOne(employeeSchedulePayrollId);
 
-                final LocalTime timeIn = givenEmployeeSchedule.getEmployeeSchedulePayroll().getTimeIn();
-                final LocalTime timeOut = givenEmployeeSchedule.getEmployeeSchedulePayroll().getTimeOut();
-                final Integer mileage = givenEmployeeSchedule.getEmployeeSchedulePayroll().getMileage();
-
-                employeeSchedulePayRoll.setTimeIn(timeIn);
-                employeeSchedulePayRoll.setTimeOut(timeOut);
-                employeeSchedulePayRoll.setMileage(mileage);
-
+                setPayrollValues(givenEmployeeSchedule, userId, employeeSchedulePayRoll);
             }else {
                 employeeSchedulePayRoll = givenEmployeeSchedule.getEmployeeSchedulePayroll();
+                setPayrollValues(givenEmployeeSchedule, userId, employeeSchedulePayRoll);
+                employeeSchedulePayRoll.setCreatedBy(userId);
             }
-
-            employeeSchedulePayRoll.setCreatedBy(userId);
-            employeeSchedulePayRoll.setUpdatedBy(userId);
 
             jpaEmployeeSchedulePayroll.save(employeeSchedulePayRoll);
             employeeSchedule.setEmployeeSchedulePayroll(employeeSchedulePayRoll);
         }
 
         return jpaEmployeeScheduleRepo.save(employeeSchedule);
+    }
+
+    private void setPayrollValues(EmployeeSchedule givenEmployeeSchedule, Integer userId, EmployeeSchedulePayroll employeeSchedulePayRoll) {
+        final LocalTime timeIn = givenEmployeeSchedule.getEmployeeSchedulePayroll().getTimeIn();
+        final LocalTime timeOut = givenEmployeeSchedule.getEmployeeSchedulePayroll().getTimeOut();
+        final Integer mileage = givenEmployeeSchedule.getEmployeeSchedulePayroll().getMileage();
+        final Double payRate = givenEmployeeSchedule.getEmployeeSchedulePayroll().getPayRate();
+
+        long timeWorked = timeIn.until(timeOut, ChronoUnit.MINUTES);
+
+        if(timeWorked >=  300){
+            employeeSchedulePayRoll.setLunch(true);
+            timeWorked = timeWorked - 30;
+        }
+
+        final Double hoursWorked = Double.valueOf( (double) timeWorked / 60);
+        double totalDayWages = hoursWorked * payRate;
+        if(mileage != null){
+            double mileageBonus = (double) mileage * .51;
+            totalDayWages = totalDayWages + mileageBonus;
+        }
+
+        employeeSchedulePayRoll.setTotalHours((double) timeWorked);
+        employeeSchedulePayRoll.setTimeIn(timeIn);
+        employeeSchedulePayRoll.setTimeOut(timeOut);
+        employeeSchedulePayRoll.setMileage(mileage);
+        employeeSchedulePayRoll.setPayRate(payRate);
+        employeeSchedulePayRoll.setTotalDayWage(totalDayWages);
+        employeeSchedulePayRoll.setUpdatedBy(userId);
     }
 }
