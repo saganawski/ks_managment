@@ -362,6 +362,11 @@ $(document).ready(function(){
                 return false;
             }
         }
+        //Checks payRate
+        if(form.checkValidity()  === false){
+            form.classList.add('was-validated');
+            return false;
+        }
         return true;
     }
 
