@@ -1,6 +1,5 @@
 package com.ks.management.employee.employeeSchedulePayRoll;
 
-import com.ks.management.employee.employeeSchedule.EmployeeSchedule;
 import lombok.*;
 
 import javax.persistence.*;
@@ -36,8 +35,8 @@ public class EmployeeSchedulePayroll {
     @Column(name = "overtime")
     private Boolean overtime;
 
-    @Column(name = "total_hours")
-    private Double totalHours;
+    @Column(name = "total_minutes")
+    private Double totalMinutes;
 
     @Column(name = "mileage")
     private Integer mileage;
@@ -59,8 +58,4 @@ public class EmployeeSchedulePayroll {
     @Temporal(TemporalType.TIMESTAMP)
     private Date createdDate;
 
-    public Double getHoursWorked(){
-//        this.timeIn
-        return null;
-    }
 }

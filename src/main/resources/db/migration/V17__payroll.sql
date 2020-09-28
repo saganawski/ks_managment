@@ -5,7 +5,7 @@ CREATE TABLE employee_schedule_payroll (
     time_out time DEFAULT NULL,
     lunch tinyint(1) DEFAULT FALSE,
     overtime tinyint(1) DEFAULT FALSE,
-    total_hours DECIMAL(6,2) DEFAULT NULL,
+    total_minutes DECIMAL(6,2) DEFAULT NULL,
     mileage int(11) DEFAULT NULL,
     total_day_wage DECIMAL(7,2) DEFAULT NULL,
     created_by int(11) DEFAULT '-1',

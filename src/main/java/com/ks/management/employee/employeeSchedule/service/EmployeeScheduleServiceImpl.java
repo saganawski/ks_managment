@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.*;
 import java.time.temporal.ChronoUnit;
+import java.time.temporal.TemporalAdjusters;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -99,16 +100,12 @@ public class EmployeeScheduleServiceImpl implements EmployeeScheduleService{
 
     @Override
     public EmployeeSchedule setEmployeeScheduleStatusAndPayRoll(Integer employeeScheduleId, EmployeeSchedule givenEmployeeSchedule, UserPrincipal userPrincipal) {
-
         final Integer userId = userPrincipal.getUserId();
 
         final EmployeeSchedule employeeSchedule = jpaEmployeeScheduleRepo.getOne(employeeScheduleId);
-        if(employeeSchedule == null){
-            throw new RuntimeException("Could not find Employee Schedule in Database! \n contact tech support!");
-        }
         employeeSchedule.setUpdatedBy(userId);
 
-        final String statusCode = Optional.ofNullable(givenEmployeeSchedule.getEmployeeScheduleStatus()).map(s -> s.getCode()).orElse(null);
+        final String statusCode = Optional.ofNullable(givenEmployeeSchedule.getEmployeeScheduleStatus()).map(EmployeeScheduleStatus::getCode).orElse(null);
         if(statusCode == null){
             throw new RuntimeException("Could not find status in database! \n contact tech support!");
         }
@@ -118,8 +115,8 @@ public class EmployeeScheduleServiceImpl implements EmployeeScheduleService{
         if(givenEmployeeSchedule.getEmployeeSchedulePayroll() != null){
             final Integer employeeSchedulePayrollId = givenEmployeeSchedule.getEmployeeSchedulePayroll().getId();
             EmployeeSchedulePayroll employeeSchedulePayRoll = null;
-            if(employeeSchedulePayrollId != null){
 
+            if(employeeSchedulePayrollId != null){
                 employeeSchedulePayRoll = jpaEmployeeSchedulePayroll.getOne(employeeSchedulePayrollId);
 
                 setPayrollValues(givenEmployeeSchedule, userId, employeeSchedulePayRoll);
@@ -133,7 +130,66 @@ public class EmployeeScheduleServiceImpl implements EmployeeScheduleService{
             employeeSchedule.setEmployeeSchedulePayroll(employeeSchedulePayRoll);
         }
 
+        payrollOvertime(employeeSchedule);
+
         return jpaEmployeeScheduleRepo.save(employeeSchedule);
+    }
+
+    private void payrollOvertime(EmployeeSchedule employeeSchedule) {
+        LocalDateTime currentScheduleDate = employeeSchedule.getScheduledTime();
+        LocalDateTime sundayStartOfWeek = currentScheduleDate.with(TemporalAdjusters.previousOrSame(DayOfWeek.SUNDAY));
+
+        final List<EmployeeSchedule> weeksEmployeeSchedules = jpaEmployeeScheduleRepo.findAllSchedulesForTimePeriod(employeeSchedule.getEmployee().getId(),sundayStartOfWeek.with(LocalTime.MIN),currentScheduleDate);
+        final Double cumulativeMinutesWorked = weeksEmployeeSchedules.stream()
+                .filter(es -> es.getEmployeeSchedulePayroll() != null)
+                .map(es -> es.getEmployeeSchedulePayroll())
+                .filter(esp -> esp.getTotalMinutes() != null)
+                .mapToDouble(esp -> esp.getTotalMinutes())
+                .sum();
+
+        final int overtimeMinuteThreshold = 2400;
+        final Boolean inOverTimePeriod = cumulativeMinutesWorked > overtimeMinuteThreshold;
+        final Boolean hasTotalMinutes = employeeSchedule.getEmployeeSchedulePayroll().getTotalMinutes() != null;
+
+        if(inOverTimePeriod && hasTotalMinutes){
+            employeeSchedule.getEmployeeSchedulePayroll().setOvertime(true);
+
+            final Double payRate = employeeSchedule.getEmployeeSchedulePayroll().getPayRate();
+            final Double todaysMinutes = employeeSchedule.getEmployeeSchedulePayroll().getTotalMinutes();
+            final Integer mileage = employeeSchedule.getEmployeeSchedulePayroll().getMileage();
+
+            final Double remainder = cumulativeMinutesWorked - todaysMinutes;
+            final Double overtimeMultiplier = new Double(1.5);
+            final Double overtimePayRate = payRate * overtimeMultiplier;
+
+            final Boolean hasMixRegularPayAndOvertimeRate = remainder - overtimeMinuteThreshold < 0;
+            if(hasMixRegularPayAndOvertimeRate){
+                final double normalPayRateMinutes = overtimeMinuteThreshold - remainder;
+                final double overtimePayRateMinutes = todaysMinutes - normalPayRateMinutes;
+
+                final Double normalHoursWorked = Double.valueOf( normalPayRateMinutes / 60);
+                final Double overtimeHoursWorked = Double.valueOf( overtimePayRateMinutes / 60);
+                final double normalDayWages = normalHoursWorked * payRate;
+                final double overtimeDayWages = overtimeHoursWorked * overtimePayRate;
+                double totalDayWages = normalDayWages + overtimeDayWages;
+                if(mileage != null){
+                    double mileageBonus = (double) mileage * .51;
+                    totalDayWages = totalDayWages + mileageBonus;
+                }
+                employeeSchedule.getEmployeeSchedulePayroll().setTotalDayWage(totalDayWages);
+            }
+
+            final Boolean hasOnlyOvertimeRate = remainder - overtimeMinuteThreshold >= 0;
+            if(hasOnlyOvertimeRate){
+                final Double hoursWorked = Double.valueOf( todaysMinutes / 60);
+                double totalDayWages = hoursWorked * overtimePayRate;
+                if(mileage != null){
+                    double mileageBonus = (double) mileage * .51;
+                    totalDayWages = totalDayWages + mileageBonus;
+                }
+                employeeSchedule.getEmployeeSchedulePayroll().setTotalDayWage(totalDayWages);
+            }
+        }
     }
 
     private void setPayrollValues(EmployeeSchedule givenEmployeeSchedule, Integer userId, EmployeeSchedulePayroll employeeSchedulePayRoll) {
@@ -142,26 +198,29 @@ public class EmployeeScheduleServiceImpl implements EmployeeScheduleService{
         final Integer mileage = givenEmployeeSchedule.getEmployeeSchedulePayroll().getMileage();
         final Double payRate = givenEmployeeSchedule.getEmployeeSchedulePayroll().getPayRate();
 
-        long timeWorked = timeIn.until(timeOut, ChronoUnit.MINUTES);
+        if(timeOut != null){
+            long timeWorked = timeIn.until(timeOut, ChronoUnit.MINUTES);
 
-        if(timeWorked >=  300){
-            employeeSchedulePayRoll.setLunch(true);
-            timeWorked = timeWorked - 30;
+            if(timeWorked >=  300){
+                employeeSchedulePayRoll.setLunch(true);
+                timeWorked = timeWorked - 30;
+            }
+
+            final Double hoursWorked = Double.valueOf( (double) timeWorked / 60);
+            double totalDayWages = hoursWorked * payRate;
+            if(mileage != null){
+                double mileageBonus = (double) mileage * .51;
+                totalDayWages = totalDayWages + mileageBonus;
+            }
+
+            employeeSchedulePayRoll.setTotalMinutes((double) timeWorked);
+            employeeSchedulePayRoll.setTotalDayWage(totalDayWages);
         }
 
-        final Double hoursWorked = Double.valueOf( (double) timeWorked / 60);
-        double totalDayWages = hoursWorked * payRate;
-        if(mileage != null){
-            double mileageBonus = (double) mileage * .51;
-            totalDayWages = totalDayWages + mileageBonus;
-        }
-
-        employeeSchedulePayRoll.setTotalHours((double) timeWorked);
         employeeSchedulePayRoll.setTimeIn(timeIn);
         employeeSchedulePayRoll.setTimeOut(timeOut);
         employeeSchedulePayRoll.setMileage(mileage);
         employeeSchedulePayRoll.setPayRate(payRate);
-        employeeSchedulePayRoll.setTotalDayWage(totalDayWages);
         employeeSchedulePayRoll.setUpdatedBy(userId);
     }
 }
