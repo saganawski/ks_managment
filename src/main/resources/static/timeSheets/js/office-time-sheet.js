@@ -404,4 +404,15 @@ $(document).ready(function(){
         }
         return json;
     }
+
+    $('#customPayRateCheckBox').on('click', function(event){
+        let checkBoxChecked = $('#customPayRateCheckBox').prop('checked');
+        if(checkBoxChecked){
+            $('#customPayRate').prop('disabled',false);
+            $('#payRateSelect').prop('disabled',true);
+        }else{
+            $('#customPayRate').prop('disabled',true);
+            $('#payRateSelect').prop('disabled',false);
+        }
+    });
 })
