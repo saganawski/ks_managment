@@ -173,7 +173,7 @@ public class EmployeeScheduleServiceImpl implements EmployeeScheduleService{
                 final double overtimeDayWages = overtimeHoursWorked * overtimePayRate;
                 double totalDayWages = normalDayWages + overtimeDayWages;
                 if(mileage != null){
-                    double mileageBonus = (double) mileage * .51;
+                    double mileageBonus = (double) mileage * .58;
                     totalDayWages = totalDayWages + mileageBonus;
                 }
                 employeeSchedule.getEmployeeSchedulePayroll().setTotalDayWage(totalDayWages);
@@ -184,7 +184,7 @@ public class EmployeeScheduleServiceImpl implements EmployeeScheduleService{
                 final Double hoursWorked = Double.valueOf( todaysMinutes / 60);
                 double totalDayWages = hoursWorked * overtimePayRate;
                 if(mileage != null){
-                    double mileageBonus = (double) mileage * .51;
+                    double mileageBonus = (double) mileage * .58;
                     totalDayWages = totalDayWages + mileageBonus;
                 }
                 employeeSchedule.getEmployeeSchedulePayroll().setTotalDayWage(totalDayWages);
@@ -209,7 +209,7 @@ public class EmployeeScheduleServiceImpl implements EmployeeScheduleService{
             final Double hoursWorked = Double.valueOf( (double) timeWorked / 60);
             double totalDayWages = hoursWorked * payRate;
             if(mileage != null){
-                double mileageBonus = (double) mileage * .51;
+                double mileageBonus = (double) mileage * .58;
                 totalDayWages = totalDayWages + mileageBonus;
             }
 
