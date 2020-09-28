@@ -29,4 +29,11 @@ public interface JpaEmployeeScheduleRepo extends JpaRepository<EmployeeSchedule,
             "AND scheduled_time >= ?2 AND scheduled_time <= ?3 ",
             nativeQuery = true)
     List<EmployeeSchedule> findAllByOfficeForTimePeriod(Integer officeId, LocalDateTime startDate, LocalDateTime endDate);
+
+    @Query(value = "SELECT es.* FROM employee_schedule AS es " +
+            "JOIN employee AS e ON e.id = es.employee_id " +
+            "WHERE e.id = ?1 AND e.deleted IS FALSE " +
+            "AND scheduled_time >= ?2 AND scheduled_time <= ?3 ",
+            nativeQuery = true)
+    List<EmployeeSchedule> findAllSchedulesForTimePeriod(Integer employeeId, LocalDateTime with, LocalDateTime currentScheduleDate);
 }

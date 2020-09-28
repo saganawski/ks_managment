@@ -20,4 +20,6 @@ public interface EmployeeScheduleService {
     EmployeeSchedule setEmployeeScheduleStatus(Integer employeeScheduleId, EmployeeScheduleStatus status, UserPrincipal userPrincipal);
 
     List<EmployeeSchedule> getEmployeeSchedulesByOfficeForTimePeriod(Integer officeId, String startDate, String endDate);
+
+    EmployeeSchedule setEmployeeScheduleStatusAndPayRoll(Integer employeeScheduleId, EmployeeSchedule employeeSchedule, UserPrincipal userPrincipal);
 }

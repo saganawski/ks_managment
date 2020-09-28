@@ -1,6 +1,7 @@
 package com.ks.management.employee.employeeSchedule;
 
 import com.ks.management.employee.Employee;
+import com.ks.management.employee.employeeSchedulePayRoll.EmployeeSchedulePayroll;
 import lombok.*;
 
 import javax.persistence.*;
@@ -44,6 +45,10 @@ public class EmployeeSchedule {
     @Column(name = "created_date", insertable = false, updatable = false)
     @Temporal(TemporalType.TIMESTAMP)
     private Date createdDate;
+
+    @OneToOne
+    @JoinColumn(name="employee_schedule_payroll_id", referencedColumnName = "id")
+    private EmployeeSchedulePayroll employeeSchedulePayroll;
 
     @Override
     public String toString() {

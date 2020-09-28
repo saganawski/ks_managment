@@ -53,4 +53,11 @@ public class EmployeeScheduleController {
 		return employeeScheduleService.setEmployeeScheduleStatus(employeeScheduleId,status,userPrincipal);
 	}
 
+	@PostMapping("/employee-schedule/{employeeScheduleId}/status-payroll")
+	public EmployeeSchedule setEmployeeScheduleStatusAndPayRoll(@PathVariable("employeeScheduleId") Integer employeeScheduleId,
+													  @RequestBody EmployeeSchedule employeeSchedule,
+													  @AuthenticationPrincipal UserPrincipal userPrincipal){
+		return employeeScheduleService.setEmployeeScheduleStatusAndPayRoll(employeeScheduleId,employeeSchedule,userPrincipal);
+	}
+
 }
