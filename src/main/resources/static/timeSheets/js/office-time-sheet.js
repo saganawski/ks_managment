@@ -116,7 +116,19 @@ $(document).ready(function(){
         if(employeeSchedule.employeeSchedulePayroll != null){
             let payRate = employeeSchedule.employeeSchedulePayroll.payRate;
             if(payRate !=null){
-                $('#payRateSelect').val(payRate);
+                let standardRateOptions = [15,17];
+                let isStandardRate = standardRateOptions.includes(payRate);
+                if(isStandardRate){
+                    $('#payRateSelect').val(payRate);
+                    $('#customPayRate').prop('disabled',true);
+                    $('#payRateSelect').prop('disabled',false);
+                    $('#customPayRateCheckBox').prop('checked',false);
+                }else{
+                    $('#customPayRate').val(payRate);
+                    $('#customPayRate').prop('disabled',false);
+                    $('#payRateSelect').prop('disabled',true);
+                    $('#customPayRateCheckBox').prop('checked',true);
+                }
             }
 
             let timeIn = employeeSchedule.employeeSchedulePayroll.timeIn;
@@ -319,7 +331,6 @@ $(document).ready(function(){
         let timeOut = jsonForm.timeOut;
         let mileage = jsonForm.mileage;
 
-        debugger;
         let checkBoxChecked = $('#customPayRateCheckBox').prop('checked');
         if(checkBoxChecked){
             var customPayRate = $('#customPayRate').val();
