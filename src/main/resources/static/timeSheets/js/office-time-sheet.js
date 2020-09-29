@@ -104,6 +104,9 @@ $(document).ready(function(){
 
         $('#statusModal').modal('show');
         $('#statusTitle').text(vm.scheduleEvent.title + ", " + vm.scheduleEvent.extendedProps.firstName);
+        $('#customPayRate').prop('disabled',true);
+        $('#payRateSelect').prop('disabled',false);
+        $('#customPayRateCheckBox').prop('checked',false);
 
         if(employeeSchedule.employeeScheduleStatus != null){
             delete employeeSchedule.employeeScheduleStatus.hibernateLazyInitializer;
@@ -114,8 +117,18 @@ $(document).ready(function(){
 
         if(employeeSchedule.employeeSchedulePayroll != null){
             let payRate = employeeSchedule.employeeSchedulePayroll.payRate;
+
             if(payRate !=null){
-                $('#payRateSelect').val(payRate);
+                let standardRateOptions = [15,17];
+                let isStandardRate = standardRateOptions.includes(payRate);
+                if(isStandardRate){
+                    $('#payRateSelect').val(payRate);
+                }else{
+                    $('#customPayRate').val(payRate);
+                    $('#customPayRate').prop('disabled',false);
+                    $('#payRateSelect').prop('disabled',true);
+                    $('#customPayRateCheckBox').prop('checked',true);
+                }
             }
 
             let timeIn = employeeSchedule.employeeSchedulePayroll.timeIn;
@@ -318,16 +331,28 @@ $(document).ready(function(){
         let timeOut = jsonForm.timeOut;
         let mileage = jsonForm.mileage;
 
+        let checkBoxChecked = $('#customPayRateCheckBox').prop('checked');
+        if(checkBoxChecked){
+            var customPayRate = $('#customPayRate').val();
+        }
+
         let validated = payRollValidation(employeeScheduleStatus, timeIn,timeOut);
 
         if(validated){
             if(vm.employeeSchedule.employeeSchedulePayroll != null){
-                vm.employeeSchedule.employeeSchedulePayroll.payRate = payRate;
+                if(checkBoxChecked){
+                    vm.employeeSchedule.employeeSchedulePayroll.payRate = customPayRate;
+                }else{
+                    vm.employeeSchedule.employeeSchedulePayroll.payRate = payRate;
+                }
                 vm.employeeSchedule.employeeSchedulePayroll.timeIn = timeIn;
                 vm.employeeSchedule.employeeSchedulePayroll.timeOut = timeOut;
                 vm.employeeSchedule.employeeSchedulePayroll.mileage = mileage;
             }else{
                 let employeeSchedulePayroll = {id:null,payRate:payRate,timeIn:timeIn,timeOut:timeOut,mileage:mileage}
+                if(checkBoxChecked){
+                    employeeSchedulePayroll.payRate = customPayRate;
+                }
                 vm.employeeSchedule.employeeSchedulePayroll = employeeSchedulePayroll;
             }
             setEmployeeScheduleStatusAndPayRoll(vm.employeeSchedule);
@@ -404,4 +429,15 @@ $(document).ready(function(){
         }
         return json;
     }
+
+    $('#customPayRateCheckBox').on('click', function(event){
+        let checkBoxChecked = $('#customPayRateCheckBox').prop('checked');
+        if(checkBoxChecked){
+            $('#customPayRate').prop('disabled',false);
+            $('#payRateSelect').prop('disabled',true);
+        }else{
+            $('#customPayRate').prop('disabled',true);
+            $('#payRateSelect').prop('disabled',false);
+        }
+    });
 })
