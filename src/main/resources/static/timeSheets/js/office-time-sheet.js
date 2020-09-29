@@ -94,8 +94,6 @@ $(document).ready(function(){
                     });
                 }
             });
-
-
         }
     });
 
@@ -107,6 +105,7 @@ $(document).ready(function(){
         $('#customPayRate').prop('disabled',true);
         $('#payRateSelect').prop('disabled',false);
         $('#customPayRateCheckBox').prop('checked',false);
+        $('#lunchBreak').prop('checked',false);
 
         if(employeeSchedule.employeeScheduleStatus != null){
             delete employeeSchedule.employeeScheduleStatus.hibernateLazyInitializer;
@@ -144,6 +143,11 @@ $(document).ready(function(){
             let mileage = employeeSchedule.employeeSchedulePayroll.mileage;
             if(mileage != null){
                 $('#mileage').val(mileage);
+            }
+
+            let lunchBreak = employeeSchedule.employeeSchedulePayroll.lunch
+            if(lunchBreak != null && lunchBreak == true){
+                $('#lunchBreak').prop('checked',true);
             }
         }
     }
@@ -331,6 +335,8 @@ $(document).ready(function(){
         let timeOut = jsonForm.timeOut;
         let mileage = jsonForm.mileage;
 
+        let lunchBoxChecked = $('#lunchBreak').prop('checked');
+
         let checkBoxChecked = $('#customPayRateCheckBox').prop('checked');
         if(checkBoxChecked){
             var customPayRate = $('#customPayRate').val();
@@ -345,6 +351,13 @@ $(document).ready(function(){
                 }else{
                     vm.employeeSchedule.employeeSchedulePayroll.payRate = payRate;
                 }
+
+                if(lunchBoxChecked){
+                    vm.employeeSchedule.employeeSchedulePayroll.lunch = true;
+                }else{
+                    vm.employeeSchedule.employeeSchedulePayroll.lunch = false;
+                }
+
                 vm.employeeSchedule.employeeSchedulePayroll.timeIn = timeIn;
                 vm.employeeSchedule.employeeSchedulePayroll.timeOut = timeOut;
                 vm.employeeSchedule.employeeSchedulePayroll.mileage = mileage;
@@ -352,6 +365,9 @@ $(document).ready(function(){
                 let employeeSchedulePayroll = {id:null,payRate:payRate,timeIn:timeIn,timeOut:timeOut,mileage:mileage}
                 if(checkBoxChecked){
                     employeeSchedulePayroll.payRate = customPayRate;
+                }
+                if(lunchBoxChecked){
+                    employeeSchedulePayroll.lunch = true;
                 }
                 vm.employeeSchedule.employeeSchedulePayroll = employeeSchedulePayroll;
             }

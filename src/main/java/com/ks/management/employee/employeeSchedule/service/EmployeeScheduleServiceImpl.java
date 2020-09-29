@@ -197,13 +197,16 @@ public class EmployeeScheduleServiceImpl implements EmployeeScheduleService{
         final LocalTime timeOut = givenEmployeeSchedule.getEmployeeSchedulePayroll().getTimeOut();
         final Integer mileage = givenEmployeeSchedule.getEmployeeSchedulePayroll().getMileage();
         final Double payRate = givenEmployeeSchedule.getEmployeeSchedulePayroll().getPayRate();
+        final Boolean lunch = Optional.ofNullable(givenEmployeeSchedule.getEmployeeSchedulePayroll().getLunch()).orElse(false);
 
         if(timeOut != null){
             long timeWorked = timeIn.until(timeOut, ChronoUnit.MINUTES);
 
-            if(timeWorked >=  300){
+            if(timeWorked >=  300 || lunch){
                 employeeSchedulePayRoll.setLunch(true);
                 timeWorked = timeWorked - 30;
+            }else{
+                employeeSchedulePayRoll.setLunch(false);
             }
 
             final Double hoursWorked = Double.valueOf( (double) timeWorked / 60);

@@ -117,12 +117,12 @@
                         </div>
                         <div class="form-group col-md-3 col-lg-9">
                             <div class="custom-control custom-checkbox">
-                                <input type="checkbox" class="custom-control-input" id="customPayRateCheckBox">
+                                <input type="checkbox" class="custom-control-input" id="customPayRateCheckBox" checked="checked">
                                 <label class="custom-control-label" for="customPayRateCheckBox">Custom Pay Rate</label>
                             </div>
                         </div>
                         <div class="form-group col-md-3 col-lg-9">
-                            <input id="customPayRate" name="customPayRate" type="number" class="form-control" step="0.01" min="0" checked="checked" disabled required>
+                            <input id="customPayRate" name="customPayRate" type="number" class="form-control" step="0.01" min="0" disabled required>
                         </div>
                         <div class="form-group col-md-3 col-lg-9">
                             <label>Time in</label>
@@ -138,6 +138,17 @@
                         <div class="form-group col-md-3 col-lg-9">
                             <label>Mileage</label>
                             <input type="number" id="mileage" name="mileage" class="form-control" min="0"/>
+                        </div>
+                        <div class="form-group col-md-3 col-lg-9">
+                            <div class="custom-control custom-checkbox">
+                                <input type="checkbox" class="custom-control-input" id="lunchBreak" name="lunch" checked="checked">
+                                <label class="custom-control-label" for="lunchBreak">Lunch Break</label>
+                                <small class="form-text text-muted">
+                                    Click this if employee works less then 5 hours and takes a lunch break.
+                                    <br>
+                                    Lunch Breaks are automatically deducted if employee works more then 5 hours
+                                </small>
+                            </div>
                         </div>
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                         <button id="statusFormSubmit" class="btn btn-primary" value="send" type="submit">Set Status</button>
