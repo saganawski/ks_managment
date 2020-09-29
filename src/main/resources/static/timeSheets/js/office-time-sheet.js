@@ -100,7 +100,6 @@ $(document).ready(function(){
     });
 
     function setEventModalFields(employeeSchedule){
-    //TODO: clear modal - add customRate
         $('#statusForm').trigger('reset');
 
         $('#statusModal').modal('show');
