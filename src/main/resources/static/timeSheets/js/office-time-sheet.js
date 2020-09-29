@@ -100,6 +100,7 @@ $(document).ready(function(){
     });
 
     function setEventModalFields(employeeSchedule){
+    //TODO: clear modal - add customRate
         $('#statusForm').trigger('reset');
 
         $('#statusModal').modal('show');
@@ -318,16 +319,29 @@ $(document).ready(function(){
         let timeOut = jsonForm.timeOut;
         let mileage = jsonForm.mileage;
 
+        debugger;
+        let checkBoxChecked = $('#customPayRateCheckBox').prop('checked');
+        if(checkBoxChecked){
+            var customPayRate = $('#customPayRate').val();
+        }
+
         let validated = payRollValidation(employeeScheduleStatus, timeIn,timeOut);
 
         if(validated){
             if(vm.employeeSchedule.employeeSchedulePayroll != null){
-                vm.employeeSchedule.employeeSchedulePayroll.payRate = payRate;
+                if(checkBoxChecked){
+                    vm.employeeSchedule.employeeSchedulePayroll.payRate = customPayRate;
+                }else{
+                    vm.employeeSchedule.employeeSchedulePayroll.payRate = payRate;
+                }
                 vm.employeeSchedule.employeeSchedulePayroll.timeIn = timeIn;
                 vm.employeeSchedule.employeeSchedulePayroll.timeOut = timeOut;
                 vm.employeeSchedule.employeeSchedulePayroll.mileage = mileage;
             }else{
                 let employeeSchedulePayroll = {id:null,payRate:payRate,timeIn:timeIn,timeOut:timeOut,mileage:mileage}
+                if(checkBoxChecked){
+                    employeeSchedulePayroll.payRate = customPayRate;
+                }
                 vm.employeeSchedule.employeeSchedulePayroll = employeeSchedulePayroll;
             }
             setEmployeeScheduleStatusAndPayRoll(vm.employeeSchedule);
