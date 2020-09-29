@@ -104,6 +104,9 @@ $(document).ready(function(){
 
         $('#statusModal').modal('show');
         $('#statusTitle').text(vm.scheduleEvent.title + ", " + vm.scheduleEvent.extendedProps.firstName);
+        $('#customPayRate').prop('disabled',true);
+        $('#payRateSelect').prop('disabled',false);
+        $('#customPayRateCheckBox').prop('checked',false);
 
         if(employeeSchedule.employeeScheduleStatus != null){
             delete employeeSchedule.employeeScheduleStatus.hibernateLazyInitializer;
@@ -114,14 +117,12 @@ $(document).ready(function(){
 
         if(employeeSchedule.employeeSchedulePayroll != null){
             let payRate = employeeSchedule.employeeSchedulePayroll.payRate;
+
             if(payRate !=null){
                 let standardRateOptions = [15,17];
                 let isStandardRate = standardRateOptions.includes(payRate);
                 if(isStandardRate){
                     $('#payRateSelect').val(payRate);
-                    $('#customPayRate').prop('disabled',true);
-                    $('#payRateSelect').prop('disabled',false);
-                    $('#customPayRateCheckBox').prop('checked',false);
                 }else{
                     $('#customPayRate').val(payRate);
                     $('#customPayRate').prop('disabled',false);
