@@ -76,30 +76,20 @@ $(document).ready(function(){
         });
     }
 
-    $('#officeFormSubmit').on('click', function(event){
+    $('#auditFormSubmit').on('click', function(event){
         event.preventDefault();
         let validated = validationCheck();
         if(validated){
-            let office = JSON.parse($('#officeSelect').val());
-            vm.office = office;
-            getEventsByOffice(office.id);
+            let jsonForm = convertFormToJson($("#auditForm").serializeArray());
+            let office = JSON.parse(jsonForm.office);
+            jsonForm.office = office;
+            createScheduleAudit(jsonForm);
         }
 
     });
 
     function validationCheck(){
-        const form = document.querySelector('#officeForm');
-        const offices = $('#officeSelect').val().toString();
-
-        if(offices == null || offices === ""){
-            swal({
-                title: "Error!",
-                text: "Must Select at least one office!",
-                icon: "error"
-            })
-            form.classList.add('was-validated');
-            return false;
-        }
+        const form = document.querySelector('#auditForm');
         if(form.checkValidity()  === false){
             form.classList.add('was-validated');
             return false;
@@ -109,29 +99,22 @@ $(document).ready(function(){
         return true;
     }
 
-
-    $('#statusFormSubmit').on('click', function(event){
-        event.preventDefault();
-
-    });
-
-
-    function setEmployeeScheduleStatusAndPayRoll(employeeSchedule){
+    function createScheduleAudit(scheduleAudit){
         $.ajax({
             type: "POST",
-            url: "/employees/employee-schedule/" + employeeSchedule.id + "/status-payroll",
-            data: JSON.stringify(employeeSchedule),
+            url: "/scheduleAudits",
+            data: JSON.stringify(scheduleAudit),
             dataType: "json",
             contentType: "application/json; charset=utf-8"
         }).then(function(response){
             swal({
                 title: "Success!",
-                text: "You updated this Employees Schedule date",
+                text: "You created a Schedule audit",
                 icon: "success",
                 timer: 2000
             }).then(function(){
-                getEventsByOffice(vm.office.id);
-                $('#statusModal').modal('hide');
+                $('#auditModal').modal('hide');
+                location.reload();
             });
         }).fail(function(error){
             console.log(error.responseJSON);

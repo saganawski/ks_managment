@@ -3,10 +3,10 @@ package com.ks.management.report.controller;
 import com.ks.management.employee.Employee;
 import com.ks.management.report.ScheduleAudit;
 import com.ks.management.report.service.ScheduleAuditService;
+import com.ks.management.security.UserPrincipal;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -20,6 +20,13 @@ public class ScheduleAuditController {
 	public List<ScheduleAudit> getScheduleAudits(){
 		return scheduleAuditService.getScheduleAudits();
 	}
+
+	@PostMapping()
+	public ScheduleAudit createScheduleAudit(@RequestBody ScheduleAudit scheduleAudit, @AuthenticationPrincipal UserPrincipal userPrincipal){
+		return scheduleAuditService.createScheduleAudit(scheduleAudit,userPrincipal);
+	}
+
+
 
 
 }

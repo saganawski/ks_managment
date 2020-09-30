@@ -28,7 +28,7 @@
                     <span class="sr-only">Loading...</span>
                 </div>
             </div>
-            <a class="btn btn-success" href="#" role="button" style="margin-bottom: 5px" data-toggle="modal" data-target="#officeModal">Add Report</a>
+            <a class="btn btn-success" href="#" role="button" style="margin-bottom: 5px" data-toggle="modal" data-target="#auditModal">Add Report</a>
             <table id="schedule-audit-table" class="display">
                 <thead>
                 <tr>
@@ -45,7 +45,7 @@
     </div>
 
     <!--        Choose Office MODAL-->
-    <div class="modal fade" id="officeModal" tabindex="-1" role="dialog" aria-labelledby="officeModalLabel" aria-hidden="true">
+    <div class="modal fade" id="auditModal" tabindex="-1" role="dialog" aria-labelledby="officeModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="text-center">
@@ -57,7 +57,7 @@
                     <h5 class="modal-title" >Choose Office to display schedules</h5>
                 </div>
                 <div class="modal-body">
-                    <form id="officeForm" class="needs-validation" novalidate>
+                    <form id="auditForm" class="needs-validation" novalidate>
                         <div class="form-group col-md-3 col-lg-9">
                             <label>Choose Office</label>
                             <select id="officeSelect" name="office" class="custom-select" required>
@@ -75,14 +75,14 @@
                             </div>
                         </div>
                         <div class="form-group col-md-3 col-lg-9">
-                            <label>Week Beginning</label>
+                            <label>Week Ending</label>
                             <input type="date" id="endDate"  class="form-control" name="endDate" required/>
                             <div class="invalid-feedback">
                                 Field is Required!
                             </div>
                         </div>
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                        <button id="officeFormSubmit" class="btn btn-primary" value="send" type="submit">Create Report</button>
+                        <button id="auditFormSubmit" class="btn btn-primary" value="send" type="submit">Create Report</button>
 
                     </form>
                 </div>
