@@ -63,7 +63,9 @@ $(document).ready(function(){
                     "defaultContent": ""},
                 {"data" : "employeeSchedulePayroll.overtime",
                     "defaultContent": ""}
-            ]
+            ],
+            dom:"Bfrtip",
+            buttons: ['copy','csv','pdf']
         });
     }
 
