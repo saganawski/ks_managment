@@ -9,4 +9,6 @@ public interface ScheduleAuditService {
     List<ScheduleAudit> getScheduleAudits();
 
     ScheduleAudit createScheduleAudit(ScheduleAudit scheduleAudit, UserPrincipal userPrincipal);
+
+    ScheduleAudit getScheduleAuditById(int scheduleAuditId);
 }

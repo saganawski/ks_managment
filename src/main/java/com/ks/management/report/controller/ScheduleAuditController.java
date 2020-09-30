@@ -26,7 +26,10 @@ public class ScheduleAuditController {
 		return scheduleAuditService.createScheduleAudit(scheduleAudit,userPrincipal);
 	}
 
-
+	@GetMapping("/{scheduleAuditId}")
+	public ScheduleAudit getScheduleAudit(@PathVariable("scheduleAuditId") int scheduleAuditId){
+		return scheduleAuditService.getScheduleAuditById(scheduleAuditId);
+	}
 
 
 }

@@ -42,4 +42,9 @@ public class ScheduleAuditServiceImpl implements ScheduleAuditService {
 
         return jpaScheduleAudit.save(scheduleAudit);
     }
+
+    @Override
+    public ScheduleAudit getScheduleAuditById(int scheduleAuditId) {
+        return jpaScheduleAudit.getOne(scheduleAuditId);
+    }
 }

@@ -1,77 +1,68 @@
 $(document).ready(function(){
     vm = this;
-    vm.office = {};
 
     const main = $('#load-layout').html();
     $('#load-layout').load("/common/_layout.html", function(responseTxt, statusTxt, xhr){
         if(statusTxt == "success"){
             $('#load-layout').append(main);
-            setDataTable();
         }
     });
 
-    getOfficeOptions()
-        .then(function(data){
-            setOfficeOptions(data);
-        })
-        .fail(function(err){
+    let searchParams = new URLSearchParams(window.location.search);
+    if(searchParams.has('scheduleAuditId')){
+        let scheduleAuditId = searchParams.get('scheduleAuditId');
+        $.ajax({
+            url:"/scheduleAudits/" + scheduleAuditId
+        }).then(function(data){
+            setDataTable(data);
+        }).fail(function(err){
             console.log(err);
             swal({
                 title: "Error!",
-                text: "Could not get Offices for drop down\n" + err.responseJSON.message,
+                text: "Failure to retrieve schedule audit! \n" + err.responseJSON.message,
                 icon: "error"
             });
         });
-
-    function getOfficeOptions(){
-        return $.ajax({
-            type:"GET",
-            url:"/offices"
-        });
+    }else{
+       swal("Error:", "no ID provided!","error");
     }
 
-    function setOfficeOptions(offices){
-        for(office of offices){
-            $('#officeSelect').append("<option value='"+JSON.stringify(office)+"'>"+ office.name +"</option>");
-        }
-    }
 
-    function setDataTable(){
+    function setDataTable(scheduleAudit){
         $('#schedule-audit-table').DataTable({
             "initComplete": function(settings, json){
                 $("div").removeClass("spinner-border");
             },
-            ajax:{
-                "url": "/scheduleAudits",
-                "dataSrc": ""
-            },
+            data: scheduleAudit.employeeSchedules,
             columns :[
                 {"data" : "id"},
                 {"data" : function(data,type,row,meta){
-                    if(data.office == undefined){
-                        return "";
-                    }
-                    return data.office.name;
-                }, "defaultContent": ""},
-                {"data" : function(data,type,row,meta){
-                        if(data.startDate == null){
+                        if(data.scheduledTime == null){
                             return "";
                         }
-                        return moment(data.startDate).format('YYYY-MM-DD');
+                        return moment(data.scheduledTime).format('YYYY-MM-DD');
                     }
                 },
-                {"data" : function(data,type,row,meta){
-                        if(data.endDate == null){
-                            return "";
-                        }
-                        return data.endDate;
-                    }
-                },
-                {   "targets": -1,
-                    "data": function(data, type,row,meta){
-                        return '<a class="btn btn-warning" href="/timeSheets/schedule-audit-details.html?scheduleAuditId='+ data.id +'">Details</a>'
-                    }
-                }
+                {"data" : "employeeScheduleStatus.status",
+                        "defaultContent": ""},
+                {"data" : "employee.firstName",
+                    "defaultContent": ""},
+                {"data" : "employee.lastName",
+                    "defaultContent": ""},
+                {"data" : "employeeSchedulePayroll.payRate",
+                    "defaultContent": ""},
+                {"data" : "employeeSchedulePayroll.timeIn",
+                    "defaultContent": ""},
+                {"data" : "employeeSchedulePayroll.timeOut",
+                    "defaultContent": ""},
+                {"data" : "employeeSchedulePayroll.lunch",
+                    "defaultContent": ""},
+                {"data" : "employeeSchedulePayroll.mileage",
+                    "defaultContent": ""},
+                {"data" : "employeeSchedulePayroll.totalDayWage",
+                    "defaultContent": ""},
+                {"data" : "employeeSchedulePayroll.overtime",
+                    "defaultContent": ""}
             ]
         });
     }
