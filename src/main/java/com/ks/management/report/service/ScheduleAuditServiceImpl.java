@@ -47,4 +47,9 @@ public class ScheduleAuditServiceImpl implements ScheduleAuditService {
     public ScheduleAudit getScheduleAuditById(int scheduleAuditId) {
         return jpaScheduleAudit.getOne(scheduleAuditId);
     }
+
+    @Override
+    public void deleteScheduleAuditById(int scheduleAuditId) {
+        jpaScheduleAudit.deleteById(scheduleAuditId);
+    }
 }

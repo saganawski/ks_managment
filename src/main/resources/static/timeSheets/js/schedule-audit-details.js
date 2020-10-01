@@ -10,7 +10,7 @@ $(document).ready(function(){
 
     let searchParams = new URLSearchParams(window.location.search);
     if(searchParams.has('scheduleAuditId')){
-        let scheduleAuditId = searchParams.get('scheduleAuditId');
+        var scheduleAuditId = searchParams.get('scheduleAuditId');
         $.ajax({
             url:"/scheduleAudits/" + scheduleAuditId
         }).then(function(data){
@@ -78,7 +78,6 @@ $(document).ready(function(){
             jsonForm.office = office;
             createScheduleAudit(jsonForm);
         }
-
     });
 
     function validationCheck(){
@@ -126,4 +125,43 @@ $(document).ready(function(){
         }
         return json;
     }
+
+     $('#load-layout').on('click', '#delete-report',function(event){
+         event.preventDefault();
+         swal({
+           title: "Are you sure?",
+           text: "Once deleted, you will not be able to recover this record!",
+           icon: "warning",
+           buttons: true,
+           dangerMode: true,
+         })
+         .then((willDelete) => {
+            if(willDelete){
+                deleteScheduleAudit(scheduleAuditId);
+            }
+         });
+     });
+
+     function deleteScheduleAudit(scheduleAuditId){
+         $.ajax({
+             type: "DELETE",
+             url: "/scheduleAudits/" + scheduleAuditId
+         }).then(function(response){
+             swal({
+                 title: "Success!",
+                 text: "You deleted this audit",
+                 icon: "success",
+                 timer: 2000
+             }).then(function(){
+                window.location.href = "/timeSheets/schedule-audit.html";
+             });
+         }).fail(function(error){
+             console.log(error);
+             swal({
+                 title: "Error!",
+                 text: "Could NOT remove training! \n" + error.responseJSON.message,
+                 icon: "error"
+             });
+         });
+     }
 })

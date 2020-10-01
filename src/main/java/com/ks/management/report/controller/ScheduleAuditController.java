@@ -1,6 +1,5 @@
 package com.ks.management.report.controller;
 
-import com.ks.management.employee.Employee;
 import com.ks.management.report.ScheduleAudit;
 import com.ks.management.report.service.ScheduleAuditService;
 import com.ks.management.security.UserPrincipal;
@@ -31,5 +30,9 @@ public class ScheduleAuditController {
 		return scheduleAuditService.getScheduleAuditById(scheduleAuditId);
 	}
 
+	@DeleteMapping("/{scheduleAuditId}")
+	void deleteScheduleAudit(@PathVariable("scheduleAuditId") int scheduleAuditId){
+		scheduleAuditService.deleteScheduleAuditById(scheduleAuditId);
+	}
 
 }

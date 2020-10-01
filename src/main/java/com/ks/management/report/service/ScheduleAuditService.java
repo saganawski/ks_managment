@@ -11,4 +11,6 @@ public interface ScheduleAuditService {
     ScheduleAudit createScheduleAudit(ScheduleAudit scheduleAudit, UserPrincipal userPrincipal);
 
     ScheduleAudit getScheduleAuditById(int scheduleAuditId);
+
+    void deleteScheduleAuditById(int scheduleAuditId);
 }
