@@ -112,7 +112,7 @@ $(document).ready(function(){
             console.log(error.responseJSON);
             swal({
                 title: "Error!",
-                text: "Could not update employee schedule! \n" + error.responseJSON.message,
+                text: "Could not create employee schedule! \n" + error.responseJSON.message,
                 icon: "error"
             });
         });

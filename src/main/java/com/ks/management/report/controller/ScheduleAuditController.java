@@ -40,4 +40,9 @@ public class ScheduleAuditController {
 		return scheduleAuditService.getScheduleAuditsPayroll();
 	}
 
+	@PostMapping("/payroll")
+	public ScheduleAudit createScheduleAuditPayroll(@RequestBody ScheduleAudit scheduleAudit, @AuthenticationPrincipal UserPrincipal userPrincipal){
+		return scheduleAuditService.createScheduleAuditPayroll(scheduleAudit,userPrincipal);
+	}
+
 }

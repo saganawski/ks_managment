@@ -57,4 +57,14 @@ public class ScheduleAuditServiceImpl implements ScheduleAuditService {
     public List<ScheduleAudit> getScheduleAuditsPayroll() {
         return jpaScheduleAudit.findAllByIsPayroll(true);
     }
+
+    @Override
+    public ScheduleAudit createScheduleAuditPayroll(ScheduleAudit scheduleAudit, UserPrincipal userPrincipal) {
+        final Integer userId = userPrincipal.getUserId();
+        scheduleAudit.setCreatedBy(userId);
+        scheduleAudit.setUpdatedBy(userId);
+        scheduleAudit.setIsPayroll(true);
+
+        return jpaScheduleAudit.save(scheduleAudit);
+    }
 }

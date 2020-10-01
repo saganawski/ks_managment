@@ -82,7 +82,7 @@ $(document).ready(function(){
             let jsonForm = convertFormToJson($("#auditForm").serializeArray());
             let office = JSON.parse(jsonForm.office);
             jsonForm.office = office;
-//            createScheduleAudit(jsonForm);
+            createScheduleAudit(jsonForm);
         }
 
     });
@@ -101,14 +101,14 @@ $(document).ready(function(){
     function createScheduleAudit(scheduleAudit){
         $.ajax({
             type: "POST",
-            url: "/scheduleAudits",
+            url: "/scheduleAudits/payroll",
             data: JSON.stringify(scheduleAudit),
             dataType: "json",
             contentType: "application/json; charset=utf-8"
         }).then(function(response){
             swal({
                 title: "Success!",
-                text: "You created a Schedule audit",
+                text: "You created a Schedule Payroll",
                 icon: "success",
                 timer: 2000
             }).then(function(){
@@ -119,7 +119,7 @@ $(document).ready(function(){
             console.log(error.responseJSON);
             swal({
                 title: "Error!",
-                text: "Could not update employee schedule! \n" + error.responseJSON.message,
+                text: "Could not create payroll report! \n" + error.responseJSON.message,
                 icon: "error"
             });
         });
