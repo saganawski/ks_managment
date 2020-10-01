@@ -45,4 +45,9 @@ public class ScheduleAuditController {
 		return scheduleAuditService.createScheduleAuditPayroll(scheduleAudit,userPrincipal);
 	}
 
+	@GetMapping("/{scheduleAuditId}/payroll")
+	public ScheduleAudit getScheduleAuditPayroll(@PathVariable("scheduleAuditId") int scheduleAuditId){
+		return scheduleAuditService.getScheduleAuditPayrollById(scheduleAuditId);
+	}
+
 }

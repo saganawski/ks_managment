@@ -12,9 +12,11 @@ $(document).ready(function(){
     if(searchParams.has('scheduleAuditId')){
         var scheduleAuditId = searchParams.get('scheduleAuditId');
         $.ajax({
-            url:"/scheduleAudits/" + scheduleAuditId
+            url:"/scheduleAudits/" + scheduleAuditId + "/payroll"
         }).then(function(data){
-            setDataTable(data);
+            console.log(data);
+            debugger;
+//            setDataTable(data);
         }).fail(function(err){
             console.log(err);
             swal({
@@ -26,7 +28,6 @@ $(document).ready(function(){
     }else{
        swal("Error:", "no ID provided!","error");
     }
-
 
     function setDataTable(scheduleAudit){
         $('#schedule-audit-table').DataTable({

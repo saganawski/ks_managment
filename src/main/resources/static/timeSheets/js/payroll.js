@@ -68,7 +68,7 @@ $(document).ready(function(){
                 },
                 {   "targets": -1,
                     "data": function(data, type,row,meta){
-                        return '<a class="btn btn-warning" href="/timeSheets/schedule-audit-details.html?scheduleAuditId='+ data.id +'">Details</a>'
+                        return '<a class="btn btn-warning" href="/timeSheets/payroll-audit-details.html?scheduleAuditId='+ data.id +'">Details</a>'
                     }
                 }
             ]

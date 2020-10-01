@@ -17,4 +17,6 @@ public interface ScheduleAuditService {
     List<ScheduleAudit> getScheduleAuditsPayroll();
 
     ScheduleAudit createScheduleAuditPayroll(ScheduleAudit scheduleAudit, UserPrincipal userPrincipal);
+
+    ScheduleAudit getScheduleAuditPayrollById(int scheduleAuditId);
 }
