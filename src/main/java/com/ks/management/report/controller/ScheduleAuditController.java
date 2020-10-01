@@ -35,4 +35,9 @@ public class ScheduleAuditController {
 		scheduleAuditService.deleteScheduleAuditById(scheduleAuditId);
 	}
 
+	@GetMapping("/payroll")
+	public List<ScheduleAudit> getScheduleAuditsPayroll(){
+		return scheduleAuditService.getScheduleAuditsPayroll();
+	}
+
 }

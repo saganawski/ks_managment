@@ -34,6 +34,9 @@ public class ScheduleAudit {
     @JoinColumn(name = "office_id")
     private Office office;
 
+    @Column(name = "is_payroll")
+    private Boolean isPayroll;
+
     @Column(name = "updated_by")
     private Integer updatedBy;
 

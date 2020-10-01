@@ -13,4 +13,6 @@ public interface ScheduleAuditService {
     ScheduleAudit getScheduleAuditById(int scheduleAuditId);
 
     void deleteScheduleAuditById(int scheduleAuditId);
+
+    List<ScheduleAudit> getScheduleAuditsPayroll();
 }
