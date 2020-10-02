@@ -65,6 +65,14 @@ public class ScheduleAuditServiceImpl implements ScheduleAuditService {
         scheduleAudit.setUpdatedBy(userId);
         scheduleAudit.setIsPayroll(true);
 
+        final Integer officeId = scheduleAudit.getOffice().getId();
+        final LocalDate startDate = scheduleAudit.getStartDate();
+        final LocalDate endDate = scheduleAudit.getEndDate();
+
+        final List<EmployeeSchedule> employeeSchedules = jpaEmployeeScheduleRepo.findAllByOfficeForTimePeriod(officeId,startDate.atStartOfDay(),endDate.atStartOfDay());
+
+        scheduleAudit.setEmployeeSchedules(employeeSchedules);
+
         return jpaScheduleAudit.save(scheduleAudit);
     }
 
