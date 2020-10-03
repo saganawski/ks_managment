@@ -177,6 +177,7 @@ public class EmployeeScheduleServiceImpl implements EmployeeScheduleService{
                     totalDayWages = totalDayWages + mileageBonus;
                 }
                 employeeSchedule.getEmployeeSchedulePayroll().setTotalDayWage(totalDayWages);
+                employeeSchedule.getEmployeeSchedulePayroll().setOvertimeMinutes(overtimePayRateMinutes);
             }
 
             final Boolean hasOnlyOvertimeRate = remainder - overtimeMinuteThreshold >= 0;
@@ -188,6 +189,7 @@ public class EmployeeScheduleServiceImpl implements EmployeeScheduleService{
                     totalDayWages = totalDayWages + mileageBonus;
                 }
                 employeeSchedule.getEmployeeSchedulePayroll().setTotalDayWage(totalDayWages);
+                employeeSchedule.getEmployeeSchedulePayroll().setOvertimeMinutes(todaysMinutes);
             }
         }
     }

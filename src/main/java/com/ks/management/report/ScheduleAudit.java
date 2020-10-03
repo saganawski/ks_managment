@@ -3,6 +3,7 @@ package com.ks.management.report;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.ks.management.employee.employeeSchedule.EmployeeSchedule;
 import com.ks.management.office.Office;
+import com.ks.management.report.ui.PayrollDto;
 import lombok.*;
 
 import javax.persistence.*;

@@ -2,6 +2,7 @@ package com.ks.management.report.controller;
 
 import com.ks.management.report.ScheduleAudit;
 import com.ks.management.report.service.ScheduleAuditService;
+import com.ks.management.report.ui.PayrollDto;
 import com.ks.management.security.UserPrincipal;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -46,7 +47,7 @@ public class ScheduleAuditController {
 	}
 
 	@GetMapping("/{scheduleAuditId}/payroll")
-	public ScheduleAudit getScheduleAuditPayroll(@PathVariable("scheduleAuditId") int scheduleAuditId){
+	public List<PayrollDto> getScheduleAuditPayroll(@PathVariable("scheduleAuditId") int scheduleAuditId){
 		return scheduleAuditService.getScheduleAuditPayrollById(scheduleAuditId);
 	}
 
