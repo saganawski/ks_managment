@@ -6,7 +6,6 @@ import com.ks.management.report.ScheduleAudit;
 import com.ks.management.report.dao.JpaScheduleAudit;
 import com.ks.management.report.ui.PayrollDto;
 import com.ks.management.security.UserPrincipal;
-import com.sun.org.apache.xalan.internal.xsltc.DOM;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,7 +26,7 @@ public class ScheduleAuditServiceImpl implements ScheduleAuditService {
 
     @Override
     public List<ScheduleAudit> getScheduleAudits() {
-        return jpaScheduleAudit.findAll();
+        return jpaScheduleAudit.findAllByIsPayroll(false);
     }
 
     @Override
@@ -36,6 +35,7 @@ public class ScheduleAuditServiceImpl implements ScheduleAuditService {
 
         scheduleAudit.setCreatedBy(userId);
         scheduleAudit.setUpdatedBy(userId);
+        scheduleAudit.setIsPayroll(false);
 
         final Integer officeId = scheduleAudit.getOffice().getId();
         final LocalDate startDate = scheduleAudit.getStartDate();

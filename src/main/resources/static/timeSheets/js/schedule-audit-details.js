@@ -28,7 +28,6 @@ $(document).ready(function(){
        swal("Error:", "no ID provided!","error");
     }
 
-
     function setDataTable(scheduleAudit){
         $('#schedule-audit-table').DataTable({
             "initComplete": function(settings, json){
