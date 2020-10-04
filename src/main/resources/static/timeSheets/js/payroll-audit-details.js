@@ -106,7 +106,7 @@ $(document).ready(function(){
                  icon: "success",
                  timer: 2000
              }).then(function(){
-                window.location.href = "/timeSheets/schedule-audit.html";
+                window.location.href = "/timeSheets/payroll.html";
              });
          }).fail(function(error){
              console.log(error);
