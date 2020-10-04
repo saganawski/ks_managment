@@ -16,13 +16,13 @@ public class PayrollDto {
     private String firstName;
     private String lastName;
     private BigDecimal hourlyRate;
-    private BigDecimal regularHours; //(total_minutes - overtime_minutes) / 60
-    private BigDecimal hourlyPay;// regularHours * hourlyRate
-    private BigDecimal overtimeRate; // hourlyRate * 1.5
-    private BigDecimal overtimeHours; // overtime_minutes / 60
-    private BigDecimal overtimePay;// overtime_minutes * overtimeRate
+    private BigDecimal regularHours;
+    private BigDecimal hourlyPay;
+    private BigDecimal overtimeRate;
+    private BigDecimal overtimeHours;
+    private BigDecimal overtimePay;
     private BigDecimal miles;
-    private BigDecimal mileagePay;// miles * .58
+    private BigDecimal mileagePay;
     private BigDecimal totalPay;
 
     public static BigDecimal calculateOvertimePay(BigDecimal overtimeRate, BigDecimal overtimeHours){
@@ -41,7 +41,6 @@ public class PayrollDto {
                 regularHours = totalMinutes.divide(BigDecimal.valueOf(60),RoundingMode.CEILING).setScale(2);
             }
         }
-
         return regularHours;
     }
 
@@ -74,7 +73,6 @@ public class PayrollDto {
         if(!totalMileage.equals(new BigDecimal(0.0))){
             return totalMileage.multiply(new BigDecimal(0.58)).setScale(2,RoundingMode.CEILING);
         }
-
         return new BigDecimal(0.0);
     }
 }
