@@ -2,6 +2,7 @@ package com.ks.management.report.service;
 
 import com.ks.management.employee.employeeSchedule.EmployeeSchedule;
 import com.ks.management.employee.employeeSchedule.dao.JpaEmployeeScheduleRepo;
+import com.ks.management.employee.employeeSchedule.service.EmployeeScheduleService;
 import com.ks.management.report.ScheduleAudit;
 import com.ks.management.report.dao.JpaScheduleAudit;
 import com.ks.management.report.ui.PayrollDto;
@@ -24,6 +25,9 @@ public class ScheduleAuditServiceImpl implements ScheduleAuditService {
     @Autowired
     private JpaEmployeeScheduleRepo jpaEmployeeScheduleRepo;
 
+    @Autowired
+    private EmployeeScheduleService employeeScheduleService;
+
     @Override
     public List<ScheduleAudit> getScheduleAudits() {
         return jpaScheduleAudit.findAllByIsPayroll(false);
@@ -45,7 +49,16 @@ public class ScheduleAuditServiceImpl implements ScheduleAuditService {
 
         scheduleAudit.setEmployeeSchedules(employeeSchedules);
 
+        updatePayroll(userPrincipal, employeeSchedules);
+
         return jpaScheduleAudit.save(scheduleAudit);
+    }
+
+    private void updatePayroll(UserPrincipal userPrincipal, List<EmployeeSchedule> employeeSchedules) {
+        employeeSchedules.forEach(es ->{
+            final Integer employeeScheduleId = es.getId();
+            employeeScheduleService.setEmployeeScheduleStatusAndPayRoll(employeeScheduleId,es, userPrincipal);
+        });
     }
 
     @Override
@@ -77,6 +90,8 @@ public class ScheduleAuditServiceImpl implements ScheduleAuditService {
         final List<EmployeeSchedule> employeeSchedules = jpaEmployeeScheduleRepo.findAllByOfficeForTimePeriod(officeId,startDate.atStartOfDay(),endDate.atStartOfDay());
 
         scheduleAudit.setEmployeeSchedules(employeeSchedules);
+
+        updatePayroll(userPrincipal, employeeSchedules);
 
         return jpaScheduleAudit.save(scheduleAudit);
     }
