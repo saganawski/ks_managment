@@ -15,6 +15,7 @@ $(document).ready(function(){
             url:"/scheduleAudits/" + scheduleAuditId
         }).then(function(data){
             setDataTable(data);
+            setTitle(data);
         }).fail(function(err){
             console.log(err);
             swal({
@@ -67,6 +68,10 @@ $(document).ready(function(){
             dom:"Bfrtip",
             buttons: ['copy','csv','pdf']
         });
+    }
+
+    function setTitle(scheduleAudit){
+        $('.card-header').append(" - " + scheduleAudit.office.name + "<br> Start Date: " + scheduleAudit.startDate + "<br> End Date: " + scheduleAudit.endDate);
     }
 
      $('#load-layout').on('click', '#delete-report',function(event){
