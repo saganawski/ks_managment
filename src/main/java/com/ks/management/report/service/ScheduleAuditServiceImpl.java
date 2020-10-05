@@ -62,7 +62,12 @@ public class ScheduleAuditServiceImpl implements ScheduleAuditService {
     }
 
     @Override
-    public ScheduleAudit getScheduleAuditById(int scheduleAuditId) {
+    public ScheduleAudit getScheduleAuditById(int scheduleAuditId, UserPrincipal userPrincipal) {
+        final ScheduleAudit scheduleAudit = jpaScheduleAudit.getOne(scheduleAuditId);
+
+        final List<EmployeeSchedule> employeeSchedules = scheduleAudit.getEmployeeSchedules();
+        updatePayroll(userPrincipal,employeeSchedules);
+
         return jpaScheduleAudit.getOne(scheduleAuditId);
     }
 
@@ -97,7 +102,11 @@ public class ScheduleAuditServiceImpl implements ScheduleAuditService {
     }
 
     @Override
-    public List<PayrollDto> getScheduleAuditPayrollById(int scheduleAuditId) {
+    public List<PayrollDto> getScheduleAuditPayrollById(int scheduleAuditId, UserPrincipal userPrincipal) {
+
+        final ScheduleAudit scheduleAudit = jpaScheduleAudit.getOne(scheduleAuditId);
+        final List<EmployeeSchedule> employeeSchedules = scheduleAudit.getEmployeeSchedules();
+        updatePayroll(userPrincipal,employeeSchedules);
 
         final List<Object[]> payrollAudits = jpaScheduleAudit.findAllPayrollSums(scheduleAuditId);
         final List<PayrollDto> dtos =  payrollAudits.stream()

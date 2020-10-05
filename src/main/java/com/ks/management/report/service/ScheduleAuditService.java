@@ -11,7 +11,7 @@ public interface ScheduleAuditService {
 
     ScheduleAudit createScheduleAudit(ScheduleAudit scheduleAudit, UserPrincipal userPrincipal);
 
-    ScheduleAudit getScheduleAuditById(int scheduleAuditId);
+    ScheduleAudit getScheduleAuditById(int scheduleAuditId, UserPrincipal userPrincipal);
 
     void deleteScheduleAuditById(int scheduleAuditId);
 
@@ -19,5 +19,5 @@ public interface ScheduleAuditService {
 
     ScheduleAudit createScheduleAuditPayroll(ScheduleAudit scheduleAudit, UserPrincipal userPrincipal);
 
-    List<PayrollDto> getScheduleAuditPayrollById(int scheduleAuditId);
+    List<PayrollDto> getScheduleAuditPayrollById(int scheduleAuditId, UserPrincipal userPrincipal);
 }

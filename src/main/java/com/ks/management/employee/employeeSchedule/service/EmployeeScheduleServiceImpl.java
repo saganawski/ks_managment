@@ -196,6 +196,7 @@ public class EmployeeScheduleServiceImpl implements EmployeeScheduleService{
             }
         }else{
             employeeSchedule.getEmployeeSchedulePayroll().setOvertimeMinutes(null);
+            employeeSchedule.getEmployeeSchedulePayroll().setOvertime(false);
         }
     }
 

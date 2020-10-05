@@ -27,8 +27,8 @@ public class ScheduleAuditController {
 	}
 
 	@GetMapping("/{scheduleAuditId}")
-	public ScheduleAudit getScheduleAudit(@PathVariable("scheduleAuditId") int scheduleAuditId){
-		return scheduleAuditService.getScheduleAuditById(scheduleAuditId);
+	public ScheduleAudit getScheduleAudit(@PathVariable("scheduleAuditId") int scheduleAuditId, @AuthenticationPrincipal UserPrincipal userPrincipal){
+		return scheduleAuditService.getScheduleAuditById(scheduleAuditId, userPrincipal);
 	}
 
 	@DeleteMapping("/{scheduleAuditId}")
@@ -47,8 +47,8 @@ public class ScheduleAuditController {
 	}
 
 	@GetMapping("/{scheduleAuditId}/payroll")
-	public List<PayrollDto> getScheduleAuditPayroll(@PathVariable("scheduleAuditId") int scheduleAuditId){
-		return scheduleAuditService.getScheduleAuditPayrollById(scheduleAuditId);
+	public List<PayrollDto> getScheduleAuditPayroll(@PathVariable("scheduleAuditId") int scheduleAuditId, @AuthenticationPrincipal UserPrincipal userPrincipal){
+		return scheduleAuditService.getScheduleAuditPayrollById(scheduleAuditId,userPrincipal);
 	}
 
 }
