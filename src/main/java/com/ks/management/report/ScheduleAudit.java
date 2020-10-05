@@ -3,6 +3,7 @@ package com.ks.management.report;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.ks.management.employee.employeeSchedule.EmployeeSchedule;
 import com.ks.management.office.Office;
+import com.ks.management.report.ui.PayrollDto;
 import lombok.*;
 
 import javax.persistence.*;
@@ -33,6 +34,9 @@ public class ScheduleAudit {
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
     @JoinColumn(name = "office_id")
     private Office office;
+
+    @Column(name = "is_payroll")
+    private Boolean isPayroll;
 
     @Column(name = "updated_by")
     private Integer updatedBy;

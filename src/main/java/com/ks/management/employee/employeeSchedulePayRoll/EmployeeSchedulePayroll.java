@@ -38,6 +38,9 @@ public class EmployeeSchedulePayroll {
     @Column(name = "total_minutes")
     private Double totalMinutes;
 
+    @Column(name = "overtime_minutes")
+    private Double overtimeMinutes;
+
     @Column(name = "mileage")
     private Integer mileage;
 

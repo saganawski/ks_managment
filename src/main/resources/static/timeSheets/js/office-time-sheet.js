@@ -82,7 +82,6 @@ $(document).ready(function(){
                     }).then(function(data){
                         let employeeSchedules = data;
                         setEvents(employeeSchedules);
-                        fullCal
                     }).fail(function(error){
                         console.log(error);
                         swal({

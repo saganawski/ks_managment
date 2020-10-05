@@ -106,11 +106,13 @@ public class EmployeeScheduleServiceImpl implements EmployeeScheduleService{
         employeeSchedule.setUpdatedBy(userId);
 
         final String statusCode = Optional.ofNullable(givenEmployeeSchedule.getEmployeeScheduleStatus()).map(EmployeeScheduleStatus::getCode).orElse(null);
-        if(statusCode == null){
+        /*if(statusCode == null){
             throw new RuntimeException("Could not find status in database! \n contact tech support!");
+        }*/
+        if(statusCode != null){
+            final EmployeeScheduleStatus employeeScheduleStatus = jpaEmployeeScheduleStatusRepo.findByCode(statusCode);
+            employeeSchedule.setEmployeeScheduleStatus(employeeScheduleStatus);
         }
-        final EmployeeScheduleStatus employeeScheduleStatus = jpaEmployeeScheduleStatusRepo.findByCode(statusCode);
-        employeeSchedule.setEmployeeScheduleStatus(employeeScheduleStatus);
 
         if(givenEmployeeSchedule.getEmployeeSchedulePayroll() != null){
             final Integer employeeSchedulePayrollId = givenEmployeeSchedule.getEmployeeSchedulePayroll().getId();
@@ -128,9 +130,10 @@ public class EmployeeScheduleServiceImpl implements EmployeeScheduleService{
 
             jpaEmployeeSchedulePayroll.save(employeeSchedulePayRoll);
             employeeSchedule.setEmployeeSchedulePayroll(employeeSchedulePayRoll);
+
+            payrollOvertime(employeeSchedule);
         }
 
-        payrollOvertime(employeeSchedule);
 
         return jpaEmployeeScheduleRepo.save(employeeSchedule);
     }
@@ -177,6 +180,7 @@ public class EmployeeScheduleServiceImpl implements EmployeeScheduleService{
                     totalDayWages = totalDayWages + mileageBonus;
                 }
                 employeeSchedule.getEmployeeSchedulePayroll().setTotalDayWage(totalDayWages);
+                employeeSchedule.getEmployeeSchedulePayroll().setOvertimeMinutes(overtimePayRateMinutes);
             }
 
             final Boolean hasOnlyOvertimeRate = remainder - overtimeMinuteThreshold >= 0;
@@ -188,7 +192,11 @@ public class EmployeeScheduleServiceImpl implements EmployeeScheduleService{
                     totalDayWages = totalDayWages + mileageBonus;
                 }
                 employeeSchedule.getEmployeeSchedulePayroll().setTotalDayWage(totalDayWages);
+                employeeSchedule.getEmployeeSchedulePayroll().setOvertimeMinutes(todaysMinutes);
             }
+        }else{
+            employeeSchedule.getEmployeeSchedulePayroll().setOvertimeMinutes(null);
+            employeeSchedule.getEmployeeSchedulePayroll().setOvertime(false);
         }
     }
 
@@ -218,6 +226,7 @@ public class EmployeeScheduleServiceImpl implements EmployeeScheduleService{
 
             employeeSchedulePayRoll.setTotalMinutes((double) timeWorked);
             employeeSchedulePayRoll.setTotalDayWage(totalDayWages);
+            //TODO: may need to set to null? if updated
         }
 
         employeeSchedulePayRoll.setTimeIn(timeIn);
