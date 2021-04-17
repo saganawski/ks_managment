@@ -24,92 +24,100 @@
 					<span class="sr-only">Loading...</span>
 				</div>
 			</div>
-			<form id="app-form" class="needs-validation" novalidate>
-				<div class="form-group col-md-3 col-lg-9">
-					<label>ID</label>
-					<input type="text" id="id"  class="form-control" name="id" readonly />
+			<div class="card col-lg-10" style="margin:15px">
+				<div class="card-header text-center">
+					Application
 				</div>
-				<div class="form-row">
-					<div class="form-group col-md-3">
-						<label>First Name</label>
-						<input type="text" id="firstName" name="firstName" class="form-control" required/>
-						<div class="invalid-feedback">
-							Field is Required!
-						</div>
-					</div>
-					<div class="form-group col-md-3">
-						<label>Last Name</label>
-						<input type="text" id="lastName" name="lastName" class="form-control" required/>
-						<div class="invalid-feedback">
-							Field is Required!
-						</div>
-					</div>
-					<div class="form-group col-md-3">
-						<label>Phone Number</label>
-						<input type="text" id="phoneNumber" name="phoneNumber" class="form-control"/>
-					</div>
-				</div>
+				<div class="card-body">
 
-				<div class="form-row">
-					<div class="form-group col-md-3">
-						<label>Email</label>
-						<input type="email" id="email" name="email" class="form-control" required/>
-						<div class="invalid-feedback">
-							Field is Required!
+					<form id="app-form" class="needs-validation" novalidate>
+					<div class="form-group col-md-3 col-lg-9">
+							<label>ID</label>
+							<input type="text" id="id"  class="form-control" name="id" readonly />
 						</div>
-					</div>
-					<div class="form-group col-md-3">
-						<label>Date Received</label>
-						<input type="date" id="dateReceived" name="dateReceived" class="form-control"/>
-					</div>
-					<div class="form-group col-md-3">
-						<label>Call Back Date</label>
-						<input type="date" id="callBackDate" name="callBackDate" class="form-control"/>
-					</div>
-				</div>
-				<div class="form-row">
-					<div class="form-group col-md-3">
-						<label>Contact Type</label>
-						<select id="applicationContactType" name="applicationContactType" class="custom-select">
-							<option value="null" selected>Choose Contact Type</option>
-						</select>
-					</div>
-					<div class="form-group col-md-3">
-						<label>Application Source</label>
-						<select id="applicationSource" name="applicationSource" class="custom-select">
-							<option value="null" selected>Choose Source</option>
-						</select>
-					</div>
-					<div class="form-group col-md-3">
-						<label>Result</label>
-						<select id="applicationResult" name="applicationResult" class="custom-select">
-							<option value="null" selected>Choose Result</option>
-						</select>
-					</div>
-				</div>
-				<div class="form-row">
-					<div class="form-group col-sm-12 col-md-3 col-lg-3 ">
-						<label>Office</label>
-						<select id="office" name="office" class="custom-select" required>
-							<option value="" selected>Choose Office </option>
-						</select>
-						<div class="invalid-feedback">
-							Field is Required!
+						<div class="form-row">
+							<div class="form-group col-md-3">
+								<label>First Name</label>
+								<input type="text" id="firstName" name="firstName" class="form-control" required/>
+								<div class="invalid-feedback">
+									Field is Required!
+								</div>
+							</div>
+							<div class="form-group col-md-3">
+								<label>Last Name</label>
+								<input type="text" id="lastName" name="lastName" class="form-control" required/>
+								<div class="invalid-feedback">
+									Field is Required!
+								</div>
+							</div>
+							<div class="form-group col-md-3">
+								<label>Phone Number</label>
+								<input type="text" id="phoneNumber" name="phoneNumber" class="form-control"/>
+							</div>
 						</div>
-					</div>
-					<div class="card col-lg-6">
-						<div class="card-header">
-							Notes
-						</div>
-						<div id="note-body" class="card-body">
-							<textarea id="new-note" name="applicationNotes"class="form-control" placeholder="Add a note"></textarea>
-						</div>
-					</div>
-				</div>
 
-				<button id="editApplication" value="send" type="submit" class="btn btn-primary">Update changes</button>
-				<button id="deleteApplication" value="send" type="submit" class="btn btn-danger">Delete Application</button>
-			</form>
+						<div class="form-row">
+							<div class="form-group col-md-3">
+								<label>Email</label>
+								<input type="email" id="email" name="email" class="form-control" required/>
+								<div class="invalid-feedback">
+									Field is Required!
+								</div>
+							</div>
+							<div class="form-group col-md-3">
+								<label>Date Received</label>
+								<input type="date" id="dateReceived" name="dateReceived" class="form-control"/>
+							</div>
+							<div class="form-group col-md-3">
+								<label>Call Back Date</label>
+								<input type="date" id="callBackDate" name="callBackDate" class="form-control"/>
+							</div>
+						</div>
+						<div class="form-row">
+							<div class="form-group col-md-3">
+								<label>Contact Type</label>
+								<select id="applicationContactType" name="applicationContactType" class="custom-select">
+									<option value="null" selected>Choose Contact Type</option>
+								</select>
+							</div>
+							<div class="form-group col-md-3">
+								<label>Application Source</label>
+								<select id="applicationSource" name="applicationSource" class="custom-select">
+									<option value="null" selected>Choose Source</option>
+								</select>
+							</div>
+							<div class="form-group col-md-3">
+								<label>Result</label>
+								<select id="applicationResult" name="applicationResult" class="custom-select">
+									<option value="null" selected>Choose Result</option>
+								</select>
+							</div>
+						</div>
+						<div class="form-row">
+							<div class="form-group col-sm-12 col-md-3 col-lg-3 ">
+								<label>Office</label>
+								<select id="office" name="office" class="custom-select" required>
+									<option value="" selected>Choose Office </option>
+								</select>
+								<div class="invalid-feedback">
+									Field is Required!
+								</div>
+							</div>
+							<div class="card col-lg-6">
+								<div class="card-header">
+									Notes
+								</div>
+								<div id="note-body" class="card-body">
+									<textarea id="new-note" name="applicationNotes"class="form-control" placeholder="Add a note"></textarea>
+								</div>
+							</div>
+						</div>
+
+						<button id="editApplication" value="send" type="submit" class="btn btn-primary">Update changes</button>
+						<button id="deleteApplication" value="send" type="submit" class="btn btn-danger">Delete Application</button>
+					</form>
+				</div>
+			</div>
 		</main>
 	</div>
 

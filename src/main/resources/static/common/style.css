@@ -107,3 +107,7 @@ footer {
 body {
   font-family: system-ui, sans-serif;
 }
+
+.text-center{
+  text-align: center;
+}
