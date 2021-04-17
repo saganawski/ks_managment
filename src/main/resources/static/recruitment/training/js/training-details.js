@@ -125,7 +125,7 @@ $(document).ready(function(){
         }).then(function(response){
             swal({
                 title: "Success!",
-                text: "You updated an interview",
+                text: "You updated an training",
                 icon: "success",
                 timer: 2000
             }).then(function(){
