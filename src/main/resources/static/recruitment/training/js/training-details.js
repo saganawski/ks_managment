@@ -156,7 +156,7 @@ $(document).ready(function(){
 
     function createEmployeeOnHasShow(){
         checkIfEmployeeExists(vm.trainingDto.application.lastName,vm.trainingDto.application.email).then(hasEmployee =>{
-            
+
             if(!hasEmployee){
                 let newEmployeeJson = {};
                 newEmployeeJson.firstName = vm.trainingDto.application.firstName;
@@ -164,6 +164,7 @@ $(document).ready(function(){
                 newEmployeeJson.email = vm.trainingDto.application.email;
                 newEmployeeJson.phoneNumber = vm.trainingDto.application.phoneNumber;
                 newEmployeeJson.offices = [vm.trainingDto.application.office];
+                newEmployeeJson.startDate = new Date($('#scheduledTime').val()).toJSON();
 
                 let url = "/employees/new";
                 $.ajax({
