@@ -272,15 +272,17 @@ $(document).ready(function(){
         let events = [];
 
         for(schedule of employeeSchedules){
+            const fullName = schedule.employee.lastName + ", " + schedule.employee.firstName;
             event = {
                 id: schedule.id,
-                title: schedule.employee.lastName,
+                title: fullName,
                 start: schedule.scheduledTime,
                 allDay : true,
                 color : setColorByStatus(schedule.employeeScheduleStatus),
                 extendedProps: {
                     status: schedule.employeeScheduleStatus,
                     firstName: schedule.employee.firstName,
+                    lastName: schedule.employee.lastName,
                     employeeSchedule: schedule
                 }
             };
