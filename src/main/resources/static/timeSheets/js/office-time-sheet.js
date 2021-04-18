@@ -378,6 +378,10 @@ $(document).ready(function(){
     function payRollValidation(employeeScheduleStatus, timeIn,timeOut){
         const form = document.querySelector('#statusForm');
 
+        if(employeeScheduleStatus.code == "UNEXCUSED_ABSENCE" || employeeScheduleStatus.code =="EXCUSED_ABSENCE"){
+            return true;
+        }
+
          if(employeeScheduleStatus == null || employeeScheduleStatus === ""){
             swal({
                 title: "Error!",
