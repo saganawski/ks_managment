@@ -41,6 +41,15 @@ $(document).ready(function(){
 
     function setInterviewFormData(interview){
         $('#interview-id').val(interview.interviewId);
+
+        const cardHeader = document.getElementById("card-title");
+        const intervieweeName = interview.application.lastName + ", " + interview.application.firstName;
+        const intervieweePhone = interview.application.phoneNumber;
+        let pTag = document.createElement('p');
+        const textNode = document.createTextNode(intervieweeName + " " + intervieweePhone);
+        pTag.appendChild(textNode);
+        cardHeader.appendChild(pTag);
+
         if(interview.scheduledTime != null ){
             $('#scheduledTime').val(new Date(interview.scheduledTime).toLocaleString());
         }
