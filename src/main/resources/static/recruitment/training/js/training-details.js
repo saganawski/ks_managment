@@ -38,6 +38,15 @@ $(document).ready(function(){
 
     function setFormData(training){
        $('#id').val(training.id);
+
+       const cardHeader = document.getElementById("card-title");
+       const traineeName = training.application.lastName + ", " + training.application.firstName;
+       const traineePhone = training.application.phoneNumber;
+       let pTag = document.createElement('p');
+       const textNode = document.createTextNode(traineeName + " " + traineePhone);
+       pTag.appendChild(textNode);
+       cardHeader.appendChild(pTag);
+
        if(training.hasShow != null){
             $('#hasShow').val(training.hasShow.toString());
        }
