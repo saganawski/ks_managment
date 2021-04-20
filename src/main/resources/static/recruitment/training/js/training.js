@@ -25,7 +25,7 @@ $(document).ready(function(){
                         return traineeName;
                         },
                         "defaultContent": ""},
-                    {"data": "application.phoneNumber"},
+                    {"data": "application.phoneNumber","defaultContent":""},
                     {"data" : function(data,type,row,meta){
                         if(data.scheduledTime == null){
                             return " ";
