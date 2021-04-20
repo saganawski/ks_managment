@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Conversions</title>
+    <!-- JQUERY -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <!-- Data Tables -->
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.20/css/jquery.dataTables.css">
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.js"></script>
+    <!-- BootStrap -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
+    <!--    sweetAlert-->
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <!--    Moment pluggin-->
+    <script src="/pluggins/moment/moment.min.js"></script>
+
+    <link rel="stylesheet" href="/common/style.css">
+    <script src="/reports/conversions/js/conversion.js"></script>
+</head>
+<body>
+    <div id="load-layout">
+        <main>
+            <div class="text-center">
+                <div id="initialLoad" class="spinner-border" role="status">
+                    <span class="sr-only">Loading...</span>
+                </div>
+                <h2>Conversions</h2>
+            </div>
+            <a class="btn btn-success" href="#" role="button" style="margin-bottom: 5px" data-toggle="modal" data-target="#auditModal">Add Report</a>
+            <table id="schedule-audit-table" class="display">
+                <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Office</th>
+                    <th>Starting Date</th>
+                    <th>Ending Date</th>
+                    <th>Actions</th>
+                </tr>
+                </thead>
+            </table>
+
+        </main>
+    </div>
+
+    <!--        Choose Office MODAL-->
+    <div class="modal fade" id="auditModal" tabindex="-1" role="dialog" aria-labelledby="officeModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="text-center">
+                    <div class="spinner-border" role="status">
+                        <span class="sr-only">Loading...</span>
+                    </div>
+                </div>
+                <div class="modal-header">
+                    <h5 class="modal-title" >Generate Conversion Report</h5>
+                </div>
+                <div class="modal-body">
+                    <form id="auditForm" class="needs-validation" novalidate>
+                        <div class="form-group col-md-3 col-lg-9">
+                            <label>Choose Office</label>
+                            <select id="officeSelect" name="office" class="custom-select" required>
+                                <option value="">Choose an office</option>
+                            </select>
+                            <div class="invalid-feedback">
+                                Must Choose office!
+                            </div>
+                        </div>
+                        <div class="form-group col-md-3 col-lg-9">
+                            <label>Start Date</label>
+                            <input type="date" id="startDate"  class="form-control" name="startDate" required/>
+                            <div class="invalid-feedback">
+                                Field is Required!
+                            </div>
+                        </div>
+                        <div class="form-group col-md-3 col-lg-9">
+                            <label>End Date</label>
+                            <input type="date" id="endDate"  class="form-control" name="endDate" required/>
+                            <div class="invalid-feedback">
+                                Field is Required!
+                            </div>
+                        </div>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button id="auditFormSubmit" class="btn btn-primary" value="send" type="submit">Create Report</button>
+
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>
