@@ -36,6 +36,24 @@ $(document).ready(function () {
                     }
                     return officeName;
                 }, "defaultContent": ""},
+                {"data": "phoneNumber", "defaultContent": "" },
+                {"data": "startDate", "defaultContent": "" },
+                {"data": "endDate", "defaultContent": "" },
+                {"data": function(data,type,row,meta){
+                   if(data.voluntary == null){
+                    return "";
+                   }
+
+                   let separationType = "";
+
+                   if(data.voluntary == false){
+                    separationType = "Involuntary";
+                   }else if(data.voluntary){
+                    separationType = "Voluntary";
+                   }
+                   return separationType;
+
+                }, "defaultContent": "" },
                 {   "targets": -1,
                     "data": function(data, type,row,meta){
                         return '<a class="btn btn-warning" href="/employee/employee-details.html?employeeId='+ data.id +'">Details</a>'
