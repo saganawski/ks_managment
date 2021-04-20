@@ -25,7 +25,7 @@ $(document).ready(function(){
                         return applicantName;
                         },
                         "defaultContent": ""},
-                    {"data" : "application.phoneNumber"},
+                    {"data" : "application.phoneNumber","defaultContent":""},
                     {"data" : function(data,type,row,meta){
                         if(data.scheduledTime == null){
                             return " ";
@@ -41,7 +41,7 @@ $(document).ready(function(){
                             return interviewersLastNames;
                         },
                         "defaultContent":""},
-                    {"data" : "application.office.name" },
+                    {"data" : "application.office.name","defaultContent":"" },
                     {   "targets": -1,
                         "data": function(data, type,row,meta){
                             return '<a class="btn btn-warning" href="/recruitment/interview/interview-details.html?interviewId= '+data.id + '">Details</a>'
