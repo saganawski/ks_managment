@@ -11,6 +11,11 @@ $(document).ready(function () {
             "initComplete": function(settings, json){
                 $("div").removeClass("spinner-border");
             },
+            "columnDefs":[
+                {"targets" : [10],
+                "visible" : false,
+                "searchable" : false}
+            ],
             ajax:{
                 "url": "/employees",
                 "dataSrc": ""
@@ -35,6 +40,29 @@ $(document).ready(function () {
                         }
                     }
                     return officeName;
+                }, "defaultContent": ""},
+                {"data": "phoneNumber", "defaultContent": "" },
+                {"data": "startDate", "defaultContent": "" },
+                {"data": "endDate", "defaultContent": "" },
+                {"data": function(data,type,row,meta){
+                   if(data.voluntary == null){
+                    return "";
+                   }
+
+                   let separationType = "";
+
+                   if(data.voluntary == false){
+                    separationType = "Involuntary";
+                   }else if(data.voluntary){
+                    separationType = "Voluntary";
+                   }
+                   return separationType;
+
+                }, "defaultContent": "" },
+                {"data": function(data,type,row,meta){
+                    let finalNote = "";
+                    data.employeeNotes.forEach(note => {finalNote = finalNote + note.note + " | "});
+                    return finalNote;
                 }, "defaultContent": ""},
                 {   "targets": -1,
                     "data": function(data, type,row,meta){
