@@ -39,8 +39,14 @@ public class Conversion {
     @Column(name = "total_interviews_show")
     private Integer totalInterviewsShow;
 
+    @Column(name = "interview_show_rate")
+    private Double interviewShowRate;
+
     @Column(name = "total_hires")
     private Integer totalHires;
+
+    @Column(name = "interview_hire_rate")
+    private Double interviewHireRate;
 
     @Column(name = "updated_by")
     private Integer updatedBy;
