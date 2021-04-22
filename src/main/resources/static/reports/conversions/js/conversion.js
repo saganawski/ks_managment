@@ -47,14 +47,12 @@ $(document).ready(function(){
             },
             columns :[
                 {"data" : "id"},
-                {"data" : "office", "defaultContent" : ""},
-//                {"data" : function(data,type,row,meta){
-//                    if(data.office == undefined){
-//                        return "";
-//                    }
-//                    return data.office.name;
-//                }, "defaultContent": ""},
-
+                {"data" : function(data,type,row,meta){
+                    if(data.office == undefined || data.office == null){
+                        return "";
+                    }
+                    return data.office.name;
+                }, "defaultContent": ""},
                 {"data" : "startDate", "defaultContent" : ""},
                 {"data" : "endDate", "defaultContent" : ""},
                 {"data" : "totalApplications", "defaultContent" : ""},

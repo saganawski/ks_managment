@@ -1,5 +1,7 @@
 package com.ks.management.report.service;
 
+import com.ks.management.office.Office;
+import com.ks.management.office.dao.JpaOfficeRepo;
 import com.ks.management.recruitment.application.dao.ApplicationJpa;
 import com.ks.management.recruitment.interview.dao.JpaInterview;
 import com.ks.management.report.Conversion;
@@ -21,12 +23,16 @@ public class ConversionServiceImpl implements ConversionService {
     private ApplicationJpa applicationJpa;
     @Autowired
     private JpaInterview jpaInterview;
+    @Autowired
+    private JpaOfficeRepo jpaOfficeRepo;
 
     @Override
     public Conversion createConversionForOfficeByTimePeriod(Integer officeId, String startDate, String endDate, UserPrincipal userPrincipal) {
         final Integer userId = userPrincipal.getUserId();
         final LocalDate localStartDate = LocalDate.parse(startDate);
         final LocalDate localEndDate = LocalDate.parse(endDate);
+
+        final Office office = jpaOfficeRepo.findById(officeId).orElse(null);
 
         final Integer applicationCount = applicationJpa.getCountOfApplicationsForOfficeBetweenDates(officeId,startDate,endDate);
         final Integer interviewsCount = jpaInterview.getInterviewsCountForOfficeBetweenDates(officeId,startDate,endDate);
@@ -38,6 +44,7 @@ public class ConversionServiceImpl implements ConversionService {
         final Conversion conversion = Conversion.builder()
                 .startDate(localStartDate)
                 .endDate(localEndDate)
+                .office(office)
                 .totalApplications(applicationCount)
                 .totalInterviewsScheduled(interviewsCount)
                 .totalInterviewsShow(interviewsShowCount)
