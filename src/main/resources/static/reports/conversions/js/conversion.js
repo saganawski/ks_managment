@@ -6,7 +6,7 @@ $(document).ready(function(){
     $('#load-layout').load("/common/_layout.html", function(responseTxt, statusTxt, xhr){
         if(statusTxt == "success"){
             $('#load-layout').append(main);
-//            setDataTable(); TODO
+            setDataTable();
         }
     });
 
@@ -42,31 +42,32 @@ $(document).ready(function(){
                 $("div").removeClass("spinner-border");
             },
             ajax:{
-                "url": "/scheduleAudits",
+                "url": "/conversions",
                 "dataSrc": ""
             },
             columns :[
                 {"data" : "id"},
+                {"data" : "office", "defaultContent" : ""},
+//                {"data" : function(data,type,row,meta){
+//                    if(data.office == undefined){
+//                        return "";
+//                    }
+//                    return data.office.name;
+//                }, "defaultContent": ""},
+
+                {"data" : "startDate", "defaultContent" : ""},
+                {"data" : "endDate", "defaultContent" : ""},
+                {"data" : "totalApplications", "defaultContent" : ""},
+                {"data" : "totalInterviewsScheduled", "defaultContent" : ""},
+                {"data" : "totalInterviewsShow", "defaultContent" : ""},
                 {"data" : function(data,type,row,meta){
-                    if(data.office == undefined){
-                        return "";
-                    }
-                    return data.office.name;
-                }, "defaultContent": ""},
+                        return percentageCalc(data.interviewShowRate);
+                    }, "defaultContent" : ""},
+                {"data" : "totalHires", "defaultContent" : ""},
                 {"data" : function(data,type,row,meta){
-                        if(data.startDate == null){
-                            return "";
-                        }
-                        return moment(data.startDate).format('YYYY-MM-DD');
-                    }
-                },
-                {"data" : function(data,type,row,meta){
-                        if(data.endDate == null){
-                            return "";
-                        }
-                        return data.endDate;
-                    }
-                },
+                        return percentageCalc(data.interviewHireRate);
+                    }, "defaultContent" : ""},
+
                 {   "targets": -1,
                     "data": function(data, type,row,meta){
                         return '<a class="btn btn-warning" href="/timeSheets/schedule-audit-details.html?scheduleAuditId='+ data.id +'">Details</a>'
@@ -74,6 +75,11 @@ $(document).ready(function(){
                 }
             ]
         });
+    }
+
+    function percentageCalc(rate){
+        let percentage = (rate * 100) +"%";
+        return percentage;
     }
 
     $('#auditFormSubmit').on('click', function(event){
