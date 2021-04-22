@@ -2,6 +2,58 @@ $(document).ready(function(){
     vm = this;
     vm.office = {};
 
+    const deleteConversionModule = (() => {
+        const setEventListener = () => {
+            const allDeleteButtons = document.querySelectorAll(".btn-danger");
+            allDeleteButtons.forEach( button => {
+                button.addEventListener("click", (btn) => {
+                    askDeleteConversion(btn);
+                });
+            });
+        }
+
+        const askDeleteConversion = (event) => {
+            const id = event.target.getAttribute("id");
+
+            swal({
+               title: "Are you sure?",
+               text: "Once deleted, you will not be able to recover this record!",
+               icon: "warning",
+               buttons: true,
+               dangerMode: true,
+             })
+             .then((willDelete) => {
+                if(willDelete){
+                    deleteConversion(id);
+                }
+             });
+        }
+
+        const deleteConversion = (conversionId) => {
+            $.ajax({
+                 type: "DELETE",
+                 url: "/conversions/" + conversionId
+             }).then(function(response){
+                 swal({
+                     title: "Success!",
+                     text: "You deleted this report",
+                     icon: "success",
+                     timer: 2000
+                 }).then(function(){
+                    location.reload();
+                 });
+             }).fail(function(error){
+                 console.log(error);
+                 swal({
+                     title: "Error!",
+                     text: "Could NOT remove report! \n" + error.responseJSON.message,
+                     icon: "error"
+                 });
+             });
+        }
+        return {setEventListener};
+    })();
+
     const main = $('#load-layout').html();
     $('#load-layout').load("/common/_layout.html", function(responseTxt, statusTxt, xhr){
         if(statusTxt == "success"){
@@ -40,6 +92,7 @@ $(document).ready(function(){
         $('#schedule-audit-table').DataTable({
             "initComplete": function(settings, json){
                 $("div").removeClass("spinner-border");
+                deleteConversionModule.setEventListener();
             },
             ajax:{
                 "url": "/conversions",
@@ -71,7 +124,7 @@ $(document).ready(function(){
                     },
                 {   "targets": -1,
                     "data": function(data, type,row,meta){
-                        return '<a class="btn btn-warning" href="/timeSheets/schedule-audit-details.html?scheduleAuditId='+ data.id +'">Details</a>'
+                        return '<a class="btn btn-danger" id="'+ data.id +'" >Delete</a>'
                     }
                 }
             ]
