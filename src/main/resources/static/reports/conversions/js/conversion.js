@@ -65,7 +65,10 @@ $(document).ready(function(){
                 {"data" : function(data,type,row,meta){
                         return percentageCalc(data.interviewHireRate);
                     }, "defaultContent" : ""},
-
+                {"data" : function(data, type,row,meta){
+                        return moment.utc(data.createdDate).format('YYYY-MM-DD h:mm:ss a');
+                        }
+                    },
                 {   "targets": -1,
                     "data": function(data, type,row,meta){
                         return '<a class="btn btn-warning" href="/timeSheets/schedule-audit-details.html?scheduleAuditId='+ data.id +'">Details</a>'
