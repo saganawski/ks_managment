@@ -3,6 +3,7 @@ package com.ks.management.employee.controller;
 import com.ks.management.employee.Employee;
 import com.ks.management.employee.service.EmployeeService;
 import com.ks.management.employee.ui.EditEmployeeDTO;
+import com.ks.management.employee.ui.EmployeeDTO;
 import com.ks.management.employee.ui.NewEmployeeDTO;
 import com.ks.management.security.UserPrincipal;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,6 +62,11 @@ public class EmployeeController {
 	@DeleteMapping("/{employeeId}/notes/{noteId}")
 	public void deleteNotes(@PathVariable("employeeId") int employeeId, @PathVariable("noteId") int noteId){
 		employeeService.deleteNote(noteId);
+	}
+
+	@GetMapping("/{employeeId}/employeeDTO")
+	public EmployeeDTO getEmployeeDtoDetails(@PathVariable("employeeId") int employeeId){
+		return employeeService.getEmployeeDTO(employeeId);
 	}
 
 }
