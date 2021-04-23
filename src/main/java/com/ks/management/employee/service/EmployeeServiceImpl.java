@@ -4,6 +4,7 @@ import com.ks.management.employee.Employee;
 import com.ks.management.employee.EmployeeNote;
 import com.ks.management.employee.dao.JpaEmployeeRepo;
 import com.ks.management.employee.ui.EditEmployeeDTO;
+import com.ks.management.employee.ui.EmployeeDTO;
 import com.ks.management.employee.ui.NewEmployeeDTO;
 import com.ks.management.office.Office;
 import com.ks.management.office.dao.JpaOfficeRepo;
@@ -197,6 +198,24 @@ public class EmployeeServiceImpl implements EmployeeService{
     @Override
     public void deleteNote(int noteId) {
         jpaEmployeeNoteRepo.deleteById(noteId);
+    }
+
+    @Override
+    public EmployeeDTO getEmployeeDTO(int employeeId) {
+        final Optional<Employee> employee = repo.findById(employeeId);
+        if(!employee.isPresent()){
+            throw new RuntimeException("Cant find training with ID: " + employeeId);
+        }
+        final Set<Office> officeOptions = officeRepo.findAll().stream().collect(Collectors.toSet());
+        final Set<Position> positionsOptions = positionRepo.findAll().stream().collect(Collectors.toSet());
+
+        final EmployeeDTO employeeDTO = EmployeeDTO.builder()
+                .employee(employee.get())
+                .officeOptions(officeOptions)
+                .positionOptions(positionsOptions)
+                .build();
+
+        return employeeDTO;
     }
 
 }

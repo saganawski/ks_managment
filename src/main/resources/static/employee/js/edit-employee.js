@@ -120,74 +120,52 @@ $(document).ready(function() {
         });
     }
 
-    getPositionsForDropDown();
-        function getPositionsForDropDown(){
-            $.ajax({
-                type:"GET",
-                url: "/positions"
-            }).then(function(data){
-                setPositionOptions(data);
-            }).fail(function(err){
-                swal("ERROR", "Could note retrieve positions!","error");
-            });
-
+    const employeeSetValuesAndOptions = (() => {
+        const getEmployeeDetailsAndOptions = () =>{
+            const searchParams = new URLSearchParams(window.location.search);
+            if(searchParams.has('employeeId')){
+                const employeeId = searchParams.get('employeeId');
+                fetch(`/employees/${employeeId}/employeeDTO`)
+                    .then(response => response.json())
+                    .then(data => setDetailsAndOptions(data));
+            }else{
+                swal("ERROR", "Page didn't load right. Needs a Employee ID","error");
+            }
         }
 
-        function setPositionOptions(positions){
-            for(position of positions){
+        const setDetailsAndOptions = (employeeDTO) => {
+            setPositionOptions(employeeDTO.positionOptions);
+            setOfficeOptions(employeeDTO.officeOptions);
+            setEmployeeValues(employeeDTO.employee);
+        }
+
+        const setPositionOptions = (positionOptions) => {
+            for(position of positionOptions){
                 $('#position').append("<option value='"+position.code+"'>"+ position.name +"</option>");
             }
         }
 
-    const officesPromise = new Promise((resolve,reject) => {
-        return $.ajax({
-                       type:"GET",
-                       url: "/offices"
-                   }).then(function(data){
-                       return resolve(data);
-                   }).fail(function(error){
-                       return reject(error);
-                   });
-    });
-   async function setOfficeOptions(offices){
-        for(office of offices){
-            $('#officeSelect').append("<option value='"+ office.id + "'>"+ office.name +"</option>");
+        const setOfficeOptions = (officeOptions) => {
+            for(office of officeOptions){
+                $('#officeSelect').append("<option value='"+ office.id + "'>"+ office.name +"</option>");
+            }
+            $('#officeSelect').selectpicker('refresh');
         }
-        $('#officeSelect').selectpicker('refresh');
-        return true;
-   }
-   const employeeDataPromise = new Promise(function(resolve,reject) {
-           let searchParams = new URLSearchParams(window.location.search);
-           if(searchParams.has('employeeId')){
-                let employeeId = searchParams.get('employeeId');
-               return $.ajax({
-                              url:"/employees/"+ employeeId
-                          }).then(function(data){
-                              vm.employee = data;
-                              return resolve(data);
-                          }).fail(function(err){
-                              console.log(err);
-                              swal("ERROR", "Could NOT retrieve employees!","error");
-                              return reject("failed to retrieve Employee");
-                          });
-           }else{
-               return reject("no ID provided ");
-           }
-       });
 
-       async function setFieldValuesForEmployee(data){
-           let employeeId = data.id;
-           let firstName = data.firstName;
-           let lastName = data.lastName;
-           let alias = data.alias;
-           let email = data.email;
-           let phoneNumber = data.phoneNumber;
-           let position = data.position;
-           let offices = data.offices;
-           let employeeNotes = data.employeeNotes;
-           let startDate = data.startDate;
-           let endDate = data.endDate;
-           let voluntary = data.voluntary;
+        const setEmployeeValues = (employee) => {
+            vm.employee = employee;
+            const employeeId = employee.id;
+            const firstName = employee.firstName;
+           const lastName = employee.lastName;
+           const alias = employee.alias;
+           const email = employee.email;
+           const phoneNumber = employee.phoneNumber;
+           const position = employee.position;
+           const offices = employee.offices;
+           const employeeNotes = employee.employeeNotes;
+           const startDate = employee.startDate;
+           const endDate = employee.endDate;
+           const voluntary = employee.voluntary;
 
            $("#id").val(employeeId);
            $("#firstName").val(firstName);
@@ -204,9 +182,9 @@ $(document).ready(function() {
                 $("#position").val(position.code);
            }
 
-           for(note of data.employeeNotes){
-                let message = note.note;
-                let val = JSON.stringify(note);
+           for(note of employee.employeeNotes){
+                const message = note.note;
+                const val = JSON.stringify(note);
 
                 $("<textarea name='employeeNotes' class='form-control' value='"+ val + "' readonly>"+ message +
                     "</textarea> <div class='text-left'><a href='/employees/"+ vm.employee.id +"/notes/"+note.id+"' class='delete-note btn btn-danger'>Delete Note</a></div>").prependTo('#note-body');
@@ -219,16 +197,13 @@ $(document).ready(function() {
                officeIds.push(office.id);
            }
            $('#officeSelect').selectpicker('val', officeIds);
-           return(true);
-       }
-    officesPromise
-        .then(results => {
-            setOfficeOptions(results);
-            return employeeDataPromise
-                .then(results =>{
-                    setFieldValuesForEmployee(results);
-                })
-        })
+
+        }
+
+        return {getEmployeeDetailsAndOptions};
+    })();
+
+    employeeSetValuesAndOptions.getEmployeeDetailsAndOptions();
 
     $('#load-layout').on('click','#editEmployee', function(event){
         event.preventDefault();
