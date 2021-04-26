@@ -44,7 +44,8 @@ public class ProjectDTO {
             shiftsCompleted = shiftsCompleted + Optional.ofNullable(pw.getShiftsCompleted()).orElse(0);
             shiftsVsGoal = shiftsVsGoal + ( Optional.ofNullable(pw.getShiftsCompleted()).orElse(0) - Optional.ofNullable(pw.getCurrentShiftGoal()).orElse(0));
             remainingWorkingDays = remainingWorkingDays + Optional.ofNullable(pw.getRemainingWorkingDays()).orElse(0);
-            shiftsNeeded = shiftsNeeded + Optional.ofNullable(pw.getShiftsNeeded()).orElse(0.0);
         });
+
+        shiftsNeeded = Optional.ofNullable((currentShiftGoal.doubleValue() - shiftsCompleted.doubleValue()) / remainingWorkingDays).orElse(0.0);
     }
 }
