@@ -107,6 +107,14 @@
                                         <option value="false">Involuntary</option>
                                     </select>
                                 </div>
+                                <div class="form-group col-md-3">
+                                    <label>Activation Status</label>
+                                    <select id="activation" name="activation" class="custom-select">
+                                        <option value="true">Deactivated</option>
+                                        <option value="false">Active</option>
+                                    </select>
+                                </div>
+
                                 <div class="card col-lg-6">
                                     <div class="card-header">
                                         Notes
@@ -119,6 +127,8 @@
 
                             <button id="editEmployee" value="send" type="submit" class="btn btn-primary">Save changes</button>
                             <button id="deleteEmployee" value="send" type="submit" class="btn btn-danger">Deactivate Employee</button>
+<!--                            TODO: pick button color-->
+                            <button id="activateEmployee" value="send" type="submit" class="btn btn hide">Activate Employee</button>
                         </form>
                     </div>
                 </div>

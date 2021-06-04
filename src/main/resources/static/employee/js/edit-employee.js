@@ -166,6 +166,7 @@ $(document).ready(function() {
            const startDate = employee.startDate;
            const endDate = employee.endDate;
            const voluntary = employee.voluntary;
+           const activationStatus = employee.deleted;
 
            $("#id").val(employeeId);
            $("#firstName").val(firstName);
@@ -181,6 +182,9 @@ $(document).ready(function() {
            if(position != null){
                 $("#position").val(position.code);
            }
+           $("#activation").val(activationStatus); // TODO: check me out dude .. Maybe get rid of buttons just toggle on update??
+
+           toggleDeactivateAndActiveButtons(activationStatus);
 
            for(note of employee.employeeNotes){
                 const message = note.note;
@@ -398,6 +402,20 @@ $(document).ready(function() {
             }
          });
      });
+    //TODO: toggle deactivate and activate buttons on status
 
+    const toggleDeactivateAndActiveButtons = (activationStatus) => {
+
+        if(activationStatus){//TODO: this could be confusing cause an active employee is 'active' when deleted is false
+            //hide deactivation button
+            const deactivateButton = document.getElementById('deleteEmployee');
+            deactivateButton.classList.add("hide");
+
+            //Show activate
+            const activateButton = document.getElementById('activateEmployee');
+            activateButton.setAttribute("class", "btn btn"); //TODO: pick a color
+
+        }
+    }
 
 });
