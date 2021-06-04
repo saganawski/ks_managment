@@ -209,7 +209,7 @@ $(document).ready(function() {
 
     employeeSetValuesAndOptions.getEmployeeDetailsAndOptions();
 
-    $('#load-layout').on('click','#editEmployee', function(event){
+    $('#load-layout').on('click','#editEmployee', function(event){//TODO: check update with new field
         event.preventDefault();
         let validated = validationCheck();
         if(validated){

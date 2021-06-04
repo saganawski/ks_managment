@@ -111,6 +111,9 @@ public class EmployeeServiceImpl implements EmployeeService{
         final LocalDate endDate = Optional.ofNullable(employeeDTO.getEndDate()).orElse(null);
         final Boolean voluntary = Optional.ofNullable(employeeDTO.getVoluntary()).orElse(null);
 
+        // TODO: test this
+        final Boolean activationStatus = Optional.ofNullable(employeeDTO.getIsActive()).orElse(false);
+
         final Employee employee = Employee.builder()
                 .id(id)
                 .firstName(firstName)
@@ -119,7 +122,7 @@ public class EmployeeServiceImpl implements EmployeeService{
                 .email(email)
                 .phoneNumber(phoneNumber)
                 .position(position)
-                .deleted(false)
+                .deleted(activationStatus)
                 .startDate(startDate)
                 .endDate(endDate)
                 .voluntary(voluntary)
