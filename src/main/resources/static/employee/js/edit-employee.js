@@ -277,7 +277,7 @@ $(document).ready(function() {
         let employeeId = $('#id').val();
         swal({
            title: "Are you sure?",
-           text: "Once deleted, you will not be able to recover this record!",
+           text: "Once deactivated, employee !", //TODO: think of something descrpitve
            icon: "warning",
            buttons: true,
            dangerMode: true,
@@ -296,7 +296,7 @@ $(document).ready(function() {
         }).then(function(response){
             swal({
                 title: "Success!",
-                text: "You deleted this employee",
+                text: "You deactivated this employee",
                 icon: "success",
                 timer: 2000
             }).then(function(){
@@ -306,7 +306,7 @@ $(document).ready(function() {
             console.log(error.responseJSON);
             swal({
                 title: "Error!",
-                text: "Could not delete employee! \n" + error.responseJSON.message,
+                text: "Could not deactivate employee! \n" + error.responseJSON.message,
                 icon: "error"
             }).then(function(){
                 location.reload();
