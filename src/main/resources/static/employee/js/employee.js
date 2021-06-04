@@ -60,6 +60,14 @@ $(document).ready(function () {
 
                 }, "defaultContent": "" },
                 {"data": function(data,type,row,meta){
+                    let activationStatus = "";
+                    if(data.deleted == false){
+                        activationStatus = "Active";
+                    }else if (data.deleted == true){
+                        activationStatus = "Deactivated";
+                    }
+                },"defaultContent": ""},
+                {"data": function(data,type,row,meta){
                     let finalNote = "";
                     data.employeeNotes.forEach(note => {finalNote = finalNote + note.note + " | "});
                     return finalNote;

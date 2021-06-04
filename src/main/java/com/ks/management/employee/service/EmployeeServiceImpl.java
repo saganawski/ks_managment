@@ -74,7 +74,8 @@ public class EmployeeServiceImpl implements EmployeeService{
     @Override
     public List<Employee> getAllEmployees() {
         return repo.findAll().stream()
-                .filter(e -> !e.getDeleted())
+//                .filter(e -> !e.getDeleted()) TODO: want all regardless of status
+
                 .collect(Collectors.toList());
     }
 
