@@ -73,10 +73,7 @@ public class EmployeeServiceImpl implements EmployeeService{
 
     @Override
     public List<Employee> getAllEmployees() {
-        return repo.findAll().stream()
-//                .filter(e -> !e.getDeleted()) TODO: want all regardless of status
-
-                .collect(Collectors.toList());
+        return repo.findAll();
     }
 
     @Override
@@ -93,11 +90,9 @@ public class EmployeeServiceImpl implements EmployeeService{
     public Employee updateEmployee(EditEmployeeDTO employeeDTO, UserPrincipal userPrincipal) {
         final Set<Office> offices = new HashSet<>();
         for (Integer officeId: employeeDTO.getOfficeSelection()){
-            final Office office = officeRepo.findById(officeId).orElse(null);
-            if(office != null){
-                offices.add(office);
-            }
+            officeRepo.findById(officeId).ifPresent(offices::add);
         }
+        
         final Integer userId = userPrincipal.getUserId();
 
         final Position position = positionRepo.findByCode(employeeDTO.getPosition());
