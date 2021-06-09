@@ -92,7 +92,7 @@ public class EmployeeServiceImpl implements EmployeeService{
         for (Integer officeId: employeeDTO.getOfficeSelection()){
             officeRepo.findById(officeId).ifPresent(offices::add);
         }
-        
+
         final Integer userId = userPrincipal.getUserId();
 
         final Position position = positionRepo.findByCode(employeeDTO.getPosition());
