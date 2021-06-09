@@ -25,6 +25,7 @@ public class EditEmployeeDTO {
     private Date createdDate;
     private List<Integer> officeSelection = new ArrayList<>();
     private List<EmployeeNote> employeeNotes = new ArrayList<>();
+    private Boolean isActive;
 
     public EditEmployeeDTO() {
     }
@@ -52,7 +53,7 @@ public class EditEmployeeDTO {
         this.officeSelection = officeSelection;
     }
 
-    public EditEmployeeDTO(Integer id, String firstName, String lastName, String alias, String email, String phoneNumber, String position, Boolean deleted, LocalDate startDate, LocalDate endDate, Boolean voluntary,  Integer updatedBy, Date updatedDate, Integer createdBy, Date createdDate, List<Integer> officeSelection, List<EmployeeNote> employeeNotes) {
+    public EditEmployeeDTO(Integer id, String firstName, String lastName, String alias, String email, String phoneNumber, String position, Boolean deleted, LocalDate startDate, LocalDate endDate, Boolean voluntary,  Integer updatedBy, Date updatedDate, Integer createdBy, Date createdDate, List<Integer> officeSelection, List<EmployeeNote> employeeNotes, Boolean isActive) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -70,6 +71,7 @@ public class EditEmployeeDTO {
         this.createdDate = createdDate;
         this.officeSelection = officeSelection;
         this.employeeNotes = employeeNotes;
+        this.isActive = isActive;
     }
 
     public Integer getId() {
@@ -207,4 +209,8 @@ public class EditEmployeeDTO {
     public void setEmployeeNotes(List<EmployeeNote> employeeNotes) {
         this.employeeNotes = employeeNotes;
     }
+
+    public  Boolean getIsActive() {return isActive;}
+
+    public void setIsActive(Boolean isActive) {this.isActive = isActive;}
 }

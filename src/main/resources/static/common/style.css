@@ -111,3 +111,7 @@ body {
 .text-center{
   text-align: center;
 }
+
+button .hide {
+    opacity: 0;
+}

@@ -106,7 +106,7 @@ $(document).ready(function () {
             window.location.href = "/employee/employee.html";
         }).fail(function(error){
             console.log(error);
-            swal("ERROR", "Could not create employee! \n" + error.responseJSON.error,"error");
+            swal("ERROR", "Could not create employee! \n" + error.responseJSON.message,"error");
         });
 	}
 	function convertFormToJson(form){

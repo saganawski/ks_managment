@@ -23,59 +23,68 @@
 <body>
 	<div id="load-layout">
 		<main>
-			<form id="employee-form" class="needs-validation" novalidate>
-				<div class="form-row">
-					<div class="form-group col-md-3">
-						<label>First Name</label>
-						<input type="text" id="firstName" name="firstName" class="form-control" required/>
-						<div class="invalid-feedback">
-							Field is Required!
-						</div>
-					</div>
-					<div class="form-group col-md-3">
-						<label>Last Name</label>
-						<input type="text" id="lastName" name="lastName" class="form-control" required/>
-						<div class="invalid-feedback">
-							Field is Required!
-						</div>
-					</div>
-					<div class="form-group col-md-3">
-						<label>Alias</label>
-						<input type="text" id="alias" name="alias" class="form-control"/>
-					</div>
-				</div>
 
-				<div class="form-row">
-					<div class="form-group col-md-3">
-						<label>Email</label>
-						<input type="email" id="email" name="email" class="form-control" required/>
-						<div class="invalid-feedback">
-							Field is Required!
-						</div>
-					</div>
-					<div class="form-group col-md-3">
-						<label>Phone Number</label>
-						<input type="text" id="phoneNumber" name="phoneNumber" class="form-control"/>
-					</div>
-					<div class="form-group col-md-3">
-						<label>Position</label>
-						<select id="position" name="position" class="custom-select" required>
-							<option value="" selected>Choose Position</option>
-						</select>
-						<div class="invalid-feedback">
-							Field is Required!
-						</div>
-					</div>
+			<div class="card col-lg-10" style="margin:15px;">
+				<div class="card-header">
+					New Employee Creation
 				</div>
+				<div class="card-body">
+					<form id="employee-form" class="needs-validation" novalidate>
+						<div class="form-row">
+							<div class="form-group col-md-3">
+								<label>First Name</label>
+								<input type="text" id="firstName" name="firstName" class="form-control" required/>
+								<div class="invalid-feedback">
+									Field is Required!
+								</div>
+							</div>
+							<div class="form-group col-md-3">
+								<label>Last Name</label>
+								<input type="text" id="lastName" name="lastName" class="form-control" required/>
+								<div class="invalid-feedback">
+									Field is Required!
+								</div>
+							</div>
+							<div class="form-group col-md-3">
+								<label>Alias</label>
+								<input type="text" id="alias" name="alias" class="form-control"/>
+							</div>
+						</div>
 
-				<div class="form-group col-md-3">
-					<label>Office</label>
-					<select id="officeSelect" name="officeSelection" class="form-control"  multiple required>
-					</select>
+						<div class="form-row">
+							<div class="form-group col-md-3">
+								<label>Email</label>
+								<input type="email" id="email" name="email" class="form-control" required/>
+								<div class="invalid-feedback">
+									Field is Required!
+								</div>
+							</div>
+							<div class="form-group col-md-3">
+								<label>Phone Number</label>
+								<input type="text" id="phoneNumber" name="phoneNumber" class="form-control"/>
+							</div>
+							<div class="form-group col-md-3">
+								<label>Position</label>
+								<select id="position" name="position" class="custom-select" required>
+									<option value="" selected>Choose Position</option>
+								</select>
+								<div class="invalid-feedback">
+									Field is Required!
+								</div>
+							</div>
+						</div>
+
+						<div class="form-group col-md-3">
+							<label>Office</label>
+							<select id="officeSelect" name="officeSelection" class="form-control"  multiple required>
+							</select>
+						</div>
+
+						<button id="newEmployee" value="send" type="submit" class="btn btn-primary">Save changes</button>
+					</form>
 				</div>
+			</div>
 
-				<button id="newEmployee" value="send" type="submit" class="btn btn-primary">Save changes</button>
-			</form>
 		</main>
 	</div>
 

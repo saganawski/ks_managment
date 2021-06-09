@@ -73,9 +73,7 @@ public class EmployeeServiceImpl implements EmployeeService{
 
     @Override
     public List<Employee> getAllEmployees() {
-        return repo.findAll().stream()
-                .filter(e -> !e.getDeleted())
-                .collect(Collectors.toList());
+        return repo.findAll();
     }
 
     @Override
@@ -92,11 +90,9 @@ public class EmployeeServiceImpl implements EmployeeService{
     public Employee updateEmployee(EditEmployeeDTO employeeDTO, UserPrincipal userPrincipal) {
         final Set<Office> offices = new HashSet<>();
         for (Integer officeId: employeeDTO.getOfficeSelection()){
-            final Office office = officeRepo.findById(officeId).orElse(null);
-            if(office != null){
-                offices.add(office);
-            }
+            officeRepo.findById(officeId).ifPresent(offices::add);
         }
+
         final Integer userId = userPrincipal.getUserId();
 
         final Position position = positionRepo.findByCode(employeeDTO.getPosition());
@@ -111,6 +107,8 @@ public class EmployeeServiceImpl implements EmployeeService{
         final LocalDate endDate = Optional.ofNullable(employeeDTO.getEndDate()).orElse(null);
         final Boolean voluntary = Optional.ofNullable(employeeDTO.getVoluntary()).orElse(null);
 
+        final Boolean activationStatus = Optional.ofNullable(employeeDTO.getIsActive()).orElse(false);
+
         final Employee employee = Employee.builder()
                 .id(id)
                 .firstName(firstName)
@@ -119,7 +117,7 @@ public class EmployeeServiceImpl implements EmployeeService{
                 .email(email)
                 .phoneNumber(phoneNumber)
                 .position(position)
-                .deleted(false)
+                .deleted(activationStatus)
                 .startDate(startDate)
                 .endDate(endDate)
                 .voluntary(voluntary)
