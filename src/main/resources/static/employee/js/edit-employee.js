@@ -166,6 +166,7 @@ $(document).ready(function() {
            const startDate = employee.startDate;
            const endDate = employee.endDate;
            const voluntary = employee.voluntary;
+           const activationStatus = employee.deleted;
 
            $("#id").val(employeeId);
            $("#firstName").val(firstName);
@@ -181,6 +182,8 @@ $(document).ready(function() {
            if(position != null){
                 $("#position").val(position.code);
            }
+
+           $("#activation").val(activationStatus.toString());
 
            for(note of employee.employeeNotes){
                 const message = note.note;
@@ -263,7 +266,7 @@ $(document).ready(function() {
                 icon: "success",
                 timer: 2000
             }).then(function(){
-                window.location.href = "/employee/employee.html";
+                location.reload();
             });
         }).fail(function(error){
             console.log(error);
@@ -271,48 +274,48 @@ $(document).ready(function() {
 
         });
     }
-
-    $('#load-layout').on('click', '#deleteEmployee', function(event){
-        event.preventDefault();
-        let employeeId = $('#id').val();
-        swal({
-           title: "Are you sure?",
-           text: "Once deleted, you will not be able to recover this record!",
-           icon: "warning",
-           buttons: true,
-           dangerMode: true,
-         })
-         .then((willDelete) => {
-            if(willDelete){
-                deleteEmployee(employeeId);
-            }
-         });
-    });
-
-    function deleteEmployee(employeeId){
-        $.ajax({
-            type: "DELETE",
-            url: "/employees/" + employeeId
-        }).then(function(response){
-            swal({
-                title: "Success!",
-                text: "You deleted this employee",
-                icon: "success",
-                timer: 2000
-            }).then(function(){
-                window.location.href = "/employee/employee.html";
-            });
-        }).fail(function(error){
-            console.log(error.responseJSON);
-            swal({
-                title: "Error!",
-                text: "Could not delete employee! \n" + error.responseJSON.message,
-                icon: "error"
-            }).then(function(){
-                location.reload();
-            });
-        });
-    }
+//Remove ability to delete in favor of activationStatus
+//    $('#load-layout').on('click', '#deleteEmployee', function(event){
+//        event.preventDefault();
+//        let employeeId = $('#id').val();
+//        swal({
+//           title: "Are you sure?",
+//           text: "Once deactivated, employee !", //TODO: think of something descrpitve
+//           icon: "warning",
+//           buttons: true,
+//           dangerMode: true,
+//         })
+//         .then((willDelete) => {
+//            if(willDelete){
+//                deleteEmployee(employeeId);
+//            }
+//         });
+//    });
+//
+//    function deleteEmployee(employeeId){
+//        $.ajax({
+//            type: "DELETE",
+//            url: "/employees/" + employeeId
+//        }).then(function(response){
+//            swal({
+//                title: "Success!",
+//                text: "You deactivated this employee",
+//                icon: "success",
+//                timer: 2000
+//            }).then(function(){
+//                window.location.href = "/employee/employee.html";
+//            });
+//        }).fail(function(error){
+//            console.log(error.responseJSON);
+//            swal({
+//                title: "Error!",
+//                text: "Could not deactivate employee! \n" + error.responseJSON.message,
+//                icon: "error"
+//            }).then(function(){
+//                location.reload();
+//            });
+//        });
+//    }
 
     $('#load-layout').on('click','#scheduleEmployee', function(event){
         event.preventDefault();
@@ -398,6 +401,5 @@ $(document).ready(function() {
             }
          });
      });
-
 
 });

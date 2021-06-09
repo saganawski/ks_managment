@@ -11,11 +11,6 @@ $(document).ready(function () {
             "initComplete": function(settings, json){
                 $("div").removeClass("spinner-border");
             },
-            "columnDefs":[
-                {"targets" : [10],
-                "visible" : false,
-                "searchable" : false}
-            ],
             ajax:{
                 "url": "/employees",
                 "dataSrc": ""
@@ -60,10 +55,14 @@ $(document).ready(function () {
 
                 }, "defaultContent": "" },
                 {"data": function(data,type,row,meta){
-                    let finalNote = "";
-                    data.employeeNotes.forEach(note => {finalNote = finalNote + note.note + " | "});
-                    return finalNote;
-                }, "defaultContent": ""},
+                    let activationStatus = "";
+                    if(data.deleted == false){
+                        activationStatus = "Active";
+                    }else if (data.deleted == true){
+                        activationStatus = "Deactivated";
+                    }
+                    return activationStatus;
+                },"defaultContent": ""},
                 {   "targets": -1,
                     "data": function(data, type,row,meta){
                         return '<a class="btn btn-warning" href="/employee/employee-details.html?employeeId='+ data.id +'">Details</a>'

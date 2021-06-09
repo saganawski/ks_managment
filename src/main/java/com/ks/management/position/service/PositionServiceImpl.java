@@ -1,6 +1,8 @@
 package com.ks.management.position.service;
 
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,7 +19,9 @@ public class PositionServiceImpl implements PositionService {
 
 	@Override
 	public List<Position> getPositions() {
-		return jpaPositionRepo.findAll();
+		return jpaPositionRepo.findAll().stream()
+				.sorted(Comparator.comparing(Position::getCode))
+				.collect(Collectors.toList());
 	}
 
 	@Override
