@@ -106,6 +106,7 @@ $(document).ready(function () {
             window.location.href = "/employee/employee.html";
         }).fail(function(error){
             console.log(error);
+            //TODO: find away to alert about duplicate emails
             swal("ERROR", "Could not create employee! \n" + error.responseJSON.error,"error");
         });
 	}
