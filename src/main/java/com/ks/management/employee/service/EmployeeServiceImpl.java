@@ -112,7 +112,6 @@ public class EmployeeServiceImpl implements EmployeeService{
         final LocalDate endDate = Optional.ofNullable(employeeDTO.getEndDate()).orElse(null);
         final Boolean voluntary = Optional.ofNullable(employeeDTO.getVoluntary()).orElse(null);
 
-        // TODO: test this
         final Boolean activationStatus = Optional.ofNullable(employeeDTO.getIsActive()).orElse(false);
 
         final Employee employee = Employee.builder()
