@@ -10,7 +10,6 @@ import com.ks.management.office.Office;
 import com.ks.management.office.dao.JpaOfficeRepo;
 import com.ks.management.position.Position;
 import com.ks.management.position.dao.JpaPositionRepo;
-import com.ks.management.recruitment.training.TrainingNote;
 import com.ks.management.security.UserPrincipal;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.crossstore.ChangeSetPersister;
@@ -67,6 +66,10 @@ public class EmployeeServiceImpl implements EmployeeService{
 
         for (Office office : offices){
             employee.addOffice(office);
+        }
+
+        if(employee.getOffices().size() == 0 || employee.getOffices().isEmpty()){
+            throw new RuntimeException("Unable to update employee with out an office selected");
         }
         return repo.save(employee);
     }
@@ -135,6 +138,10 @@ public class EmployeeServiceImpl implements EmployeeService{
             note.setEmployee(employee);
             employee.addEmployeeNote(note);
         }
+
+        if(employee.getOffices().size() == 0 || employee.getOffices().isEmpty()){
+            throw new RuntimeException("Unable to update employee with out an office selected");
+        }
         
         return repo.save(employee);
     }
@@ -162,14 +169,20 @@ public class EmployeeServiceImpl implements EmployeeService{
         }
         final List<Office> offices = new ArrayList<>();
 
-        employee.getOffices().stream()
-                .map(Office::getId)
-                .filter(officeId -> officeRepo.findById(officeId).isPresent())
-                .map(id -> officeRepo.findById(id).get())
-                .forEach(offices::add);
+        for (Office office: employee.getOffices()) {
+            final int officeId = office.getId();
+            officeRepo.findById(officeId).ifPresent(offices::add);
+        }
 
-        employee.removeALlOffices();
-        offices.forEach(employee::addOffice);
+        employee.getOffices().clear();
+        for(Office office : offices){
+            employee.addOffice(office);
+        }
+
+        if(employee.getOffices().size() == 0 || employee.getOffices().isEmpty()){
+            throw new RuntimeException("Unable to update employee with out an office selected");
+        }
+
         final Integer userId = Optional.ofNullable(userPrincipal.getUserId()).orElse(-1);
         employee.setUpdatedBy(userId);
         employee.setCreatedBy(userId);

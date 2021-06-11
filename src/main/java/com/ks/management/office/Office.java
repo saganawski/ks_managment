@@ -40,13 +40,7 @@ public class Office {
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date createdDate;
 
-	@ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE,
-			CascadeType.DETACH, CascadeType.REFRESH})
-	@JoinTable(
-			name= "employee_office",
-			joinColumns = @JoinColumn(name="office_id"),
-			inverseJoinColumns = @JoinColumn(name="employee_id")
-	)
+	@ManyToMany(fetch = FetchType.LAZY, mappedBy = "offices")
 	private List<Employee> employees = new ArrayList<>();
 	
 	public Office() {}
