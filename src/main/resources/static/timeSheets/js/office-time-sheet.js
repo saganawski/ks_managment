@@ -100,7 +100,7 @@ $(document).ready(function(){
         $('#statusForm').trigger('reset');
 
         $('#statusModal').modal('show');
-        $('#statusTitle').text(vm.scheduleEvent.title + ", " + vm.scheduleEvent.extendedProps.firstName);
+        $('#statusTitle').text(vm.scheduleEvent.title);
         $('#customPayRate').prop('disabled',true);
         $('#payRateSelect').prop('disabled',false);
         $('#customPayRateCheckBox').prop('checked',false);
