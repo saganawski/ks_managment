@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.criteria.CriteriaBuilder;
 import java.time.*;
 import java.util.List;
 
@@ -37,9 +38,17 @@ public class ConversionServiceImpl implements ConversionService {
         final Integer applicationCount = applicationJpa.getCountOfApplicationsForOfficeBetweenDates(officeId,startDate,endDate);
         final Integer interviewsCount = jpaInterview.getInterviewsCountForOfficeBetweenDates(officeId,startDate,endDate);
         final Integer interviewsShowCount = jpaInterview.getInterviewsShowCountForOfficeBetweenDates(officeId,startDate,endDate);
-        final Double interviewShowRate = Double.valueOf(interviewsShowCount) / Double.valueOf(interviewsCount);
+
+        Double interviewShowRate = Double.valueOf(0);
+        if(interviewsCount != 0 && interviewsShowCount !=0){
+            interviewShowRate = Double.valueOf(interviewsShowCount) / Double.valueOf(interviewsCount);
+        }
         final Integer totalHires = jpaInterview.getInterviewsHireCountForOfficeBetweenDates(officeId,startDate,endDate);
-        final Double hireRate = Double.valueOf(totalHires) /  Double.valueOf(interviewsShowCount);
+
+        Double hireRate = Double.valueOf(0);
+        if(totalHires != 0 && interviewsShowCount !=0){
+            hireRate = Double.valueOf(totalHires) /  Double.valueOf(interviewsShowCount);
+        }
 
         final Conversion conversion = Conversion.builder()
                 .startDate(localStartDate)
