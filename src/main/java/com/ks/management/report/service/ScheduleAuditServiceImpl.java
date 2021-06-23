@@ -92,7 +92,9 @@ public class ScheduleAuditServiceImpl implements ScheduleAuditService {
         final LocalDate startDate = scheduleAudit.getStartDate();
         final LocalDate endDate = scheduleAudit.getEndDate();
 
-        final List<EmployeeSchedule> employeeSchedules = jpaEmployeeScheduleRepo.findAllByOfficeForTimePeriod(officeId,startDate.atStartOfDay(),endDate.atStartOfDay());
+        final List<EmployeeSchedule> employeeSchedules = jpaEmployeeScheduleRepo.findAllByOfficeForTimePeriod(officeId,startDate.atStartOfDay(),endDate.atStartOfDay()).stream()
+                .filter(es -> es.getEmployeeSchedulePayroll() != null)
+                .collect(Collectors.toList());
 
         scheduleAudit.setEmployeeSchedules(employeeSchedules);
 
