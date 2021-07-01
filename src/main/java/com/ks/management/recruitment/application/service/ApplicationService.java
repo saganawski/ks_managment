@@ -21,5 +21,5 @@ public interface ApplicationService {
 
     void deleteNoteForAppId(int applicationId, int noteId);
 
-    void bulkUpload(MultipartFile file, UserPrincipal userPrincipal);
+    void bulkUpload(MultipartFile file, UserPrincipal userPrincipal, String type);
 }

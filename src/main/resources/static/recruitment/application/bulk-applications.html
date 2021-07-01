@@ -28,18 +28,28 @@
                     Bulk Upload Applications
                 </div>
                 <div class="card-body">
-                    <div class="container">
-                        <form id="bulk-form" class="needs-validation" novalidate>
-                            <div class="form-group mt-3">
-                                <label for="file">Select a CSV file</label>
-                                <input id="fileInput" type="file" name="file" class="form-control-file" id="file" accept=".csv" required>
-                                <div class="invalid-feedback">Invalid custom file</div>
-                            </div>
-                            <div>
-                                <button id="bulkUploadButton" type="submit" class="btn btn-primary">Start Upload</button>
-                            </div>
-                        </form>
+                    <h5 id="choose-type-title">Must Select Bulk Upload Application type</h5>
+                    <div class="dropdown">
+                        <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Upload Type
+                        </button>
+                        <div class="dropdown-menu">
+                            <a href="#" class="dropdown-item" data-value="DoorDoor">Door Door</a>
+                            <a href="#" class="dropdown-item" data-value="PetitionCirculator">Petition Circulator</a>
+                            <a href="#" class="dropdown-item" data-value="PoliticalCanvasser" >Political Canvasser</a>
+                        </div>
                     </div>
+
+                    <form id="bulk-form" class="needs-validation hidden" novalidate>
+                        <div class="form-group mt-3">
+                            <label for="file">Select a CSV file</label>
+                            <input id="fileInput" type="file" name="file" class="form-control-file" id="file" accept=".csv" required>
+                            <div class="invalid-feedback">Invalid custom file</div>
+                        </div>
+                        <div>
+                            <button id="bulkUploadButton" type="submit" class="btn btn-primary">Start Upload</button>
+                        </div>
+                    </form>
                 </div>
             </div>
         </main>
