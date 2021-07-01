@@ -13,6 +13,7 @@ $(document).ready(function () {
                 let validated = validationCheck(bulkForm);
 
                 if(validated && vm.type.length !=0 ){
+                    $("#initialLoad").addClass("spinner-border")
                     $.ajax({
                         type: "POST",
                         url:"/applications/bulk-upload/bulk-type/" + vm.type,
@@ -22,6 +23,7 @@ $(document).ready(function () {
                         contentType: false,
                         cache: false
                     }).then(function(response){
+                        $("#initialLoad").removeClass("spinner-border");
                         swal({
                             title: "Success!",
                             text: "You upload a file",
