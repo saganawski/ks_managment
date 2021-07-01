@@ -3,6 +3,8 @@ package com.ks.management.recruitment.application.service;
 import com.ks.management.office.Office;
 import com.ks.management.office.dao.JpaOfficeRepo;
 import com.ks.management.recruitment.application.*;
+import com.ks.management.recruitment.application.bulkupload.ApplicationBulkUpload;
+import com.ks.management.recruitment.application.bulkupload.BulkUploadFactory;
 import com.ks.management.recruitment.application.bulkupload.PetitionCirculator;
 import com.ks.management.recruitment.application.dao.ApplicationJpa;
 import com.ks.management.recruitment.application.dao.ApplicationSourceJpaDao;
@@ -177,8 +179,9 @@ public class ApplicationServiceImpl implements ApplicationService {
 
     @Override
     public void bulkUpload(MultipartFile file, UserPrincipal userPrincipal) {
-        //TODO: add factory
-        final PetitionCirculator petitionCirculator = new PetitionCirculator(applicationJpa,jpaOfficeRepo,jpaApplicationNote,applicationSourceJpaDao);
-        petitionCirculator.bulkUpload(file,userPrincipal);
+        //TODO: add type argument from client
+        final BulkUploadFactory bulkUploadFactory = new BulkUploadFactory(applicationJpa,jpaOfficeRepo,jpaApplicationNote,applicationSourceJpaDao);
+        final ApplicationBulkUpload applicationBulkUpload = bulkUploadFactory.createBulkUploadType("DoorDoor");
+        applicationBulkUpload.bulkUpload(file,userPrincipal);
     }
 }
