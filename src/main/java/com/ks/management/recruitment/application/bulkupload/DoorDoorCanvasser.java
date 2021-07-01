@@ -5,7 +5,6 @@ import com.ks.management.office.dao.JpaOfficeRepo;
 import com.ks.management.recruitment.application.Application;
 import com.ks.management.recruitment.application.ApplicationNote;
 import com.ks.management.recruitment.application.ApplicationSource;
-import com.ks.management.recruitment.application.PoliticalCanvasserApplicationBulkUploadCSV;
 import com.ks.management.recruitment.application.dao.ApplicationJpa;
 import com.ks.management.recruitment.application.dao.ApplicationSourceJpaDao;
 import com.ks.management.recruitment.application.dao.JpaApplicationNote;

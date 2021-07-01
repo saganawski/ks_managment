@@ -1,4 +1,4 @@
-package com.ks.management.recruitment.application;
+package com.ks.management.recruitment.application.bulkupload;
 
 import lombok.Getter;
 
@@ -10,7 +10,7 @@ import java.util.Date;
 import java.util.List;
 
 @Getter
-public class PoliticalCanvasserApplicationBulkUploadCSV {
+public class PetitionCirculatorApplicationBulkUploadCSV {
     private final static Integer NAME = 0;
     private final static Integer EMAIL = 1;
     private final static Integer PHONE = 2;
@@ -48,7 +48,7 @@ public class PoliticalCanvasserApplicationBulkUploadCSV {
     private String qualification2Answer;
     private String qualification2Match;
 
-    public PoliticalCanvasserApplicationBulkUploadCSV(List<String> application) {
+    public PetitionCirculatorApplicationBulkUploadCSV(List<String> application) {
         try{
             this.name = application.get(NAME);
             this.email = application.get(EMAIL);
