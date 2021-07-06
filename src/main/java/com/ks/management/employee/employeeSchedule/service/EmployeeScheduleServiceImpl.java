@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.time.*;
 import java.time.temporal.ChronoUnit;
 import java.time.temporal.TemporalAdjusters;
@@ -139,6 +140,7 @@ public class EmployeeScheduleServiceImpl implements EmployeeScheduleService{
     }
 
     private void payrollOvertime(EmployeeSchedule employeeSchedule) {
+        //TODO
         LocalDateTime currentScheduleDate = employeeSchedule.getScheduledTime();
         LocalDateTime sundayStartOfWeek = currentScheduleDate.with(TemporalAdjusters.previousOrSame(DayOfWeek.SUNDAY));
 
@@ -217,16 +219,21 @@ public class EmployeeScheduleServiceImpl implements EmployeeScheduleService{
                 employeeSchedulePayRoll.setLunch(false);
             }
 
-            final Double hoursWorked = Double.valueOf( (double) timeWorked / 60);
-            double totalDayWages = hoursWorked * payRate;
+            final BigDecimal hoursWorked = BigDecimal.valueOf(timeWorked)
+                    .divide(new BigDecimal(60.00), 2,BigDecimal.ROUND_UP);
+
+            BigDecimal totalDayWages = hoursWorked.multiply(BigDecimal.valueOf(payRate)).setScale(2, BigDecimal.ROUND_HALF_UP);
+
             if(mileage != null){
-                double mileageBonus = (double) mileage * .58;
-                totalDayWages = totalDayWages + mileageBonus;
+                final BigDecimal mileageBonus = BigDecimal.valueOf(mileage)
+                        .setScale(2, BigDecimal.ROUND_HALF_UP)
+                        .multiply(BigDecimal.valueOf(.58))
+                        .setScale(2, BigDecimal.ROUND_HALF_UP);
+                totalDayWages = totalDayWages.add(mileageBonus);
             }
 
             employeeSchedulePayRoll.setTotalMinutes((double) timeWorked);
-            employeeSchedulePayRoll.setTotalDayWage(totalDayWages);
-            //TODO: may need to set to null? if updated
+            employeeSchedulePayRoll.setTotalDayWage(totalDayWages.doubleValue());
         }
 
         employeeSchedulePayRoll.setTimeIn(timeIn);
