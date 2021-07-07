@@ -42,7 +42,7 @@ $(document).ready(function(){
     }
 
     function setDataTable(scheduleAudit){
-        $('#schedule-audit-table').DataTable({
+        var table = $('#schedule-audit-table').DataTable({
             "initComplete": function(settings, json){
                 $("div").removeClass("spinner-border");
             },
@@ -52,28 +52,46 @@ $(document).ready(function(){
                         "defaultContent": ""},
                 {"data" : "lastName",
                     "defaultContent": ""},
-                {"data" : "regularHours",
+                {"className":"sum","data" : "regularHours",
                     "defaultContent": "0"},
                 {"data" : "hourlyRate",
                     "defaultContent": "0"},
-                {"data" : "hourlyPay",
+                {"className":"sum", "data" : "hourlyPay",
                     "defaultContent": "0"},
-                {"data" : "overtimeHours",
+                {"className":"sum", "data" : "overtimeHours",
                     "defaultContent": "0"},
-                {"data" : "overtimeRate",
+                {"className":"sum", "data": "overtimeRate",
                     "defaultContent": "0"},
-                {"data" : "overtimePay",
+                {"className":"sum", "data" : "overtimePay",
                     "defaultContent": "0"},
-                {"data" : "miles",
+                {"className":"sum", "data" : "miles",
                     "defaultContent": "0"},
-                {"data" : "mileagePay",
+                {"className":"sum","data" : "mileagePay",
                     "defaultContent": "0"},
-                {"data" : "totalPay",
+                {"className":"sum","data" : "totalPay",
                     "defaultContent": "0"}
             ],
             dom:"Bfrtip",
-            buttons: ['copy','csv','pdf']
+            buttons: ['copy','csv','pdf'],
+            "footerCallback": function(row,data,start,end,display){
+                const api = this.api();
+                api.columns('.sum',{
+                    page: 'current'
+                }).every(function () {
+                    const columnSum = this.data()
+                        .reduce(function(a,b){
+                            const x = parseFloat(a) || 0;
+                            const y = parseFloat(b) || 0;
+                            return x + y;
+                        }, 0);
+
+                    const roundedSum = Math.round((columnSum + Number.EPSILON) *100) / 100;
+                    $(this.footer()).html(roundedSum);
+                });
+
+            }
         });
+
     }
     function setTitle(scheduleAudit){
         $('.card-header').append(" - " + scheduleAudit.office.name + "<br> Start Date: " + scheduleAudit.startDate + "<br> End Date: " + scheduleAudit.endDate);

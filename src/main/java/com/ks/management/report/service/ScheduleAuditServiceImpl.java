@@ -92,7 +92,9 @@ public class ScheduleAuditServiceImpl implements ScheduleAuditService {
         final LocalDate startDate = scheduleAudit.getStartDate();
         final LocalDate endDate = scheduleAudit.getEndDate();
 
-        final List<EmployeeSchedule> employeeSchedules = jpaEmployeeScheduleRepo.findAllByOfficeForTimePeriod(officeId,startDate.atStartOfDay(),endDate.atStartOfDay());
+        final List<EmployeeSchedule> employeeSchedules = jpaEmployeeScheduleRepo.findAllByOfficeForTimePeriod(officeId,startDate.atStartOfDay(),endDate.atStartOfDay()).stream()
+                .filter(es -> es.getEmployeeSchedulePayroll() != null)
+                .collect(Collectors.toList());
 
         scheduleAudit.setEmployeeSchedules(employeeSchedules);
 
@@ -116,7 +118,6 @@ public class ScheduleAuditServiceImpl implements ScheduleAuditService {
                     final BigDecimal payRate = (BigDecimal) Optional.ofNullable(pr[2]).orElse(new BigDecimal(0.0));
                     final BigDecimal totalOvertimeMinutes = (BigDecimal)Optional.ofNullable(pr[3]).orElse(new BigDecimal(0.0));
                     final BigDecimal totalMileage = (BigDecimal) Optional.ofNullable(pr[4]).orElse(new BigDecimal(0.0));
-                    final BigDecimal totalPay = (BigDecimal) Optional.ofNullable(pr[5]).orElse(new BigDecimal(0.0));
                     final BigDecimal totalMinutes = (BigDecimal) Optional.ofNullable(pr[6]).orElse(new BigDecimal(0.0));
 
                     final BigDecimal overtimeRate = PayrollDto.calculateOvertimeRate(totalOvertimeMinutes,payRate);
@@ -125,6 +126,7 @@ public class ScheduleAuditServiceImpl implements ScheduleAuditService {
                     final BigDecimal overtimeHours = PayrollDto.calculateOvertimeHours(totalOvertimeMinutes);
                     final BigDecimal overtimePay = PayrollDto.calculateOvertimePay(overtimeRate,overtimeHours);
                     final BigDecimal mileagePay = PayrollDto.calculateMileagePay(totalMileage);
+                    final BigDecimal totalPay = PayrollDto.calculateTotalPay(hourlyPay, overtimePay, mileagePay);
 
 
                     final PayrollDto dto = PayrollDto.builder()

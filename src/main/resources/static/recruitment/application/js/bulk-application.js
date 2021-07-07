@@ -1,4 +1,7 @@
 $(document).ready(function () {
+    vm = this;
+    vm.type = "";
+
 	const main = $('#load-layout').html();
     $('#load-layout').load("/common/_layout.html", function(responseTxt, statusTxt, xhr){
         if(statusTxt == "success"){
@@ -9,24 +12,25 @@ $(document).ready(function () {
             bulkForm.addEventListener('submit',function(event){
                 let validated = validationCheck(bulkForm);
 
-                if(validated){
-
+                if(validated && vm.type.length !=0 ){
+                    $("#initialLoad").addClass("spinner-border")
                     $.ajax({
                         type: "POST",
-                        url:"/applications/bulk-upload",
+                        url:"/applications/bulk-upload/bulk-type/" + vm.type,
                         data: new FormData(this),
                         enctype: 'multipart/form-data',
                         processData: false,
                         contentType: false,
                         cache: false
                     }).then(function(response){
+                        $("#initialLoad").removeClass("spinner-border");
                         swal({
                             title: "Success!",
                             text: "You upload a file",
                             icon: "success",
                             timer: 2000
                         }).then(function(){
-//                            window.location.href = "/user/user.html";
+                            location.reload();
                         });
                     }).fail(function(err){
                         console.log(err);
@@ -76,4 +80,15 @@ $(document).ready(function () {
         return json;
     }
 
+    $('#load-layout').on("click", ".dropdown-item", function(event){
+        event.preventDefault();
+        const chosenType = $(this).data("value");
+        vm.type = chosenType;
+//        replace text of title to chosenType
+        $('#choose-type-title').text(chosenType);
+        //hide drop down
+        $(this).closest('.dropdown').hide();
+        //show form
+        $('#bulk-form').removeClass('hidden');
+    })
 });

@@ -50,8 +50,8 @@ public class ApplicationController {
         applicationService.deleteNoteForAppId(applicationId,noteId) ;
     }
 
-    @PostMapping("/bulk-upload")
-    public void bulkUpload(MultipartFile file, @AuthenticationPrincipal UserPrincipal userPrincipal){
-        applicationService.bulkUpload(file, userPrincipal);
+    @PostMapping("/bulk-upload/bulk-type/{type}")
+    public void bulkUpload(MultipartFile file, @AuthenticationPrincipal UserPrincipal userPrincipal, @PathVariable("type") String type ){
+        applicationService.bulkUpload(file, userPrincipal,type);
     }
 }

@@ -75,4 +75,12 @@ public class PayrollDto {
         }
         return new BigDecimal(0.0);
     }
+
+    public static BigDecimal calculateTotalPay(BigDecimal hourlyPay, BigDecimal overtimePay, BigDecimal mileagePay) {
+        BigDecimal totalPay = hourlyPay.add(overtimePay)
+                .add(overtimePay)
+                .add(mileagePay)
+                .setScale(2,BigDecimal.ROUND_HALF_UP);
+        return totalPay;
+    }
 }
