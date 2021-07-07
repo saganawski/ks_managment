@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.time.*;
 import java.time.temporal.ChronoUnit;
 import java.time.temporal.TemporalAdjusters;
@@ -106,9 +107,7 @@ public class EmployeeScheduleServiceImpl implements EmployeeScheduleService{
         employeeSchedule.setUpdatedBy(userId);
 
         final String statusCode = Optional.ofNullable(givenEmployeeSchedule.getEmployeeScheduleStatus()).map(EmployeeScheduleStatus::getCode).orElse(null);
-        /*if(statusCode == null){
-            throw new RuntimeException("Could not find status in database! \n contact tech support!");
-        }*/
+
         if(statusCode != null){
             final EmployeeScheduleStatus employeeScheduleStatus = jpaEmployeeScheduleStatusRepo.findByCode(statusCode);
             employeeSchedule.setEmployeeScheduleStatus(employeeScheduleStatus);
@@ -162,36 +161,45 @@ public class EmployeeScheduleServiceImpl implements EmployeeScheduleService{
             final Integer mileage = employeeSchedule.getEmployeeSchedulePayroll().getMileage();
 
             final Double remainder = cumulativeMinutesWorked - todaysMinutes;
-            final Double overtimeMultiplier = new Double(1.5);
-            final Double overtimePayRate = payRate * overtimeMultiplier;
+
+            final BigDecimal overtimePayRate = BigDecimal.valueOf(payRate)
+                    .setScale(2, BigDecimal.ROUND_UNNECESSARY)
+                    .multiply(BigDecimal.valueOf(1.5))
+                    .setScale(2, BigDecimal.ROUND_HALF_UP);
 
             final Boolean hasMixRegularPayAndOvertimeRate = remainder - overtimeMinuteThreshold < 0;
             if(hasMixRegularPayAndOvertimeRate){
                 final double normalPayRateMinutes = overtimeMinuteThreshold - remainder;
                 final double overtimePayRateMinutes = todaysMinutes - normalPayRateMinutes;
 
-                final Double normalHoursWorked = Double.valueOf( normalPayRateMinutes / 60);
-                final Double overtimeHoursWorked = Double.valueOf( overtimePayRateMinutes / 60);
-                final double normalDayWages = normalHoursWorked * payRate;
-                final double overtimeDayWages = overtimeHoursWorked * overtimePayRate;
-                double totalDayWages = normalDayWages + overtimeDayWages;
-                if(mileage != null){
-                    double mileageBonus = (double) mileage * .58;
-                    totalDayWages = totalDayWages + mileageBonus;
-                }
-                employeeSchedule.getEmployeeSchedulePayroll().setTotalDayWage(totalDayWages);
+                final BigDecimal normalHoursWorked = BigDecimal.valueOf(normalPayRateMinutes)
+                        .divide(BigDecimal.valueOf(60), 2, BigDecimal.ROUND_UP);
+                final BigDecimal overtimeHoursWorked = BigDecimal.valueOf(overtimePayRateMinutes)
+                        .divide(BigDecimal.valueOf(60), 2, BigDecimal.ROUND_HALF_UP);
+
+                final BigDecimal normalDayWages = normalHoursWorked.multiply(BigDecimal.valueOf(payRate))
+                        .setScale(2, BigDecimal.ROUND_HALF_UP);
+                final BigDecimal overtimeDayWages = overtimeHoursWorked.multiply(overtimePayRate)
+                        .setScale(2, BigDecimal.ROUND_HALF_UP);
+
+                BigDecimal totalDayWages = normalDayWages.add(overtimeDayWages);
+
+                totalDayWages = addMileageBonus(mileage, totalDayWages);
+
+                employeeSchedule.getEmployeeSchedulePayroll().setTotalDayWage(totalDayWages.doubleValue());
                 employeeSchedule.getEmployeeSchedulePayroll().setOvertimeMinutes(overtimePayRateMinutes);
             }
 
             final Boolean hasOnlyOvertimeRate = remainder - overtimeMinuteThreshold >= 0;
             if(hasOnlyOvertimeRate){
-                final Double hoursWorked = Double.valueOf( todaysMinutes / 60);
-                double totalDayWages = hoursWorked * overtimePayRate;
-                if(mileage != null){
-                    double mileageBonus = (double) mileage * .58;
-                    totalDayWages = totalDayWages + mileageBonus;
-                }
-                employeeSchedule.getEmployeeSchedulePayroll().setTotalDayWage(totalDayWages);
+                final BigDecimal overTimeHoursWorked = BigDecimal.valueOf(todaysMinutes)
+                        .divide(BigDecimal.valueOf(60), 2, BigDecimal.ROUND_UP);
+                BigDecimal totalDayWages = overTimeHoursWorked.multiply(overtimePayRate)
+                        .setScale(2, BigDecimal.ROUND_UP);
+
+                totalDayWages = addMileageBonus(mileage, totalDayWages);
+
+                employeeSchedule.getEmployeeSchedulePayroll().setTotalDayWage(totalDayWages.doubleValue());
                 employeeSchedule.getEmployeeSchedulePayroll().setOvertimeMinutes(todaysMinutes);
             }
         }else{
@@ -217,16 +225,15 @@ public class EmployeeScheduleServiceImpl implements EmployeeScheduleService{
                 employeeSchedulePayRoll.setLunch(false);
             }
 
-            final Double hoursWorked = Double.valueOf( (double) timeWorked / 60);
-            double totalDayWages = hoursWorked * payRate;
-            if(mileage != null){
-                double mileageBonus = (double) mileage * .58;
-                totalDayWages = totalDayWages + mileageBonus;
-            }
+            final BigDecimal hoursWorked = BigDecimal.valueOf(timeWorked)
+                    .divide(BigDecimal.valueOf(60), 2,BigDecimal.ROUND_UP);
+
+            BigDecimal totalDayWages = hoursWorked.multiply(BigDecimal.valueOf(payRate)).setScale(2, BigDecimal.ROUND_HALF_UP);
+
+            totalDayWages = addMileageBonus(mileage, totalDayWages);
 
             employeeSchedulePayRoll.setTotalMinutes((double) timeWorked);
-            employeeSchedulePayRoll.setTotalDayWage(totalDayWages);
-            //TODO: may need to set to null? if updated
+            employeeSchedulePayRoll.setTotalDayWage(totalDayWages.doubleValue());
         }
 
         employeeSchedulePayRoll.setTimeIn(timeIn);
@@ -234,5 +241,16 @@ public class EmployeeScheduleServiceImpl implements EmployeeScheduleService{
         employeeSchedulePayRoll.setMileage(mileage);
         employeeSchedulePayRoll.setPayRate(payRate);
         employeeSchedulePayRoll.setUpdatedBy(userId);
+    }
+
+    private BigDecimal addMileageBonus(Integer mileage, BigDecimal totalDayWages) {
+        if(mileage != null){
+            final BigDecimal mileageBonus = BigDecimal.valueOf(mileage)
+                    .setScale(2, BigDecimal.ROUND_HALF_UP)
+                    .multiply(BigDecimal.valueOf(.58))
+                    .setScale(2, BigDecimal.ROUND_HALF_UP);
+            totalDayWages = totalDayWages.add(mileageBonus);
+        }
+        return totalDayWages;
     }
 }
