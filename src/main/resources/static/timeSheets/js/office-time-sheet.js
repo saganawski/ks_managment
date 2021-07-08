@@ -214,9 +214,14 @@ $(document).ready(function(){
             let office = JSON.parse($('#officeSelect').val());
             vm.office = office;
             getEventsByOffice(office.id);
-        }
+            updateTitle(office.name);
 
+        }
     });
+
+    function updateTitle(officeName){
+        $('.card-header').append(" <br>" + officeName);
+    }
 
     function validationCheck(){
         const form = document.querySelector('#officeForm');
