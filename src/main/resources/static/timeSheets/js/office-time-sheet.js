@@ -95,11 +95,10 @@ $(document).ready(function(){
             });
         }
     });
-    //TODO: refactor ALSO on succes mabye just update event not refresh??
+
     function setEventModalFields(employeeSchedule){
-        // determine if is an canvasser
         const isCanvasser = isEmployeeCanvasser(employeeSchedule.employee);
-        // launch modal based on isCanvasser
+
         displayModalType(isCanvasser, employeeSchedule);
     }
 
@@ -492,8 +491,7 @@ $(document).ready(function(){
                 icon: "success",
                 timer: 2000
             }).then(function(){
-                getEventsByOffice(vm.office.id);
-                $('#statusModal').modal('hide');
+                hideEventModals();
             });
         }).fail(function(error){
             console.log(error.responseJSON);
@@ -511,6 +509,11 @@ $(document).ready(function(){
             json[j.name] = j.value || null;
         }
         return json;
+    }
+
+    function hideEventModals(){
+        $('#statusModal').modal('hide');
+        $('#nonCanvasserModal').modal('hide');
     }
 
     $('#nonCanvasserFormSubmit').on('click', function(event){
