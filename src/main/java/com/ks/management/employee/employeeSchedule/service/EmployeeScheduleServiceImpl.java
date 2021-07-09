@@ -133,7 +133,6 @@ public class EmployeeScheduleServiceImpl implements EmployeeScheduleService{
             payrollOvertime(employeeSchedule);
         }
 
-
         return jpaEmployeeScheduleRepo.save(employeeSchedule);
     }
 
@@ -247,7 +246,7 @@ public class EmployeeScheduleServiceImpl implements EmployeeScheduleService{
         if(mileage != null){
             final BigDecimal mileageBonus = BigDecimal.valueOf(mileage)
                     .setScale(2, BigDecimal.ROUND_HALF_UP)
-                    .multiply(BigDecimal.valueOf(.58))
+                    .multiply(BigDecimal.valueOf(.56))
                     .setScale(2, BigDecimal.ROUND_HALF_UP);
             totalDayWages = totalDayWages.add(mileageBonus);
         }

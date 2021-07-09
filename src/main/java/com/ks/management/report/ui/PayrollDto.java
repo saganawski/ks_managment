@@ -71,7 +71,7 @@ public class PayrollDto {
 
     public static BigDecimal calculateMileagePay(BigDecimal totalMileage) {
         if(!totalMileage.equals(new BigDecimal(0.0))){
-            return totalMileage.multiply(new BigDecimal(0.58)).setScale(2,RoundingMode.CEILING);
+            return totalMileage.multiply(new BigDecimal(0.56)).setScale(2,BigDecimal.ROUND_HALF_UP);
         }
         return new BigDecimal(0.0);
     }
