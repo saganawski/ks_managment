@@ -95,8 +95,65 @@ $(document).ready(function(){
             });
         }
     });
-
+    //TODO: refactor ALSO on succes mabye just update event not refresh??
     function setEventModalFields(employeeSchedule){
+        // determine if is an canvasser
+        const isCanvasser = isEmployeeCanvasser(employeeSchedule.employee);
+        // launch modal based on isCanvasser
+        displayModalType(isCanvasser, employeeSchedule);
+    }
+
+    function isEmployeeCanvasser(employee){
+        let isEmployeeCanvasser = true;
+        const canvasserCode = "CANVASSER";
+
+        if(employee.position != null){
+            const positionCode = employee.position.code;
+            isEmployeeCanvasser = positionCode === canvasserCode;
+        }else{
+            swal({
+                title: "Error!",
+                text: "Employee Dose not have an 'Position' assigned!\n Update employee before adjusting schedule.",
+                icon: "error"
+            }).then(function() {
+                window.location.href=`/employee/employee-details.html?employeeId=${employee.id}`;
+            });
+        }
+
+        return isEmployeeCanvasser;
+    }
+
+    function displayModalType(isCanvasser, employeeSchedule){
+        if(isCanvasser){
+            displayCanvasserTypeModal(employeeSchedule);
+        }else{
+            displayNonCanvasserTypeModal(employeeSchedule);
+        }
+    }
+
+    function displayNonCanvasserTypeModal(employeeSchedule){
+        $('#nonCanvasserForm').trigger('reset');
+
+        $('#nonCanvasserModal').modal('show');
+        $('#employeeName').text(vm.scheduleEvent.title + " - Salaried Employee ");
+
+        if(employeeSchedule.employeeScheduleStatus != null){
+            delete employeeSchedule.employeeScheduleStatus.hibernateLazyInitializer;
+            delete employeeSchedule.employeeScheduleStatus.id;
+        }
+
+        $('#nonCanvasserStatusSelect').val(JSON.stringify(employeeSchedule.employeeScheduleStatus));
+
+        const hasEmployeeSchedulePayroll = employeeSchedule.employeeSchedulePayroll != null;
+        if(hasEmployeeSchedulePayroll){
+            let mileage = employeeSchedule.employeeSchedulePayroll.mileage;
+            if(mileage != null){
+                $('#nonCanvasserMileage').val(mileage);
+            }
+        }
+    }
+
+    function displayCanvasserTypeModal(employeeSchedule){
         $('#statusForm').trigger('reset');
 
         $('#statusModal').modal('show');
@@ -204,6 +261,7 @@ $(document).ready(function(){
         statuses.forEach(status => {
             delete status._links;
             $('#statusSelect').append("<option value='"+JSON.stringify(status)+"'>"+ status.status +"</option>");
+            $('#nonCanvasserStatusSelect').append("<option value='"+JSON.stringify(status)+"'>"+ status.status +"</option>");
         });
     }
 
@@ -379,7 +437,6 @@ $(document).ready(function(){
             }
             setEmployeeScheduleStatusAndPayRoll(vm.employeeSchedule);
         }
-
     });
 
     function payRollValidation(employeeScheduleStatus, timeIn,timeOut){
@@ -454,6 +511,52 @@ $(document).ready(function(){
             json[j.name] = j.value || null;
         }
         return json;
+    }
+
+    $('#nonCanvasserFormSubmit').on('click', function(event){
+        event.preventDefault();
+
+        const employeeScheduleStatus = JSON.parse($('#nonCanvasserStatusSelect').val());
+        vm.employeeSchedule.employeeScheduleStatus = employeeScheduleStatus;
+
+        const jsonForm = convertFormToJson($("#nonCanvasserForm").serializeArray());
+
+        const mileage = jsonForm.mileage;
+        let validated = nonCanvasserFormValidation(employeeScheduleStatus);
+        if(validated){
+            updateOrCreateNonCanvasserEmployeeSchedulePayroll(vm.employeeSchedule, mileage);
+            setEmployeeScheduleStatusAndPayRoll(vm.employeeSchedule);
+        }
+    });
+
+    function updateOrCreateNonCanvasserEmployeeSchedulePayroll(employeeSchedule,mileage){
+        if(vm.employeeSchedule.employeeSchedulePayroll != null){
+            vm.employeeSchedule.employeeSchedulePayroll.mileage = mileage;
+        }else{
+            const employeeSchedulePayroll = {id:null,payRate:null,timeIn:null,timeOut:null,mileage:mileage}
+            vm.employeeSchedule.employeeSchedulePayroll = employeeSchedulePayroll;
+        }
+    }
+
+    function nonCanvasserFormValidation(employeeScheduleStatus){
+        const form = document.querySelector('#nonCanvasserForm');
+
+         if(employeeScheduleStatus == null || employeeScheduleStatus === ""){
+            swal({
+                title: "Error!",
+                text: "Must Select a status!",
+                icon: "error"
+            });
+            form.classList.add('was-validated');
+            return false;
+        }
+
+        if(form.checkValidity()  === false){
+            form.classList.add('was-validated');
+            return false;
+        }
+        return true;
+
     }
 
     $('#customPayRateCheckBox').on('click', function(event){
