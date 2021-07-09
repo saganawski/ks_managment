@@ -492,6 +492,7 @@ $(document).ready(function(){
                 timer: 2000
             }).then(function(){
                 hideEventModals();
+                updateEventColor(employeeSchedule);
             });
         }).fail(function(error){
             console.log(error.responseJSON);
@@ -501,6 +502,16 @@ $(document).ready(function(){
                 icon: "error"
             });
         });
+    }
+
+    function updateEventColor(employeeSchedule){
+        const employeeScheduleStatus = employeeSchedule.employeeScheduleStatus;
+        const newEventColor = setColorByStatus(employeeScheduleStatus);
+
+        const eventId = employeeSchedule.id;
+        const event = fullCalendar.getEventById(eventId);
+
+        event.setProp("color", newEventColor);
     }
 
     function convertFormToJson(form){
