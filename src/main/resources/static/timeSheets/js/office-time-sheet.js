@@ -104,7 +104,7 @@ $(document).ready(function(){
 
     function isEmployeeCanvasser(employee){
         let isEmployeeCanvasser = true;
-        const canvasserCode = "CANVASSER";
+        const canvasserCode = "CANVASSER"; // this is in my new branch
 
         if(employee.position != null){
             const positionCode = employee.position.code;
