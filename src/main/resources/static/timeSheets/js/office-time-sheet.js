@@ -97,18 +97,25 @@ $(document).ready(function(){
     });
 
     function setEventModalFields(employeeSchedule){
-        const isCanvasser = isEmployeeCanvasser(employeeSchedule.employee);
+        const isSalaried = isEmployeeSalaried(employeeSchedule.employee);
 
-        displayModalType(isCanvasser, employeeSchedule);
+        displayModalType(isSalaried, employeeSchedule);
     }
 
-    function isEmployeeCanvasser(employee){
-        let isEmployeeCanvasser = true;
-        const canvasserCode = "CANVASSER";
+    const SalariedEmployeeTypes = (() => {
+        const salariedEmployeePositionCodes = () =>{
+            const positionCodes = new Array("FIELD_DIRECTOR","REGIONAL_FIELD_DIRECTOR","OWNER", "DIRECTOR_OF_OPERATIONS");
+            return positionCodes;
+        }
+        return{salariedEmployeePositionCodes};
+    })();
+
+    function isEmployeeSalaried(employee){
+        let isEmployeeSalaried = false;
 
         if(employee.position != null){
             const positionCode = employee.position.code;
-            isEmployeeCanvasser = positionCode === canvasserCode;
+            isEmployeeSalaried =  SalariedEmployeeTypes.salariedEmployeePositionCodes().includes(positionCode);
         }else{
             swal({
                 title: "Error!",
@@ -119,21 +126,21 @@ $(document).ready(function(){
             });
         }
 
-        return isEmployeeCanvasser;
+        return isEmployeeSalaried;
     }
 
-    function displayModalType(isCanvasser, employeeSchedule){
-        if(isCanvasser){
-            displayCanvasserTypeModal(employeeSchedule);
+    function displayModalType(isSalaried, employeeSchedule){
+        if(isSalaried){
+            displaySalariedTypeModal(employeeSchedule);
         }else{
-            displayNonCanvasserTypeModal(employeeSchedule);
+            displayHourlyTypeModal(employeeSchedule);
         }
     }
 
-    function displayNonCanvasserTypeModal(employeeSchedule){
-        $('#nonCanvasserForm').trigger('reset');
+    function displaySalariedTypeModal(employeeSchedule){
+        $('#salaryForm').trigger('reset');
 
-        $('#nonCanvasserModal').modal('show');
+        $('#salariedModal').modal('show');
         $('#employeeName').text(vm.scheduleEvent.title + " - Salaried Employee ");
 
         if(employeeSchedule.employeeScheduleStatus != null){
@@ -141,18 +148,18 @@ $(document).ready(function(){
             delete employeeSchedule.employeeScheduleStatus.id;
         }
 
-        $('#nonCanvasserStatusSelect').val(JSON.stringify(employeeSchedule.employeeScheduleStatus));
+        $('#salariedStatusSelect').val(JSON.stringify(employeeSchedule.employeeScheduleStatus));
 
         const hasEmployeeSchedulePayroll = employeeSchedule.employeeSchedulePayroll != null;
         if(hasEmployeeSchedulePayroll){
             let mileage = employeeSchedule.employeeSchedulePayroll.mileage;
             if(mileage != null){
-                $('#nonCanvasserMileage').val(mileage);
+                $('#salariedMileage').val(mileage);
             }
         }
     }
 
-    function displayCanvasserTypeModal(employeeSchedule){
+    function displayHourlyTypeModal(employeeSchedule){
         $('#statusForm').trigger('reset');
 
         $('#statusModal').modal('show');
@@ -260,7 +267,7 @@ $(document).ready(function(){
         statuses.forEach(status => {
             delete status._links;
             $('#statusSelect').append("<option value='"+JSON.stringify(status)+"'>"+ status.status +"</option>");
-            $('#nonCanvasserStatusSelect').append("<option value='"+JSON.stringify(status)+"'>"+ status.status +"</option>");
+            $('#salariedStatusSelect').append("<option value='"+JSON.stringify(status)+"'>"+ status.status +"</option>");
         });
     }
 
@@ -524,19 +531,19 @@ $(document).ready(function(){
 
     function hideEventModals(){
         $('#statusModal').modal('hide');
-        $('#nonCanvasserModal').modal('hide');
+        $('#salariedModal').modal('hide');
     }
 
-    $('#nonCanvasserFormSubmit').on('click', function(event){
+    $('#salaryFormSubmit').on('click', function(event){
         event.preventDefault();
 
-        const employeeScheduleStatus = JSON.parse($('#nonCanvasserStatusSelect').val());
+        const employeeScheduleStatus = JSON.parse($('#salariedStatusSelect').val());
         vm.employeeSchedule.employeeScheduleStatus = employeeScheduleStatus;
 
-        const jsonForm = convertFormToJson($("#nonCanvasserForm").serializeArray());
+        const jsonForm = convertFormToJson($("#salaryForm").serializeArray());
 
         const mileage = jsonForm.mileage;
-        let validated = nonCanvasserFormValidation(employeeScheduleStatus);
+        let validated = salariedFormValidation(employeeScheduleStatus);
         if(validated){
             updateOrCreateNonCanvasserEmployeeSchedulePayroll(vm.employeeSchedule, mileage);
             setEmployeeScheduleStatusAndPayRoll(vm.employeeSchedule);
@@ -552,8 +559,8 @@ $(document).ready(function(){
         }
     }
 
-    function nonCanvasserFormValidation(employeeScheduleStatus){
-        const form = document.querySelector('#nonCanvasserForm');
+    function salariedFormValidation(employeeScheduleStatus){
+        const form = document.querySelector('#salaryForm');
 
          if(employeeScheduleStatus == null || employeeScheduleStatus === ""){
             swal({
