@@ -15,12 +15,13 @@ $(document).ready(function(){
             url:"/scheduleAudits/" + scheduleAuditId
         }).then(function(data){
             setDataTable(data);
+            console.log(data);
             setTitle(data);
         }).fail(function(err){
             console.log(err);
             swal({
                 title: "Error!",
-                text: "Failure to retrieve schedule audit! \n" + err.responseJSON.message,
+                text: "Failure to retrieve schedule audit! \n" + err,
                 icon: "error"
             });
         });
@@ -55,6 +56,19 @@ $(document).ready(function(){
                     "defaultContent": ""},
                 {"data" : "employeeSchedulePayroll.timeOut",
                     "defaultContent": ""},
+                {"data" : function(data,type,row,meta){
+                    if(data.employeeSchedulePayroll == null){
+                        return "";
+                    }
+                    const totalMinutes = data.employeeSchedulePayroll.totalMinutes
+                    if(totalMinutes == null){
+                        return "";
+                    }
+                    const roundedHours = Math.round((totalMinutes/60)*100)/100;
+
+                    return roundedHours;
+                    }
+                },
                 {"data" : "employeeSchedulePayroll.lunch",
                     "defaultContent": ""},
                 {"data" : "employeeSchedulePayroll.mileage",
