@@ -80,6 +80,7 @@ public class ProjectServiceImpl implements ProjectService{
                                 .filter(es -> es.getEmployeeScheduleStatus() != null)
                                 .filter(es -> !es.getEmployeeScheduleStatus().getCode().equalsIgnoreCase("UNEXCUSED_ABSENCE"))
                                 .filter(es -> !es.getEmployeeScheduleStatus().getCode().equalsIgnoreCase("EXCUSED_ABSENCE"))
+                                .filter(es -> !es.getEmployeeScheduleStatus().getCode().equalsIgnoreCase("NON_CANVASS"))
                                 .count();
                         final Integer shiftsCompleted = shiftsWorked + doubleShiftCount;
 
@@ -201,6 +202,7 @@ public class ProjectServiceImpl implements ProjectService{
                     .filter(es -> es.getEmployeeScheduleStatus() != null)
                     .filter(es -> !es.getEmployeeScheduleStatus().getCode().equalsIgnoreCase("UNEXCUSED_ABSENCE"))
                     .filter(es -> !es.getEmployeeScheduleStatus().getCode().equalsIgnoreCase("EXCUSED_ABSENCE"))
+                    .filter(es -> !es.getEmployeeScheduleStatus().getCode().equalsIgnoreCase("NON_CANVASS"))
                     .count();
             final Integer shiftsCompleted = shiftsWorked + doubleShiftCount;
 

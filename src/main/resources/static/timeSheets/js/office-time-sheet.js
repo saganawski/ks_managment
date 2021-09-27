@@ -384,6 +384,9 @@ $(document).ready(function(){
                 case "Director or Project Manager":
                     return "#5e1678";
                     break;
+                case "Non Canvass":
+                    return "#FF5300";
+                    break;
                 default:
                     return "#007bff";
             }
