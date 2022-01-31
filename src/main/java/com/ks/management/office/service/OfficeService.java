@@ -14,4 +14,6 @@ public interface OfficeService {
     Office getOfficeById(Integer officeId);
 
     Office updateOffice(Office office, UserPrincipal userPrincipal);
+
+    Office updateOffice(Office office, Integer officeId, UserPrincipal userPrincipal);
 }

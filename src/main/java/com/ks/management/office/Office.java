@@ -2,7 +2,9 @@ package com.ks.management.office;
 
 import com.ks.management.employee.Employee;
 import com.ks.management.location.Location;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -12,6 +14,8 @@ import java.util.List;
 
 @Entity
 @Table(name="office")
+@NoArgsConstructor
+@AllArgsConstructor
 public class Office {
 	
 	@Id
@@ -25,6 +29,9 @@ public class Office {
 	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
 	@JoinColumn(name = "location_id")
 	private Location location;
+
+	@Column(name = "is_completed")
+	private Boolean completed;
 
 	@Column(name = "updated_by")
 	private Integer updatedBy;
@@ -42,15 +49,6 @@ public class Office {
 
 	@ManyToMany(fetch = FetchType.LAZY, mappedBy = "offices")
 	private List<Employee> employees = new ArrayList<>();
-	
-	public Office() {}
-
-	public Office(String name, Location location, Integer updatedBy, Integer createdBy) {
-		this.name = name;
-		this.location = location;
-		this.updatedBy = updatedBy;
-		this.createdBy = createdBy;
-	}
 
 	public String getName() {
 		return name;
@@ -66,6 +64,14 @@ public class Office {
 
 	public void setLocation(Location location) {
 		this.location = location;
+	}
+
+	public Boolean getCompleted() {
+		return completed;
+	}
+
+	public void setCompleted(Boolean completed) {
+		this.completed = completed;
 	}
 
 	public Integer getUpdatedBy() {

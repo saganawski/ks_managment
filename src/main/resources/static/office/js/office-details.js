@@ -49,8 +49,9 @@ $(document).ready(function () {
 
                         $.ajax({
                             type: "PUT",
-                            url:"/offices",
+                            url:"/offices/" + jsonForm.id,
                             data: JSON.stringify(jsonForm),
+                            dataType: "json",
                             contentType: "application/json; charset=utf-8"
                         }).then(function(response){
                             swal({
@@ -65,7 +66,7 @@ $(document).ready(function () {
                             console.log(err);
                             swal({
                                 title: "Error!",
-                                text: "Failure to update an office! \n" + err.responseJSON.message,
+                                text: "Failure to update an office! \n" + err,
                                 icon: "error"
                             });
                         });
@@ -96,6 +97,7 @@ $(document).ready(function () {
 
     function setFormData(office){
         $('#name').val(office.name);
+        $('#completed').val(office.completed.toString());
         $('#stateName').val(office.location.stateName);
         $('#cityName').val(office.location.cityName);
         $('#address1').val(office.location.address1);
