@@ -219,7 +219,11 @@ public class EmployeeServiceImpl implements EmployeeService{
         if(!employee.isPresent()){
             throw new RuntimeException("Cant find training with ID: " + employeeId);
         }
-        final Set<Office> officeOptions = officeRepo.findAll().stream().collect(Collectors.toSet());
+        final Set<Office> officeOptions = officeRepo.findAll().stream()
+                .filter(o -> !o.getCompleted())
+                .collect(Collectors.toSet());
+
+
         final Set<Position> positionsOptions = positionRepo.findAll().stream().collect(Collectors.toSet());
 
         final EmployeeDTO employeeDTO = EmployeeDTO.builder()
