@@ -16,13 +16,16 @@ $(document).ready(function () {
                 $("div").removeClass("spinner-border");
             },
             ajax: {
-                url: "/offices",
+                url: "/offices/all",
                 dataSrc: ''
             },
             columns : [
                 {"data": "name"},
                 {"data": "location.address1",
                     "defaultContent":""
+                },
+                {"data": "completed",
+                    "defaultContent": ""
                 },
                 {   "targets": -1,
                     "data": function(data, type,row,meta){

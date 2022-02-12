@@ -1,4 +1,7 @@
 $(document).ready(function () {
+    vm = this;
+    vm.offices = [];
+
 	const main = $('#load-layout').html();
         $('#load-layout').load("/common/_layout.html", function(responseTxt, statusTxt, xhr){
             if(statusTxt == "success"){
@@ -107,6 +110,7 @@ $(document).ready(function () {
         getOfficeOptions()
                 .then(function(data){
                     setOfficeOptions(data);
+                    vm.offices = data;
                 })
                 .fail(function(err){
                     console.log(err);
@@ -126,6 +130,7 @@ $(document).ready(function () {
 
             function setOfficeOptions(offices){
                 for(office of offices){
+                    //TODO: refactor.. do we really neeed the whole office object?
                     $('#office').append("<option value='"+JSON.stringify(office)+"'>"+ office.name +"</option>")
                 }
             }
@@ -155,6 +160,23 @@ $(document).ready(function () {
         }
     });
 
+    const setAssignedOfficesAndAddCompletedOffice = (officeOptions, assignedOffices) => {
+        completedOffices = assignedOffices.filter(({id: id1}) => !officeOptions.some(({id: id2}) => id2 === id1 ));
+        //TODO refactor;
+        for(office of completedOffices){
+            //TODO: refactor.. do we really neeed the whole office object?
+            $('#office').append("<option value='"+JSON.stringify(office)+"'>"+ office.name +"</option>")
+        }
+
+        if(completedOffices.length  == 1 ){
+            $('#office').val(JSON.stringify(completedOffices[0]));
+        }
+
+        if(assignedOffices.length == 1){
+            $('#office').val(JSON.stringify(assignedOffices[0]));
+        }
+    }
+
     function setApplicationFieldValues(application){
         $('#id').val(application.id);
         $('#firstName').val(application.firstName);
@@ -167,9 +189,10 @@ $(document).ready(function () {
         if(application.callBackDate != null){
             $('#callBackDate').val(application.callBackDate.substr(0,10));
         }
-        if(application.office != null ){
-            $('#office').val(JSON.stringify(application.office));
-        }
+
+        const assignedOffices = [application.office];
+        setAssignedOfficesAndAddCompletedOffice(vm.offices, assignedOffices);
+
         $('#applicationContactType').val(JSON.stringify(application.applicationContactType));
         $('#applicationSource').val(JSON.stringify(application.applicationSource));
         $('#applicationResult').val(JSON.stringify(application.applicationResult));

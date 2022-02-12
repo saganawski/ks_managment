@@ -140,6 +140,8 @@ $(document).ready(function() {
             setPositionOptions(employeeDTO.positionOptions);
             setOfficeOptions(employeeDTO.officeOptions);
             setEmployeeValues(employeeDTO.employee);
+            //set employee office if not in options
+            setAssignedOfficesAndAddCompletedOffice(employeeDTO.officeOptions,employeeDTO.employee.offices);
         }
 
         const setPositionOptions = (positionOptions) => {
@@ -153,6 +155,18 @@ $(document).ready(function() {
                 $('#officeSelect').append("<option value='"+ office.id + "'>"+ office.name +"</option>");
             }
             $('#officeSelect').selectpicker('refresh');
+        }
+
+        const setAssignedOfficesAndAddCompletedOffice = (officeOptions, assignedOffices) => {
+            completedOffices = assignedOffices.filter(({id: id1}) => !officeOptions.some(({id: id2}) => id2 === id1 ));
+            setOfficeOptions(completedOffices);
+
+            var officeIds = [];
+            for(office of assignedOffices){
+               officeIds.push(office.id);
+            }
+            $('#officeSelect').selectpicker('val', officeIds);
+
         }
 
         const setEmployeeValues = (employee) => {
@@ -196,13 +210,6 @@ $(document).ready(function() {
                     "</textarea> <div class='text-left'><a href='/employees/"+ vm.employee.id +"/notes/"+note.id+"' class='delete-note btn btn-danger'>Delete Note</a></div>").prependTo('#note-body');
 
            }
-
-   //            Refresh multiselect with office ids
-           var officeIds = [];
-           for(office of offices){
-               officeIds.push(office.id);
-           }
-           $('#officeSelect').selectpicker('val', officeIds);
 
         }
 
