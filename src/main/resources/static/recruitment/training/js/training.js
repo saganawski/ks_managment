@@ -21,7 +21,7 @@ $(document).ready(function(){
                     {"data" : function(data,type,row,meta){
                         let firstName = data.application.firstName;
                         let lastName = data.application.lastName;
-                        let traineeName = lastName + " ," + firstName;
+                        let traineeName = firstName + " " + lastName;
                         return traineeName;
                         },
                         "defaultContent": ""},
