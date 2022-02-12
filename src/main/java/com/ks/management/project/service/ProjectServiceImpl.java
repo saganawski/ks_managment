@@ -30,7 +30,9 @@ public class ProjectServiceImpl implements ProjectService{
 
     @Override
     public Set<Project> getProjects() {
-        return jpaProjectRepo.findAll().stream().collect(Collectors.toSet());
+        return jpaProjectRepo.findAll().stream()
+                .filter(p -> !p.getCompleted())
+                .collect(Collectors.toSet());
     }
 
     @Override
