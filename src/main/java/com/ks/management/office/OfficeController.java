@@ -20,6 +20,12 @@ public class OfficeController {
 		return officeService.getOffices();
 	}
 
+	@GetMapping("/all")
+	public List<Office> getAllOffices(){
+		return officeService.getAllOffices();
+
+	}
+
 	@PostMapping()
 	public Office createOffice(@RequestBody Office office, @AuthenticationPrincipal UserPrincipal userPrincipal){
 		return officeService.createOffice(office,userPrincipal);

@@ -1,6 +1,7 @@
 package com.ks.management.office.service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import com.ks.management.location.Location;
 import com.ks.management.location.dao.JpaLocationDao;
@@ -21,7 +22,9 @@ public class OfficeServiceImpl implements OfficeService {
 	
 	@Override
 	public List<Office> getOffices() {
-		return jpaOfficeRepo.findAll();
+		return jpaOfficeRepo.findAll().stream()
+				.filter(o -> !o.getCompleted())
+				.collect(Collectors.toList());
 	}
 
 	@Override
@@ -69,6 +72,11 @@ public class OfficeServiceImpl implements OfficeService {
 		office.setLocation(location);
 
 		return jpaOfficeRepo.save(office);
+	}
+
+	@Override
+	public List<Office> getAllOffices() {
+		return jpaOfficeRepo.findAll();
 	}
 
 }
