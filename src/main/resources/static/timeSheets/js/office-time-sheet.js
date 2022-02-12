@@ -284,7 +284,7 @@ $(document).ready(function(){
     });
 
     function updateTitle(officeName){
-        $('.card-header').append(" <br>" + officeName);
+        $('#office-title').text(officeName);
     }
 
     function validationCheck(){
@@ -341,7 +341,7 @@ $(document).ready(function(){
         let events = [];
 
         for(schedule of employeeSchedules){
-            const fullName = schedule.employee.lastName + ", " + schedule.employee.firstName;
+            const fullName = schedule.employee.firstName + " " + schedule.employee.lastName;
             event = {
                 id: schedule.id,
                 title: fullName,
