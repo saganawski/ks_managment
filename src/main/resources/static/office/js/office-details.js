@@ -60,7 +60,7 @@ $(document).ready(function () {
                                 icon: "success",
                                 timer: 2000
                             }).then(function(){
-                                location.reload();
+                                window.location.reload(true);
                             });
                         }).fail(function(err){
                             console.log(err);
