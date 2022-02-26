@@ -9,6 +9,9 @@ $(document).ready(function(){
 
     function setDataTable(){
         $('#trainer-table').DataTable({
+            columnDefs: [
+                { visible: false, targets: 2 }
+            ],
             "initComplete": function(settings, json){
                 $("div").removeClass("spinner-border");
             },
@@ -21,10 +24,11 @@ $(document).ready(function(){
                     {"data" : function(data,type,row,meta){
                         let firstName = data.application.firstName;
                         let lastName = data.application.lastName;
-                        let traineeName = lastName + " ," + firstName;
+                        let traineeName = firstName + " " + lastName;
                         return traineeName;
                         },
                         "defaultContent": ""},
+                    {"data" : "application.email","defaultContent":""},
                     {"data": "application.phoneNumber","defaultContent":""},
                     {"data" : function(data,type,row,meta){
                         if(data.scheduledTime == null){
