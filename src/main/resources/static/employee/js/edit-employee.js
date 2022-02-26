@@ -32,7 +32,10 @@ $(document).ready(function() {
                      .then((willDelete) => {
                         if(willDelete){
                             arg.event.remove();
-                            deleteEmployeeSchedule(vm.employee.id,arg.event._def.publicId);
+
+                            if(arg.event._def.publicId != '') {
+                                deleteEmployeeSchedule(vm.employee.id,arg.event._def.publicId);
+                            }
                         }
                      });
                 },
