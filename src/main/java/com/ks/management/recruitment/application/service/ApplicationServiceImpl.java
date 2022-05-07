@@ -9,11 +9,15 @@ import com.ks.management.recruitment.application.dao.ApplicationJpa;
 import com.ks.management.recruitment.application.dao.ApplicationSourceJpaDao;
 import com.ks.management.recruitment.application.dao.JpaApplicationNote;
 import com.ks.management.security.UserPrincipal;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.temporal.ChronoUnit;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -73,7 +77,12 @@ public class ApplicationServiceImpl implements ApplicationService {
                     final Integer updatedBy = Optional.ofNullable(a.getUpdatedBy()).orElse(-1);
                     final Date updatedDate = Optional.ofNullable(a.getUpdatedDate()).orElse(null);
                     final Integer createdBy = Optional.ofNullable(a.getCreatedBy()).orElse(null);
-                    final Date createdDate = Optional.ofNullable(a.getCreatedDate()).orElse(null);
+                    final LocalDateTime createdDate = Optional.ofNullable(a.getCreatedDate())
+                            .map(d -> d.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime())
+                            .map(ld -> ld.minus(4, ChronoUnit.HOURS))
+                            .orElse(null);
+                    System.out.println(String.format("Time is : %s", createdDate.toString()));
+                    System.out.println(String.format("Orginal Time is : %s", a.getCreatedDate().toString()));
                     final ApplicationContactType applicationContactType = Optional.ofNullable(a.getApplicationContactType()).orElse(null);
                     final ApplicationSource applicationSource = Optional.ofNullable(a.getApplicationSource()).orElse(null);
                     final ApplicationResult applicationResult = Optional.ofNullable(a.getApplicationResult()).orElse(null);
@@ -115,7 +124,13 @@ public class ApplicationServiceImpl implements ApplicationService {
         final Integer updatedBy = Optional.ofNullable(application.getUpdatedBy()).orElse(-1);
         final Date updatedDate = Optional.ofNullable(application.getUpdatedDate()).orElse(null);
         final Integer createdBy = Optional.ofNullable(application.getCreatedBy()).orElse(null);
-        final Date createdDate = Optional.ofNullable(application.getCreatedDate()).orElse(null);
+        final LocalDateTime createdDate = Optional.ofNullable(application.getCreatedDate())
+                .map(d -> d.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime())
+                .map(ld -> ld.minus(4, ChronoUnit.HOURS))
+                .orElse(null);
+
+        System.out.println(String.format("Time is : %s", createdDate.toString()));
+        System.out.println(String.format("Orginal Time is : %s", application.getCreatedDate().toString()));
         final ApplicationContactType applicationContactType = Optional.ofNullable(application.getApplicationContactType()).orElse(null);
         final ApplicationSource applicationSource = Optional.ofNullable(application.getApplicationSource()).orElse(null);
         final ApplicationResult applicationResult = Optional.ofNullable(application.getApplicationResult()).orElse(null);
