@@ -81,8 +81,6 @@ public class ApplicationServiceImpl implements ApplicationService {
                             .map(d -> d.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime())
                             .map(ld -> ld.minus(4, ChronoUnit.HOURS))
                             .orElse(null);
-                    System.out.println(String.format("Time is : %s", createdDate.toString()));
-                    System.out.println(String.format("Orginal Time is : %s", a.getCreatedDate().toString()));
                     final ApplicationContactType applicationContactType = Optional.ofNullable(a.getApplicationContactType()).orElse(null);
                     final ApplicationSource applicationSource = Optional.ofNullable(a.getApplicationSource()).orElse(null);
                     final ApplicationResult applicationResult = Optional.ofNullable(a.getApplicationResult()).orElse(null);
@@ -128,9 +126,6 @@ public class ApplicationServiceImpl implements ApplicationService {
                 .map(d -> d.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime())
                 .map(ld -> ld.minus(4, ChronoUnit.HOURS))
                 .orElse(null);
-
-        System.out.println(String.format("Time is : %s", createdDate.toString()));
-        System.out.println(String.format("Orginal Time is : %s", application.getCreatedDate().toString()));
         final ApplicationContactType applicationContactType = Optional.ofNullable(application.getApplicationContactType()).orElse(null);
         final ApplicationSource applicationSource = Optional.ofNullable(application.getApplicationSource()).orElse(null);
         final ApplicationResult applicationResult = Optional.ofNullable(application.getApplicationResult()).orElse(null);
