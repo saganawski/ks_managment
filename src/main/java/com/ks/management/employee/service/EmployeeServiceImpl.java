@@ -11,12 +11,12 @@ import com.ks.management.office.dao.JpaOfficeRepo;
 import com.ks.management.position.Position;
 import com.ks.management.position.dao.JpaPositionRepo;
 import com.ks.management.security.UserPrincipal;
+import com.sun.istack.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
