@@ -3,7 +3,7 @@ $(document).ready(function(){
     $('#load-layout').load("/common/_layout.html", function(responseTxt, statusTxt, xhr){
         if(statusTxt == "success"){
             $('#load-layout').append(main);
-             
+
             $('#officeModal').modal('show');
             getOfficeOptions()
                 .then(function(data){
