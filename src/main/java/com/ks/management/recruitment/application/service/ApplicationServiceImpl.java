@@ -8,8 +8,8 @@ import com.ks.management.recruitment.application.bulkupload.BulkUploadFactory;
 import com.ks.management.recruitment.application.dao.ApplicationJpa;
 import com.ks.management.recruitment.application.dao.ApplicationSourceJpaDao;
 import com.ks.management.recruitment.application.dao.JpaApplicationNote;
+import com.ks.management.recruitment.application.ui.ApplicationDtoByOffice;
 import com.ks.management.security.UserPrincipal;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -191,5 +191,43 @@ public class ApplicationServiceImpl implements ApplicationService {
         final BulkUploadFactory bulkUploadFactory = new BulkUploadFactory(applicationJpa,jpaOfficeRepo,jpaApplicationNote,applicationSourceJpaDao);
         final ApplicationBulkUpload applicationBulkUpload = bulkUploadFactory.createBulkUploadType(type);
         applicationBulkUpload.bulkUpload(file,userPrincipal);
+    }
+
+    @Override
+    public List<ApplicationDtoByOffice> getApplicationByOffice(Integer officeId) {
+        final List<Object[]> allApplicationsByOfficeId = applicationJpa.getAllApplicationsByOfficeId(officeId);
+        final List<ApplicationDtoByOffice> dtos = allApplicationsByOfficeId.stream()
+                .map(a -> {
+                    final Integer id = (Integer) Optional.ofNullable(a[0]).orElse(0);
+                    final String firstName = (String) Optional.ofNullable(a[1]).orElse("");
+                    final String lastName = (String) Optional.ofNullable(a[2]).orElse("");
+                    final String phoneNumber = (String) Optional.ofNullable(a[3]).orElse("");
+                    final String email = (String) Optional.ofNullable(a[4]).orElse("");
+                    final Date dateReceived = (Date) a[5];
+                    final Date callBackDate = (Date) a[6];
+                    final Date createdDate = (Date) a[7];
+                    final String source = (String) Optional.ofNullable(a[8]).orElse("");
+                    final String result = (String) Optional.ofNullable(a[9]).orElse("");
+                    final String name = (String) Optional.ofNullable(a[10]).orElse("");
+
+                    final ApplicationDtoByOffice dto = ApplicationDtoByOffice.builder()
+                            .id(id)
+                            .firstName(firstName)
+                            .lastName(lastName)
+                            .phoneNumber(phoneNumber)
+                            .email(email)
+                            .dateReceived(dateReceived)
+                            .callBackDate(callBackDate)
+                            .createdDate(createdDate)
+                            .source(source)
+                            .result(result)
+                            .name(name)
+                            .build();
+
+                    return dto;
+                })
+                .collect(Collectors.toList());
+
+        return dtos;
     }
 }
