@@ -2,6 +2,7 @@ package com.ks.management.recruitment.training.service;
 
 import com.ks.management.employee.Employee;
 import com.ks.management.employee.dao.JpaEmployeeRepo;
+import com.ks.management.recruitment.interview.ui.InterviewDtoByOffice;
 import com.ks.management.recruitment.training.Training;
 import com.ks.management.recruitment.training.TrainingConfirmationType;
 import com.ks.management.recruitment.training.TrainingNote;
@@ -9,6 +10,7 @@ import com.ks.management.recruitment.training.dao.JpaTraining;
 import com.ks.management.recruitment.training.dao.JpaTrainingConfirmationType;
 import com.ks.management.recruitment.training.dao.JpaTrainingNote;
 import com.ks.management.recruitment.training.ui.TrainingDto;
+import com.ks.management.recruitment.training.ui.TrainingDtoByOffice;
 import com.ks.management.security.UserEmployee;
 import com.ks.management.security.UserPrincipal;
 import com.ks.management.security.dao.UserEmployeeJpa;
@@ -17,6 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -129,5 +132,35 @@ public class TrainingServiceImpl implements TrainingService{
         final List<Training> trainings = jpaTraining.getTodaysTrainigs(employeeId);
 
         return trainings;
+    }
+
+    @Override
+    public List<TrainingDtoByOffice> getAllTrainingsByOfficeId(Integer officeId) {
+        final List<Object[]> allTrainingsByOfficeId = jpaTraining.getAllTrainingsByOfficeId(officeId);
+
+        final List<TrainingDtoByOffice> dtos = allTrainingsByOfficeId.stream()
+                .map(t -> {
+                    final Integer id = (Integer) Optional.ofNullable(t[0]).orElse(-1);
+                    final String firstName = (String) Optional.ofNullable(t[1]).orElse("");
+                    final String lastName = (String) Optional.ofNullable(t[2]).orElse("");
+                    final String phoneNumber = (String) Optional.ofNullable(t[3]).orElse("");
+                    final Date scheduledTime = (Date) Optional.ofNullable(t[4]).orElse(null);
+                    final String trainerFirstName = (String) Optional.ofNullable(t[5]).orElse("");
+                    final String trainerLastName = (String) Optional.ofNullable(t[6]).orElse("");
+                    final String officeName = (String) Optional.ofNullable(t[7]).orElse("");
+
+                    final TrainingDtoByOffice dto = TrainingDtoByOffice.builder()
+                            .id(id)
+                            .firstName(firstName)
+                            .lastName(lastName)
+                            .phoneNumber(phoneNumber)
+                            .scheduledTime(scheduledTime)
+                            .trainer(String.format("%s , %s", trainerLastName, trainerFirstName))
+                            .officeName(officeName)
+                            .build();
+                    return dto;
+                })
+                .collect(Collectors.toList());
+        return dtos;
     }
 }

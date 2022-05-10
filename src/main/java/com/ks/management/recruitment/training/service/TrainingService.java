@@ -2,6 +2,7 @@ package com.ks.management.recruitment.training.service;
 
 import com.ks.management.recruitment.training.Training;
 import com.ks.management.recruitment.training.ui.TrainingDto;
+import com.ks.management.recruitment.training.ui.TrainingDtoByOffice;
 import com.ks.management.security.UserPrincipal;
 
 import java.util.List;
@@ -24,4 +25,6 @@ public interface TrainingService {
     Boolean checkForTraining(Integer applicationId, Integer interviewId);
 
     List<Training> getTodaysTrainings(UserPrincipal userPrincipal);
+
+    List<TrainingDtoByOffice> getAllTrainingsByOfficeId(Integer officeId);
 }
