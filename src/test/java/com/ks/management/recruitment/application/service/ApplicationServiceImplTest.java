@@ -2,12 +2,12 @@ package com.ks.management.recruitment.application.service;
 
 import org.junit.jupiter.api.Test;
 
-import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
+//@ExtendWith(SpringExtension.class)
+//@SpringBootTest
+public class ApplicationServiceImplTest {
 
-import static org.junit.jupiter.api.Assertions.*;
-
-class ApplicationServiceImplTest {
+//    @Autowired
+//    private ApplicationService service;
 
     @Test
     void createApplication() {
@@ -37,13 +37,11 @@ class ApplicationServiceImplTest {
     void bulkUpload() {
     }
 
+
     @Test
-    void shouldReturnLocalDateTimeOverUtc(){
-        final LocalDateTime now = LocalDateTime.now();
-        System.out.println(now);
-
-        final LocalDateTime minus = now.minus(4, ChronoUnit.HOURS);
-        System.out.println(minus);
+    void getApplicationByOffice() {
+        //
+//        final List<ApplicationDtoByOffice> allApplicationsByOfficeId = service.getApplicationByOffice(12);
+//        System.out.println(allApplicationsByOfficeId.size());
     }
-
 }
