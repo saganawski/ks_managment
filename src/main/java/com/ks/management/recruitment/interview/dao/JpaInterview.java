@@ -37,11 +37,12 @@ public interface JpaInterview extends JpaRepository<Interview,Integer> {
             "AND i.created_date >= ?2 AND i.created_date <= ?3", nativeQuery = true)
     Integer getInterviewsHireCountForOfficeBetweenDates(Integer officeId, String startDate, String endDate);
 
-    @Query(value = "SELECT i.id, a.first_name, a.last_name, a.phone_number, a.email, i.scheduled_time, GROUP_CONCAT(e.last_name SEPARATOR ', ') as interviewers, o.name  FROM interview AS i " +
+@Query(value = "SELECT i.id, a.first_name, a.last_name, a.phone_number, a.email, i.scheduled_time, interviewers.iName, o.name  FROM interview AS i " +
             " JOIN application AS a on a.id = i.application_id " +
             " JOIN office AS o ON o.id = a.office_id " +
-            " JOIN interview_director AS id ON id.interview_id = i.id " +
-            " JOIN employee AS e on e.id = id.employee_id " +
+            " LEFT JOIN (SELECT id.interview_id, group_concat(e.last_name SEPARATOR ', ') AS iName FROM interview_director AS id " +
+            "       JOIN employee AS e ON e.id = id.employee_id " +
+            "       GROUP BY id.interview_id) AS interviewers ON interviewers.interview_id = i.id " +
             " where o.id = ?1 group by i.id", nativeQuery = true)
     List<Object[]> getAllInterviewsByOfficeId(Integer officeId);
 }
