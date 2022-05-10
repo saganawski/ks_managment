@@ -90,8 +90,6 @@ $(document).ready(function(){
             columns :[
                 {"data": "id" },
                 {"data" : function(data,type,row,meta){
-//                        let firstName = data.application.firstName;
-//                        let lastName = data.application.lastName;
                     const firstName = data.firstName;
                     const lastName = data.lastName;
                     const applicantName = firstName + " " + lastName;
