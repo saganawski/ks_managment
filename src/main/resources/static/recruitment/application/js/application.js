@@ -3,8 +3,7 @@ $(document).ready(function(){
     $('#load-layout').load("/common/_layout.html", function(responseTxt, statusTxt, xhr){
         if(statusTxt == "success"){
             $('#load-layout').append(main);
-            setDatatable();
-            // add office select call
+            // add all offices select call TODO:
             $('#officeModal').modal('show');
             getOfficeOptions()
                 .then(function(data){
@@ -29,21 +28,6 @@ $(document).ready(function(){
         }
     }
 
-//    getOfficeOptions()
-//        .then(function(data){
-//            setOfficeOptions(data);
-//            $("div").removeClass("spinner-border");
-//        })
-//        .fail(function(err){
-//            console.log(err);
-//            swal({
-//                title: "Error!",
-//                text: "Could not get Offices for drop down\n" + err.responseJSON.message,
-//                icon: "error"
-//            });
-//        });
-
-
     function getOfficeOptions(){
         return $.ajax({
             type:"GET",
@@ -52,20 +36,22 @@ $(document).ready(function(){
     }
 
     $('#officeFormSubmit').on('click', function(event){
-            event.preventDefault();
-            let validated = validationCheck();
-            if(validated){
-                let office = JSON.parse($('#officeSelect').val());
-                console.log(office);
-//                getEventsByOffice(office.id);
-                //updateTitle(office.name); TODO:
+        event.preventDefault();
+        let validated = validationCheck();
+        if(validated){
+            $('#officeModal').modal('hide');
+            let office = JSON.parse($('#officeSelect').val());
+            $("#initialLoad").addClass("spinner-border");
+            setDatatable(office.id);
 
-            }
-        });
-        //TODO: add office title
-//    function updateTitle(officeName){
-//        $('#office-title').text(officeName);
-//    }
+        }
+    });
+
+    $('#load-layout').on('click', '#officeButton', function(event){
+        event.preventDefault();
+        $('#application-table').DataTable().clear().destroy()
+        $('#officeModal').modal('show');
+    });
 
     function validationCheck(){
         const form = document.querySelector('#officeForm');
@@ -89,16 +75,16 @@ $(document).ready(function(){
         return true;
     }
 
-    function setDatatable(){
+    function setDatatable(officeId){
         $('#application-table').DataTable({
             responsive: true,
                 "fnInitComplete": function (oSettings, json) {
-                    $("div").removeClass("spinner-border");
+                    $("#initialLoad").removeClass("spinner-border");
                 },
-//                ajax:{
-////                    "url": "/applications",
-//                    dataSrc: ''
-//                },
+                ajax:{
+                    "url": "/applications/office/" + officeId,
+                    dataSrc: ''
+                },
                 columns :[
                     {"data" : "id" ,
                        "defaultContent":""},
@@ -128,12 +114,12 @@ $(document).ready(function(){
                         },
                         "defaultContent":""
                     },
-                    {"data" : "applicationSource.source",
+                    {"data" : "source",
                         "defaultContent":""},
 
-                    {"data" : "applicationResult.result",
+                    {"data" : "result",
                         "defaultContent":""},
-                    {"data" : "office.name",
+                    {"data" : "name",
                         "defaultContent":""},
                     {"data" : function(data, type,row,meta){
                         return moment.utc(data.createdDate).format('YYYY-MM-DD h:mm:ss a');

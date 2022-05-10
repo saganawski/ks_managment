@@ -38,12 +38,13 @@
         <main>
             <div class="text-center">
                 <h2>Applications</h2>
-                <div class="spinner-border" role="status">
+                <div id="initialLoad" class="spinner-border" role="status">
                     <span class="sr-only">Loading...</span>
                 </div>
             </div>
             <a class="btn btn-success add-app-btn" href="/recruitment/application/new-application.html" role="button">Add Application</a>
             <a class="btn btn-primary add-app-btn" href="/recruitment/application/bulk-applications.html" role="button">Bulk Upload Applications</a>
+            <button id="officeButton" class="btn btn-warning add-app-btn" role="button">Choose Office</button>
             <table id="application-table" class="display">
                 <thead>
                 <tr>
