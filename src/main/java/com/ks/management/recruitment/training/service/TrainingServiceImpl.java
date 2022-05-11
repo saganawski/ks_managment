@@ -149,13 +149,17 @@ public class TrainingServiceImpl implements TrainingService{
                     final String trainerLastName = (String) Optional.ofNullable(t[6]).orElse("");
                     final String officeName = (String) Optional.ofNullable(t[7]).orElse("");
 
+                    String trainerFullName = "";
+                    if(!trainerLastName.isEmpty()){
+                        trainerFullName = String.format("%s , %s", trainerLastName, trainerFirstName);
+                    }
                     final TrainingDtoByOffice dto = TrainingDtoByOffice.builder()
                             .id(id)
                             .firstName(firstName)
                             .lastName(lastName)
                             .phoneNumber(phoneNumber)
                             .scheduledTime(scheduledTime)
-                            .trainer(String.format("%s , %s", trainerLastName, trainerFirstName))
+                            .trainer(trainerFullName)
                             .officeName(officeName)
                             .build();
                     return dto;
