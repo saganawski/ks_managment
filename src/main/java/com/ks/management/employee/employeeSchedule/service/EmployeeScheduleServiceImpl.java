@@ -214,6 +214,13 @@ public class EmployeeScheduleServiceImpl implements EmployeeScheduleService{
         final Double payRate = givenEmployeeSchedule.getEmployeeSchedulePayroll().getPayRate();
         final Boolean lunch = Optional.ofNullable(givenEmployeeSchedule.getEmployeeSchedulePayroll().getLunch()).orElse(false);
 
+        if(givenEmployeeSchedule.getEmployeeScheduleStatus().getCode().equalsIgnoreCase("EXCUSED_ABSENCE")){
+            employeeSchedulePayRoll.setTotalMinutes(null);
+            employeeSchedulePayRoll.setTotalMinutes(null);
+            employeeSchedulePayRoll.setLunch(null);
+            employeeSchedulePayRoll.setTotalDayWage(null);
+        }
+
         if(timeOut != null){
             long timeWorked = timeIn.until(timeOut, ChronoUnit.MINUTES);
 
