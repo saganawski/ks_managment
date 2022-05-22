@@ -299,7 +299,7 @@ $(document).ready(function(){
              console.log(error);
              swal({
                  title: "Error!",
-                 text: "Something went wrong when creating a training for interview!\n" + error.responseJSON.message,
+                 text: "Something went wrong when deleting interview!\n" + error.responseJSON.message,
                  icon: "error"
              });
          });
