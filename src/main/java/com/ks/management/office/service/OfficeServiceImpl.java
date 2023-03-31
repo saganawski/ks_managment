@@ -23,6 +23,7 @@ public class OfficeServiceImpl implements OfficeService {
 	@Override
 	public List<Office> getOffices() {
 		return jpaOfficeRepo.findAll().stream()
+				.filter(o -> o.getCompleted() != null)
 				.filter(o -> !o.getCompleted())
 				.collect(Collectors.toList());
 	}
