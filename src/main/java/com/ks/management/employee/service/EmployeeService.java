@@ -5,6 +5,8 @@ import com.ks.management.employee.ui.EditEmployeeDTO;
 import com.ks.management.employee.ui.EmployeeDTO;
 import com.ks.management.employee.ui.NewEmployeeDTO;
 import com.ks.management.security.UserPrincipal;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 import java.util.Set;
@@ -30,4 +32,6 @@ public interface EmployeeService {
     void deleteNote(int noteId);
 
     EmployeeDTO getEmployeeDTO(int employeeId);
+
+    Page<Employee> getAllEmployees(Pageable pageable);
 }

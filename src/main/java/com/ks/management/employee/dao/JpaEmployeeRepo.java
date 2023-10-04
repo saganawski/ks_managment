@@ -1,12 +1,11 @@
 package com.ks.management.employee.dao;
 
 import com.ks.management.employee.Employee;
-import com.ks.management.employee.employeeSchedule.EmployeeSchedule;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
-import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Set;
 
 public interface JpaEmployeeRepo extends JpaRepository<Employee, Integer> {
@@ -21,4 +20,5 @@ public interface JpaEmployeeRepo extends JpaRepository<Employee, Integer> {
             nativeQuery = true)
     Employee findByLastNameAndEmail(String lastName, String email);
 
+    Page<Employee> findAllByDeletedFalse(Pageable pageable);
 }
