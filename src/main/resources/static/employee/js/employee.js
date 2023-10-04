@@ -8,12 +8,27 @@ $(document).ready(function () {
     });
     function setDataTable(){
         $('#employee-table').DataTable({
+            "processing": true,
+            "serverSide": true,
             "initComplete": function(settings, json){
                 $("div").removeClass("spinner-border");
             },
             ajax:{
                 "url": "/employees",
-                "dataSrc": ""
+                "type": "GET",
+                "dataSrc": "data",
+                "cache": false,
+                "data": function(data){
+                    console.log(data);
+                    return{
+                        draw: data.draw,
+                        page: data.start/ data.length,
+                        size: data.length,
+                        sortBy: data.columns[data.order[0].column].data,
+                        direction: data.order[0].dir
+                    };
+
+                }
             },
             columns :[
                 {"data" : "id"},
@@ -72,5 +87,15 @@ $(document).ready(function () {
             dom:"Bfrtip",
             buttons: ['copy','csv','pdf']
         });
+
+        $('#employee-table').on('preXhr.dt', function(e, settings, data) {
+                $('#initialLoad').addClass("spinner-border");
+        });
+
+        // Hide spinner on AJAX request completion, regardless of success or error
+        $('#employee-table').on('xhr.dt', function(e, settings, json, xhr) {
+            $('#initialLoad').removeClass("spinner-border");
+        });
+
     }
 });
