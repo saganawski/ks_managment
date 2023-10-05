@@ -19,14 +19,18 @@ $(document).ready(function () {
                 "dataSrc": "data",
                 "cache": false,
                 "data": function(data){
-                    console.log(data);
-                    return{
+
+                    let result = {
                         draw: data.draw,
                         page: data.start/ data.length,
                         size: data.length,
                         sortBy: data.columns[data.order[0].column].data,
                         direction: data.order[0].dir
                     };
+                    if(data.search.value != null){
+                        result.search = data.search.value;
+                    }
+                    return result;
 
                 }
             },
@@ -84,6 +88,10 @@ $(document).ready(function () {
                     }
                 }
             ],
+            columnDefs: [{
+                targets: [5,9,10,11],
+                orderable: false
+            }],
             dom:"Bfrtip",
             buttons: ['copy','csv','pdf']
         });
