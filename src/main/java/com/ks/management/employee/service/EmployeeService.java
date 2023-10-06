@@ -33,5 +33,5 @@ public interface EmployeeService {
 
     EmployeeDTO getEmployeeDTO(int employeeId);
 
-    Page<Employee> getAllEmployees(Pageable pageable);
+    Page<Employee> getAllEmployees(Pageable pageable, List<String> sortFields, String sortDirection, String search);
 }

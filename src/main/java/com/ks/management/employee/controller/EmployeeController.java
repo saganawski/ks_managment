@@ -36,10 +36,13 @@ public class EmployeeController {
 			@RequestParam(defaultValue = "0") int page,
 			@RequestParam(defaultValue = "10") int size,
 			@RequestParam(defaultValue = "id") String sortBy,
-			@RequestParam(defaultValue ="0") int draw){
+			@RequestParam(defaultValue ="0") int draw,
+			@RequestParam(defaultValue = "firstName, lastName") List<String> sortFields,
+			@RequestParam(defaultValue = "asc") String sortDirection,
+			@RequestParam(defaultValue = "") String search){
 
 		final Pageable pageable = PageRequest.of(page, size, Sort.by(sortBy));
-		final Page<Employee> employeePage = employeeService.getAllEmployees(pageable);
+		final Page<Employee> employeePage = employeeService.getAllEmployees(pageable, sortFields, sortDirection, search);
 		List<Employee> employeeList = employeePage.getContent();
 
 		final HashMap<String, Object> response = new HashMap<>();

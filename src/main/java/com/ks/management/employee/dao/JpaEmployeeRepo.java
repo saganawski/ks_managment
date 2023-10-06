@@ -21,4 +21,6 @@ public interface JpaEmployeeRepo extends JpaRepository<Employee, Integer> {
     Employee findByLastNameAndEmail(String lastName, String email);
 
     Page<Employee> findAllByDeletedFalse(Pageable pageable);
+
+    Page<Employee> findByDeletedFalseAndFirstNameContainingIgnoreCaseOrDeletedFalseAndLastNameContainingIgnoreCase(String search, String search1, Pageable pageRequest);
 }
