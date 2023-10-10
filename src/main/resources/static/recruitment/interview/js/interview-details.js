@@ -167,14 +167,15 @@ $(document).ready(function(){
                  text: "You updated an interview",
                  icon: "success",
                  timer: 2000
-             });
-            if(interview.interviewResult != null){
-                if(interview.interviewResult.code != undefined){
-                    createTrainingIfHired(response);
+             }).then(function(){
+                if(interview.interviewResult != null){
+                    if(interview.interviewResult.code != undefined){
+                        createTrainingIfHired(response);
+                    }
+                }else{
+                    location.reload();
                 }
-            }else{
-                location.reload();
-            }
+             });
         }).fail(function(err){
             console.log(err);
             swal({
@@ -298,7 +299,7 @@ $(document).ready(function(){
              console.log(error);
              swal({
                  title: "Error!",
-                 text: "Something went wrong when creating a training for interview!\n" + error.responseJSON.message,
+                 text: "Something went wrong when deleting interview!\n" + error.responseJSON.message,
                  icon: "error"
              });
          });

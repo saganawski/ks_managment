@@ -2,6 +2,7 @@ package com.ks.management.recruitment.application.service;
 
 import com.ks.management.recruitment.application.Application;
 import com.ks.management.recruitment.application.ApplicationDto;
+import com.ks.management.recruitment.application.ui.ApplicationDtoByOffice;
 import com.ks.management.security.UserPrincipal;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -22,4 +23,6 @@ public interface ApplicationService {
     void deleteNoteForAppId(int applicationId, int noteId);
 
     void bulkUpload(MultipartFile file, UserPrincipal userPrincipal, String type);
+
+    List<ApplicationDtoByOffice> getApplicationByOffice(Integer officeId);
 }

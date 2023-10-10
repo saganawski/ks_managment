@@ -3,6 +3,7 @@ package com.ks.management.recruitment.training.controller;
 import com.ks.management.recruitment.training.Training;
 import com.ks.management.recruitment.training.service.TrainingService;
 import com.ks.management.recruitment.training.ui.TrainingDto;
+import com.ks.management.recruitment.training.ui.TrainingDtoByOffice;
 import com.ks.management.security.UserPrincipal;
 import jdk.nashorn.internal.objects.annotations.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +21,11 @@ public class TrainingController {
     @GetMapping()
     public List<Training> getTrainings(){
         return trainingService.getAllTrainings();
+    }
+
+    @GetMapping("/office/{officeId}")
+    public List<TrainingDtoByOffice> getTrainingsDtoByOfficeId(@PathVariable("officeId") Integer officeId, @AuthenticationPrincipal UserPrincipal userPrincipal){
+        return trainingService.getAllTrainingsByOfficeId(officeId);
     }
 
     @PostMapping()

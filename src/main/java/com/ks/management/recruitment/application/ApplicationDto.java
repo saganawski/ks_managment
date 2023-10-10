@@ -7,6 +7,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 
@@ -35,6 +36,6 @@ public class ApplicationDto {
     private List<ApplicationNote> applicationNotes;
     private Date updatedDate;
     private Integer createdBy;
-    private Date createdDate;
+    private LocalDateTime createdDate;
 
 }

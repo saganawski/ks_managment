@@ -11,12 +11,15 @@ import com.ks.management.office.dao.JpaOfficeRepo;
 import com.ks.management.position.Position;
 import com.ks.management.position.dao.JpaPositionRepo;
 import com.ks.management.security.UserPrincipal;
+import com.sun.istack.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.crossstore.ChangeSetPersister;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -233,6 +236,24 @@ public class EmployeeServiceImpl implements EmployeeService{
                 .build();
 
         return employeeDTO;
+    }
+
+    @Override
+    public Page<Employee> getAllEmployees(Pageable pageable, List<String> sortFields, String sortDirection, String search) {
+        if(search.isEmpty()){
+            return repo.findAllByDeletedFalse(pageable);
+        }
+
+        final Sort.Direction direction = sortDirection.equalsIgnoreCase("asc") ? Sort.Direction.ASC : Sort.Direction.DESC;
+
+        final List<Sort.Order> orders = new ArrayList<>();
+
+        for (String field : sortFields) {
+            orders.add(new Sort.Order(direction, field));
+        }
+
+        return repo.findByDeletedFalseAndFirstNameContainingIgnoreCaseOrDeletedFalseAndLastNameContainingIgnoreCase(search, search, pageable);
+
     }
 
 }

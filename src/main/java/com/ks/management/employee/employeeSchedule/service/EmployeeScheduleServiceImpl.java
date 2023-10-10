@@ -240,6 +240,17 @@ public class EmployeeScheduleServiceImpl implements EmployeeScheduleService{
         employeeSchedulePayRoll.setMileage(mileage);
         employeeSchedulePayRoll.setPayRate(payRate);
         employeeSchedulePayRoll.setUpdatedBy(userId);
+
+        final String statusCode = givenEmployeeSchedule.getEmployeeScheduleStatus().getCode();
+        if(statusCode.equalsIgnoreCase("EXCUSED_ABSENCE") || statusCode.equalsIgnoreCase("UNEXCUSED_ABSENCE")){
+            employeeSchedulePayRoll.setTotalMinutes(null);
+            employeeSchedulePayRoll.setTimeIn(null);
+            employeeSchedulePayRoll.setTimeOut(null);
+            employeeSchedulePayRoll.setMileage(null);
+            employeeSchedulePayRoll.setPayRate(null);
+            employeeSchedulePayRoll.setLunch(null);
+            employeeSchedulePayRoll.setTotalDayWage(null);
+        }
     }
 
     private BigDecimal addMileageBonus(Integer mileage, BigDecimal totalDayWages) {

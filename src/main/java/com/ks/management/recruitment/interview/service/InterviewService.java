@@ -3,6 +3,7 @@ package com.ks.management.recruitment.interview.service;
 import com.ks.management.recruitment.interview.Interview;
 import com.ks.management.recruitment.interview.ui.InterviewApplicationDto;
 import com.ks.management.recruitment.interview.ui.InterviewDto;
+import com.ks.management.recruitment.interview.ui.InterviewDtoByOffice;
 import com.ks.management.security.UserPrincipal;
 
 import java.util.List;
@@ -23,4 +24,6 @@ public interface InterviewService {
     Boolean checkIfInterviewExistsByApplicationId(Integer applicationId);
 
     List<Interview> getTodaysInterviews(UserPrincipal userPrincipal);
+
+    List<InterviewDtoByOffice> getAllInterviewsByOfficeId(Integer officeId);
 }

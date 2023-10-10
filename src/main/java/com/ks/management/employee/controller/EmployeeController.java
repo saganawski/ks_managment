@@ -7,10 +7,17 @@ import com.ks.management.employee.ui.EmployeeDTO;
 import com.ks.management.employee.ui.NewEmployeeDTO;
 import com.ks.management.security.UserPrincipal;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 @RestController
@@ -20,13 +27,31 @@ public class EmployeeController {
 	private EmployeeService employeeService;
 
 	@PostMapping()
-	public Employee createNewEmployee(@RequestBody NewEmployeeDTO employee, @AuthenticationPrincipal UserPrincipal userPrincipal) {
+	public  Employee createNewEmployee(@RequestBody NewEmployeeDTO employee, @AuthenticationPrincipal UserPrincipal userPrincipal) {
 		return employeeService.createEmployee(employee,userPrincipal);
 	}
 
 	@GetMapping()
-	public List<Employee> getEmployees(){
-		return employeeService.getAllEmployees();
+	public ResponseEntity<Map<String,Object>> getEmployees(
+			@RequestParam(defaultValue = "0") int page,
+			@RequestParam(defaultValue = "10") int size,
+			@RequestParam(defaultValue = "id") String sortBy,
+			@RequestParam(defaultValue ="0") int draw,
+			@RequestParam(defaultValue = "firstName, lastName") List<String> sortFields,
+			@RequestParam(defaultValue = "asc") String sortDirection,
+			@RequestParam(defaultValue = "") String search){
+
+		final Pageable pageable = PageRequest.of(page, size, Sort.by(sortBy));
+		final Page<Employee> employeePage = employeeService.getAllEmployees(pageable, sortFields, sortDirection, search);
+		List<Employee> employeeList = employeePage.getContent();
+
+		final HashMap<String, Object> response = new HashMap<>();
+		response.put("data", employeeList);
+		response.put("draw", draw);
+		response.put("recordsTotal", employeePage.getTotalElements());
+		response.put("recordsFiltered", employeePage.getTotalElements());
+		response.put("totalPages", employeePage.getTotalPages());
+		return ResponseEntity.ok(response);
 	}
 
 	@GetMapping("/non-canvassers")

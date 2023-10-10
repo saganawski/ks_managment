@@ -3,8 +3,8 @@ package com.ks.management.recruitment.application.controller;
 import com.ks.management.recruitment.application.Application;
 import com.ks.management.recruitment.application.ApplicationDto;
 import com.ks.management.recruitment.application.service.ApplicationService;
+import com.ks.management.recruitment.application.ui.ApplicationDtoByOffice;
 import com.ks.management.security.UserPrincipal;
-import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -21,6 +21,11 @@ public class ApplicationController {
     @GetMapping()
     public List<ApplicationDto> getApplications(){
         return applicationService.findAll();
+    }
+
+    @GetMapping("/office/{officeId}")
+    public List<ApplicationDtoByOffice> getApplicationsByOffice(@PathVariable("officeId") Integer officeId,@AuthenticationPrincipal UserPrincipal userPrincipal){
+        return applicationService.getApplicationByOffice(officeId);
     }
 
     @PostMapping()

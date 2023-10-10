@@ -21,6 +21,7 @@ import com.ks.management.recruitment.interview.dao.JpaInterviewNote;
 import com.ks.management.recruitment.interview.dao.JpaInterviewResult;
 import com.ks.management.recruitment.interview.ui.InterviewApplicationDto;
 import com.ks.management.recruitment.interview.ui.InterviewDto;
+import com.ks.management.recruitment.interview.ui.InterviewDtoByOffice;
 import com.ks.management.security.UserEmployee;
 import com.ks.management.security.UserPrincipal;
 import com.ks.management.security.dao.UserEmployeeJpa;
@@ -30,6 +31,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -180,5 +182,37 @@ public class InterviewServiceImpl implements InterviewService {
         final List<Interview> interviews = jpaInterview.findTodaysInterviews(employeeId);
 
         return interviews;
+    }
+
+    @Override
+    public List<InterviewDtoByOffice> getAllInterviewsByOfficeId(Integer officeId) {
+        final List<Object[]> allInterviewsByOfficeId = jpaInterview.getAllInterviewsByOfficeId(officeId);
+        final List<InterviewDtoByOffice> dtos = allInterviewsByOfficeId.stream()
+                .map(i -> {
+                    final Integer id = (Integer) Optional.ofNullable(i[0]).orElse(-1);
+                    final String firstName = (String) Optional.ofNullable(i[1]).orElse("");
+                    final String lastName = (String) Optional.ofNullable(i[2]).orElse("");
+                    final String phoneNumber = (String) Optional.ofNullable(i[3]).orElse("");
+                    final String email = (String) Optional.ofNullable(i[4]).orElse("");
+                    final Date scheduledTime = (Date) Optional.ofNullable(i[5]).orElse(null);
+                    final String interviewers = (String) Optional.ofNullable(i[6]).orElse("");
+                    final String officeName = (String) Optional.ofNullable(i[7]).orElse("");
+
+                    final InterviewDtoByOffice dto = InterviewDtoByOffice.builder()
+                            .id(id)
+                            .firstName(firstName)
+                            .lastName(lastName)
+                            .phoneNumber(phoneNumber)
+                            .email(email)
+                            .scheduledTime(scheduledTime)
+                            .interviewers(interviewers)
+                            .officeName(officeName)
+                            .build();
+
+                    return dto;
+
+                })
+                .collect(Collectors.toList());
+        return dtos;
     }
 }
