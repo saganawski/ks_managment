@@ -257,7 +257,8 @@ public class EmployeeScheduleServiceImpl implements EmployeeScheduleService{
         if(mileage != null){
             final BigDecimal mileageBonus = BigDecimal.valueOf(mileage)
                     .setScale(2, BigDecimal.ROUND_HALF_UP)
-                    .multiply(BigDecimal.valueOf(.56))
+                    // 67 cents per mile
+                    .multiply(BigDecimal.valueOf(.67))
                     .setScale(2, BigDecimal.ROUND_HALF_UP);
             totalDayWages = totalDayWages.add(mileageBonus);
         }
