@@ -6,6 +6,7 @@ import com.ks.management.recruitment.application.service.ApplicationService;
 import com.ks.management.recruitment.application.ui.ApplicationDtoByOffice;
 import com.ks.management.security.UserPrincipal;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -56,7 +57,7 @@ public class ApplicationController {
     }
 
     @PostMapping("/bulk-upload/bulk-type/{type}")
-    public void bulkUpload(MultipartFile file, @AuthenticationPrincipal UserPrincipal userPrincipal, @PathVariable("type") String type ){
-        applicationService.bulkUpload(file, userPrincipal,type);
+    public ResponseEntity<Object> bulkUpload(MultipartFile file, @AuthenticationPrincipal UserPrincipal userPrincipal, @PathVariable("type") String type ){
+        return applicationService.bulkUpload(file, userPrincipal,type);
     }
 }

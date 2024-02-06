@@ -27,7 +27,7 @@ public class BulkUploadFactory {
             return new DoorDoorCanvasser(applicationJpa,jpaOfficeRepo,jpaApplicationNote,applicationSourceJpaDao);
         }
         else {
-            throw new RuntimeException(String.format("Unable to find bulkUpload type or: '%s ', Select a different type of contact tech support",type));
+            throw new RuntimeException(String.format("Unable to find bulkUpload type or: '%s ', Select a different type or contact tech support",type));
         }
     }
 }

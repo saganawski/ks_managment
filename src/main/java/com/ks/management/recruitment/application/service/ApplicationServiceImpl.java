@@ -10,7 +10,9 @@ import com.ks.management.recruitment.application.dao.ApplicationSourceJpaDao;
 import com.ks.management.recruitment.application.dao.JpaApplicationNote;
 import com.ks.management.recruitment.application.ui.ApplicationDtoByOffice;
 import com.ks.management.security.UserPrincipal;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -18,14 +20,12 @@ import org.springframework.web.multipart.MultipartFile;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
 @Transactional
+@Slf4j
 public class ApplicationServiceImpl implements ApplicationService {
     @Autowired
     private ApplicationJpa applicationJpa;
@@ -187,10 +187,20 @@ public class ApplicationServiceImpl implements ApplicationService {
     }
 
     @Override
-    public void bulkUpload(MultipartFile file, UserPrincipal userPrincipal, String type) {
-        final BulkUploadFactory bulkUploadFactory = new BulkUploadFactory(applicationJpa,jpaOfficeRepo,jpaApplicationNote,applicationSourceJpaDao);
-        final ApplicationBulkUpload applicationBulkUpload = bulkUploadFactory.createBulkUploadType(type);
-        applicationBulkUpload.bulkUpload(file,userPrincipal);
+    public ResponseEntity<Object> bulkUpload(MultipartFile file, UserPrincipal userPrincipal, String type) {
+        final HashMap<String, Object> responseBody = new HashMap<>();
+        //TODO: Add error handling for file type return internal server error to response entity
+        try {
+            final BulkUploadFactory bulkUploadFactory = new BulkUploadFactory(applicationJpa,jpaOfficeRepo,jpaApplicationNote,applicationSourceJpaDao);
+            final ApplicationBulkUpload applicationBulkUpload = bulkUploadFactory.createBulkUploadType(type);
+            applicationBulkUpload.bulkUpload(file,userPrincipal);
+        }catch (Exception e){
+            log.error("Error in bulk upload: ",e);
+            responseBody.put("error",e.getMessage());
+            return ResponseEntity.badRequest().body(responseBody);
+        };
+
+        return ResponseEntity.ok(responseBody);
     }
 
     @Override
