@@ -1,6 +1,6 @@
 $(document).ready(function () {
     vm = this;
-    vm.type = "";
+    vm.type = "arizona";
 
 	const main = $('#load-layout').html();
     $('#load-layout').load("/common/_layout.html", function(responseTxt, statusTxt, xhr){
@@ -10,7 +10,6 @@ $(document).ready(function () {
 
             getOfficeOptions()
                 .then(function(data){
-                    console.log(data);
                     setOfficeOptions(data);
                     $("div").removeClass("spinner-border");
                 })
@@ -25,9 +24,11 @@ $(document).ready(function () {
 
             const bulkForm = document.querySelector('#bulk-form');
             bulkForm.addEventListener('submit',function(event){
+                event.preventDefault()
+
                 let validated = validationCheck(bulkForm);
 
-                if(validated && vm.type.length !=0 ){
+                if(validated){
                     $("#initialLoad").addClass("spinner-border")
                     $.ajax({
                         type: "POST",
@@ -51,9 +52,10 @@ $(document).ready(function () {
                         console.log(err);
                         swal({
                             title: "Error!",
-                            text: "Failure to upload applications! \n" + err.responseJSON.message,
+                            text: "Failure to upload applications! \n" + err.responseJSON.error,
                             icon: "error"
                         });
+                        $("#initialLoad").removeClass("spinner-border");
                     });
                 }
             });
@@ -61,8 +63,9 @@ $(document).ready(function () {
     });
 
 	function validationCheck(form){
-	    event.preventDefault();
+
         if(form.checkValidity() === false){
+            event.preventDefault();
             event.stopPropagation();
             form.classList.add('was-validated');
             return false;
@@ -73,6 +76,7 @@ $(document).ready(function () {
         const allowedExtensions = /(\.csv)$/i;
 
         if(!allowedExtensions.exec(filePath)){
+            event.preventDefault();
             event.stopPropagation();
             form.classList.add('was-validated');
             fileInput.classList.add('is-invalid');
@@ -101,7 +105,7 @@ $(document).ready(function () {
             url:"/offices"
         });
     }
-
+// TODO: add type of file to upload, give examples of acceptable column names and ability to report errors
 /*    $('#load-layout').on("click", ".dropdown-item", function(event){
         event.preventDefault();
         const chosenType = $(this).data("value");
