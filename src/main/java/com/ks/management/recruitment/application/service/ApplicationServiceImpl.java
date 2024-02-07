@@ -218,8 +218,7 @@ public class ApplicationServiceImpl implements ApplicationService {
                     final Date callBackDate = (Date) a[6];
                     final Date createdDate = (Date) a[7];
                     final String source = (String) Optional.ofNullable(a[8]).orElse("");
-                    final String result = (String) Optional.ofNullable(a[9]).orElse("");
-                    final String name = (String) Optional.ofNullable(a[10]).orElse("");
+                    final String name = (String) Optional.ofNullable(a[9]).orElse("");
 
                     final ApplicationDtoByOffice dto = ApplicationDtoByOffice.builder()
                             .id(id)
@@ -231,7 +230,6 @@ public class ApplicationServiceImpl implements ApplicationService {
                             .callBackDate(callBackDate)
                             .createdDate(createdDate)
                             .source(source)
-                            .result(result)
                             .name(name)
                             .build();
 
