@@ -36,23 +36,18 @@ public class PetitionCirculator implements ApplicationBulkUpload {
     }
 
     @Override
-    public void bulkUpload(MultipartFile file, UserPrincipal userPrincipal) {
+    public void bulkUpload(MultipartFile file, UserPrincipal userPrincipal, Office office) {
         final Integer userId = userPrincipal.getUserId();
 
         List<String> applications = readFileReturnListOfStringApplications(file);
+        //TODO: add metadata to response entity, number of applications it count of applications size minus 1 for header in csv file
+
         //TODO: throw error if wrong file / parser selected
 
         applications.stream().skip(1).filter(a -> a.length() > 1).forEach(a -> {
             final List<String> sourceApplication = PetitionCirculatorApplicationBulkUploadCSV.cleanInput(a);
-
+            //TODO: problem here
             final PetitionCirculatorApplicationBulkUploadCSV applicationBulkUpload = new PetitionCirculatorApplicationBulkUploadCSV(sourceApplication);
-
-            final String sourceJobLocation = Optional.ofNullable(applicationBulkUpload.getJobLocation())
-                    .map(l -> l.split(","))
-                    .map(s -> s[0])
-                    .orElse("");
-
-            Office office = getOfficeFromJobLocation(sourceJobLocation);
 
             final Application savedApplication = createApplication(applicationBulkUpload, userId, office);
 
@@ -91,17 +86,10 @@ public class PetitionCirculator implements ApplicationBulkUpload {
         return savedApplication;
     }
 
-    private Office getOfficeFromJobLocation(String sourceJobLocation) {
-        Office office = null;
-
-        if(!sourceJobLocation.isEmpty()){
-            office = jpaOfficeRepo.findByName(sourceJobLocation).orElse(null);
-        }
-        return office;
-    }
 
     private List<String> readFileReturnListOfStringApplications(MultipartFile file) {
         try{
+            //TODO test this method without reader
             Reader reader = new InputStreamReader(file.getInputStream());
 
             List<String> applications = new ArrayList<>();
