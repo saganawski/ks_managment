@@ -34,7 +34,8 @@ public class DoorDoorCanvasser implements ApplicationBulkUpload {
     }
 
     @Override
-    public void bulkUpload(MultipartFile file, UserPrincipal userPrincipal) {
+    public void bulkUpload(MultipartFile file, UserPrincipal userPrincipal, Office office) {
+        //TODO: add response entity. add metadata to response entity, number of applications added, number of applications failed
         final Integer userId = userPrincipal.getUserId();
 
         List<String> applications = readFileReturnListOfStringApplications(file);
@@ -45,13 +46,13 @@ public class DoorDoorCanvasser implements ApplicationBulkUpload {
 
             final DoorDoorCanvasserApplicationBulkUploadCSV applicationBulkUpload = new DoorDoorCanvasserApplicationBulkUploadCSV(sourceApplication);
 
-            final String sourceJobLocation = Optional.ofNullable(applicationBulkUpload.getJobLocation())
-                    .map(l -> l.split(","))
-                    .map(s -> s[0])
-                    .map(o -> o.replaceAll("\"",""))
-                    .orElse("");
+//            final String sourceJobLocation = Optional.ofNullable(applicationBulkUpload.getJobLocation())
+//                    .map(l -> l.split(","))
+//                    .map(s -> s[0])
+//                    .map(o -> o.replaceAll("\"",""))
+//                    .orElse("");
 
-            Office office = getOfficeFromJobLocation(sourceJobLocation);
+//            Office office = getOfficeFromJobLocation(sourceJobLocation);
 
             final Application savedApplication = createApplication(applicationBulkUpload, userId, office);
 

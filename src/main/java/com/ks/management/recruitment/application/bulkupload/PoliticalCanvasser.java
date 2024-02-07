@@ -32,7 +32,7 @@ public class PoliticalCanvasser implements ApplicationBulkUpload {
     }
 
     @Override
-    public void bulkUpload(MultipartFile file, UserPrincipal userPrincipal) {
+    public void bulkUpload(MultipartFile file, UserPrincipal userPrincipal, Office office) {
         final Integer userId = userPrincipal.getUserId();
 
         List<String> applications = readFileReturnListOfStringApplications(file);
@@ -43,12 +43,12 @@ public class PoliticalCanvasser implements ApplicationBulkUpload {
 
             final PoliticalCanvasserApplicationBulkUploadCSV applicationBulkUpload = new PoliticalCanvasserApplicationBulkUploadCSV(sourceApplication);
 
-            final String sourceJobLocation = Optional.ofNullable(applicationBulkUpload.getJobLocation())
+            /*final String sourceJobLocation = Optional.ofNullable(applicationBulkUpload.getJobLocation())
                     .map(l -> l.split(","))
                     .map(s -> s[0])
                     .orElse("");
 
-            Office office = getOfficeFromJobLocation(sourceJobLocation);
+            Office office = getOfficeFromJobLocation(sourceJobLocation);*/
 
             final Application savedApplication = createApplication(applicationBulkUpload, userId, office);
 
