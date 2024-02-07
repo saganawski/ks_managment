@@ -1,5 +1,6 @@
 package com.ks.management.recruitment.application.service;
 
+import com.ks.management.office.Office;
 import com.ks.management.recruitment.application.Application;
 import com.ks.management.recruitment.application.ApplicationDto;
 import com.ks.management.recruitment.application.ui.ApplicationDtoByOffice;
@@ -23,7 +24,7 @@ public interface ApplicationService {
 
     void deleteNoteForAppId(int applicationId, int noteId);
 
-    ResponseEntity<Object> bulkUpload(MultipartFile file, UserPrincipal userPrincipal, String type);
+    ResponseEntity<Object> bulkUpload(MultipartFile file, UserPrincipal userPrincipal, String type, Office office);
 
     List<ApplicationDtoByOffice> getApplicationByOffice(Integer officeId);
 }

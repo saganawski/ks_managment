@@ -1,5 +1,8 @@
 package com.ks.management.recruitment.application.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.ks.management.office.Office;
 import com.ks.management.recruitment.application.Application;
 import com.ks.management.recruitment.application.ApplicationDto;
 import com.ks.management.recruitment.application.service.ApplicationService;
@@ -57,7 +60,8 @@ public class ApplicationController {
     }
 
     @PostMapping("/bulk-upload/bulk-type/{type}")
-    public ResponseEntity<Object> bulkUpload(MultipartFile file, @AuthenticationPrincipal UserPrincipal userPrincipal, @PathVariable("type") String type ){
-        return applicationService.bulkUpload(file, userPrincipal,type);
+    public ResponseEntity<Object> bulkUpload(@RequestParam("file") MultipartFile file, @AuthenticationPrincipal UserPrincipal userPrincipal, @PathVariable("type") String type, @RequestParam("office") String officeJson) throws JsonProcessingException {
+        final Office office = new ObjectMapper().readValue(officeJson, Office.class);
+        return applicationService.bulkUpload(file, userPrincipal,type, office);
     }
 }
