@@ -4,6 +4,7 @@ $(document).ready(function () {
 
 	const main = $('#load-layout').html();
     $('#load-layout').load("/common/_layout.html", function(responseTxt, statusTxt, xhr){
+
         if(statusTxt == "success"){
             $('#load-layout').append(main);
             $("div").removeClass("spinner-border");
@@ -24,7 +25,12 @@ $(document).ready(function () {
 
             const bulkForm = document.querySelector('#bulk-form');
             bulkForm.addEventListener('submit',function(event){
+                //disable default form submission
+                const submitButton = document.getElementById('bulkUploadButton');
+                submitButton.disabled = true;
+
                 event.preventDefault()
+                const cardBody = document.querySelector('.card-body');
 
                 let validated = validationCheck(bulkForm);
 
@@ -39,24 +45,31 @@ $(document).ready(function () {
                         contentType: false,
                         cache: false
                     }).then(function(response){
-                        $("#initialLoad").removeClass("spinner-border");
                         swal({
                             title: "Success!",
                             text: "You upload a file",
                             icon: "success",
                             timer: 2000
-                        }).then(function(){
-                            location.reload();
                         });
+
+                        appendResultsToCard(cardBody, response);
+                        submitButton.disabled = false;
+
+                        $("#initialLoad").removeClass("spinner-border");
                     }).fail(function(err){
                         console.log(err);
                         swal({
                             title: "Error!",
-                            text: "Failure to upload applications! \n" + err.responseJSON.error,
+                            text: "Failure to upload applications! ",
                             icon: "error"
                         });
+
+                        appendResultsToCard(cardBody, err.responseJSON);
+                        submitButton.disabled = false;
                         $("#initialLoad").removeClass("spinner-border");
                     });
+                }else{
+                    submitButton.disabled = false;
                 }
             });
         }
@@ -104,6 +117,19 @@ $(document).ready(function () {
             type:"GET",
             url:"/offices"
         });
+    }
+
+    function appendResultsToCard(cardBody, data) {
+        const resultsDiv = document.createElement('div');
+        resultsDiv.classList.add('mt-3'); // Add margin-top for spacing
+
+        Object.entries(data).forEach(([key, value]) => {
+            const p = document.createElement('p');
+            p.classList.add('text-primary'); // Bootstrap class for styling
+            p.textContent = `${value}`;
+            resultsDiv.appendChild(p);
+        });
+        cardBody.appendChild(resultsDiv);
     }
 // TODO: add type of file to upload, give examples of acceptable column names and ability to report errors
 /*    $('#load-layout').on("click", ".dropdown-item", function(event){

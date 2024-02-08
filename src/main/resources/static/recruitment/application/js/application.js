@@ -116,7 +116,6 @@ $(document).ready(function(){
                     },
                     {"data" : "source",
                         "defaultContent":""},
-y
                     {"data" : "name",
                         "defaultContent":""},
                     {"data" : function(data, type,row,meta){
