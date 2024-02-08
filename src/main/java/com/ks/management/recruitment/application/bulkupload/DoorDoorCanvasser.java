@@ -16,6 +16,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 
@@ -34,7 +35,8 @@ public class DoorDoorCanvasser implements ApplicationBulkUpload {
     }
 
     @Override
-    public void bulkUpload(MultipartFile file, UserPrincipal userPrincipal, Office office) {
+    public HashMap<String, Object> bulkUpload(MultipartFile file, UserPrincipal userPrincipal, Office office) {
+        final HashMap<String, Object> responseBody = new HashMap<>();
         //TODO: add response entity. add metadata to response entity, number of applications added, number of applications failed
         final Integer userId = userPrincipal.getUserId();
 
@@ -58,7 +60,7 @@ public class DoorDoorCanvasser implements ApplicationBulkUpload {
 
             addNoteToApplication(applicationBulkUpload, userId, savedApplication);
         });
-
+        return responseBody;
     }
 
     private void addNoteToApplication(DoorDoorCanvasserApplicationBulkUploadCSV applicationBulkUpload, Integer userId, Application savedApplication) {
