@@ -9,6 +9,7 @@ import com.ks.management.recruitment.application.dao.ApplicationJpa;
 import com.ks.management.recruitment.application.dao.ApplicationSourceJpaDao;
 import com.ks.management.recruitment.application.dao.JpaApplicationNote;
 import com.ks.management.security.UserPrincipal;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.BufferedReader;
@@ -16,10 +17,12 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicInteger;
 
-
+@Slf4j
 public class PetitionCirculator implements ApplicationBulkUpload {
     private ApplicationJpa applicationJpa;
     private JpaOfficeRepo jpaOfficeRepo;
@@ -36,24 +39,60 @@ public class PetitionCirculator implements ApplicationBulkUpload {
     }
 
     @Override
-    public void bulkUpload(MultipartFile file, UserPrincipal userPrincipal, Office office) {
+    public HashMap<String, Object> bulkUpload(MultipartFile file, UserPrincipal userPrincipal, Office office) {
+        final HashMap<String, Object> responseBody = new HashMap<>();
+
         final Integer userId = userPrincipal.getUserId();
+        final List<String> applications = new ArrayList<>();
 
-        List<String> applications = readFileReturnListOfStringApplications(file);
-        //TODO: add metadata to response entity, number of applications it count of applications size minus 1 for header in csv file
+        try {
+             applications.addAll(readFileReturnListOfStringApplications(file));
+        }catch (IOException e){
+            log.error("Exception Unable to read file: \n" + e.getMessage());
+            // add to response file failed to read and return;
+            responseBody.put("error", "Unable to read file");
+            return responseBody;
+        };
 
-        //TODO: throw error if wrong file / parser selected
+        responseBody.put("lineCount:", "Number of applications in file : " + (applications.size() - 1));
+        final AtomicInteger applicationsCreated = new AtomicInteger(0);
 
         applications.stream().skip(1).filter(a -> a.length() > 1).forEach(a -> {
             final List<String> sourceApplication = PetitionCirculatorApplicationBulkUploadCSV.cleanInput(a);
-            //TODO: problem here
-            final PetitionCirculatorApplicationBulkUploadCSV applicationBulkUpload = new PetitionCirculatorApplicationBulkUploadCSV(sourceApplication);
+            // if sourceApplication is size is not 18 log error, add line number to response body, skip iteration
+            if(sourceApplication.size() != 18){
 
-            final Application savedApplication = createApplication(applicationBulkUpload, userId, office);
+                final int lineNumber = applications.indexOf(a) +1;
 
-            addNoteToApplication(applicationBulkUpload, userId, savedApplication);
+                log.error("Error: BAD DATA. line size is not 18 columns when split , line: {} Line in file skipped is number {}", sourceApplication, lineNumber);
+                responseBody.put( String.format( "error line number %s", lineNumber), String.format( "BAD DATA. line number skipped %s size is not 18 columns when split",  lineNumber));
+
+                return;
+            }
+
+            try{
+                final PetitionCirculatorApplicationBulkUploadCSV applicationBulkUpload = new PetitionCirculatorApplicationBulkUploadCSV(sourceApplication);
+
+                final Application savedApplication = createApplication(applicationBulkUpload, userId, office);
+
+                addNoteToApplication(applicationBulkUpload, userId, savedApplication);
+
+            }catch (Exception e){
+
+                final int lineNumber = applications.indexOf(a) +1;
+
+                log.error("Error: BAD DATA. line size is not 18 columns when split , line: {} Line in file skipped is number {}", sourceApplication, lineNumber);
+                log.error("Error: Unable to make Application \n" + e.getMessage());
+                responseBody.put( String.format( "error line number %s", lineNumber), String.format( "BAD DATA. line number skipped %s",  lineNumber));
+                return;
+            };
+
+            applicationsCreated.getAndIncrement();
         });
 
+        responseBody.put("TotalApplicantsCreated", "Number of applications created : " + applicationsCreated.get());
+
+        return responseBody;
     }
 
     private void addNoteToApplication(PetitionCirculatorApplicationBulkUploadCSV applicationBulkUpload, Integer userId, Application savedApplication) {
@@ -87,23 +126,14 @@ public class PetitionCirculator implements ApplicationBulkUpload {
     }
 
 
-    private List<String> readFileReturnListOfStringApplications(MultipartFile file) {
-        try{
-            //TODO test this method without reader
-            Reader reader = new InputStreamReader(file.getInputStream());
+    private List<String> readFileReturnListOfStringApplications(MultipartFile file) throws IOException {
+        final List<String> applications = new ArrayList<>();
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(file.getInputStream()));
 
-            List<String> applications = new ArrayList<>();
-            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(file.getInputStream()));
-
-            String line;
-            while((line = bufferedReader.readLine()) != null){
-                applications.add(line);
-            }
-            return applications;
-
-        } catch (IOException e){
-            e.printStackTrace();
-            throw new RuntimeException("Exception: \n" + e.getMessage());
+        String line;
+        while((line = bufferedReader.readLine()) != null){
+            applications.add(line);
         }
+        return applications;
     }
 }
