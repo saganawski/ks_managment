@@ -189,17 +189,23 @@ public class ApplicationServiceImpl implements ApplicationService {
     @Override
     public ResponseEntity<Object> bulkUpload(MultipartFile file, UserPrincipal userPrincipal, String type, Office office) {
         final HashMap<String, Object> responseBody = new HashMap<>();
+        final String originalFilename = file.getOriginalFilename();
+        responseBody.put("originalFilename",originalFilename);
 
         try {
             final BulkUploadFactory bulkUploadFactory = new BulkUploadFactory(applicationJpa,jpaOfficeRepo,jpaApplicationNote,applicationSourceJpaDao);
             final ApplicationBulkUpload applicationBulkUpload = bulkUploadFactory.createBulkUploadType(type);
-            // add metadata to response, number of applications added, number of applications failed, etc
-            applicationBulkUpload.bulkUpload(file,userPrincipal, office);
+
+            responseBody.putAll(applicationBulkUpload.bulkUpload(file,userPrincipal, office));
         }catch (Exception e){
             log.error("Error in bulk upload: ",e);
             responseBody.put("error",e.getMessage());
             return ResponseEntity.badRequest().body(responseBody);
         };
+
+        if(responseBody.keySet().stream().filter(k -> k.contains("error")).findFirst().isPresent()){
+            return ResponseEntity.badRequest().body(responseBody);
+        }
 
         return ResponseEntity.ok(responseBody);
     }
