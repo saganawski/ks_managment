@@ -22,11 +22,11 @@ $(document).ready(function () {
                     }).then(function(response){
                         swal({
                             title: "Success!",
-                            text: "You created a user",
+                            text: "You created a user, now link to an employee!",
                             icon: "success",
                             timer: 2000
                         }).then(function(){
-                            window.location.href = "/user/user.html";
+                            window.location.href = "/user/user-details.html?userId=" + response.id;
                         });
                     }).fail(function(err){
                         console.log(err);
