@@ -13,6 +13,10 @@ public class LoggingInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+        // return true if the request is for the health-check endpoint
+        if(request.getRequestURI().equals("/health-check")){
+            return true;
+        }
         final String username = request.getUserPrincipal().getName();
         final long startTime = System.currentTimeMillis();
         request.setAttribute("startTime", startTime);
@@ -22,6 +26,11 @@ public class LoggingInterceptor implements HandlerInterceptor {
 
     @Override
     public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
+        // return if the request is for the health-check endpoint
+        if(request.getRequestURI().equals("/health-check")){
+            return;
+        }
+
         final long startTime = (long) request.getAttribute("startTime");
         final long endTime = System.currentTimeMillis();
         final long duration = endTime - startTime;
