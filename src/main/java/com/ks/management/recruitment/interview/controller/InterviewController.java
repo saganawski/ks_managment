@@ -4,6 +4,7 @@ import com.ks.management.recruitment.interview.Interview;
 import com.ks.management.recruitment.interview.service.InterviewService;
 import com.ks.management.recruitment.interview.ui.InterviewApplicationDto;
 import com.ks.management.recruitment.interview.ui.InterviewDto;
+import com.ks.management.recruitment.interview.ui.InterviewDtoByOffice;
 import com.ks.management.security.UserPrincipal;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -20,6 +21,11 @@ public class InterviewController {
     @GetMapping()
     public List<Interview> getInterviews(){
         return interviewService.getAllInterviews();
+    }
+
+    @GetMapping("/office/{officeId}")
+    public List<InterviewDtoByOffice> getInterviewsByOfficeId(@PathVariable("officeId") Integer officeId,@AuthenticationPrincipal UserPrincipal userPrincipal){
+        return  interviewService.getAllInterviewsByOfficeId(officeId);
     }
 
     @PostMapping()

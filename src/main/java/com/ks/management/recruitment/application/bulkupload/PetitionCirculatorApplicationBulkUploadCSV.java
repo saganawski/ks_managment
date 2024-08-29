@@ -114,12 +114,10 @@ public class PetitionCirculatorApplicationBulkUploadCSV {
             return Collections.emptyList();
         }
         final List<String> cleanedInput = new ArrayList<>();
+        final String[] parts = application.split(",(?=([^\"]*\"[^\"]*\")*[^\"]*$)");
 
-        String[] tabSplitValues = application.split("\\t");
-        for(String val: tabSplitValues){
-            final String removeNonPrintChars1 = val.replaceAll("\\P{Print}", "");
-            final String removeQuotes = removeNonPrintChars1.replaceAll("\"","");
-            cleanedInput.add(removeQuotes);
+        for(String val: parts){
+            cleanedInput.add(val.replace("\"", ""));
         }
         return cleanedInput;
     }

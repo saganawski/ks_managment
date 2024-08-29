@@ -8,20 +8,24 @@ import com.ks.management.recruitment.application.bulkupload.BulkUploadFactory;
 import com.ks.management.recruitment.application.dao.ApplicationJpa;
 import com.ks.management.recruitment.application.dao.ApplicationSourceJpaDao;
 import com.ks.management.recruitment.application.dao.JpaApplicationNote;
+import com.ks.management.recruitment.application.ui.ApplicationDtoByOffice;
 import com.ks.management.security.UserPrincipal;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.temporal.ChronoUnit;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
 @Transactional
+@Slf4j
 public class ApplicationServiceImpl implements ApplicationService {
     @Autowired
     private ApplicationJpa applicationJpa;
@@ -73,7 +77,10 @@ public class ApplicationServiceImpl implements ApplicationService {
                     final Integer updatedBy = Optional.ofNullable(a.getUpdatedBy()).orElse(-1);
                     final Date updatedDate = Optional.ofNullable(a.getUpdatedDate()).orElse(null);
                     final Integer createdBy = Optional.ofNullable(a.getCreatedBy()).orElse(null);
-                    final Date createdDate = Optional.ofNullable(a.getCreatedDate()).orElse(null);
+                    final LocalDateTime createdDate = Optional.ofNullable(a.getCreatedDate())
+                            .map(d -> d.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime())
+                            .map(ld -> ld.minus(4, ChronoUnit.HOURS))
+                            .orElse(null);
                     final ApplicationContactType applicationContactType = Optional.ofNullable(a.getApplicationContactType()).orElse(null);
                     final ApplicationSource applicationSource = Optional.ofNullable(a.getApplicationSource()).orElse(null);
                     final ApplicationResult applicationResult = Optional.ofNullable(a.getApplicationResult()).orElse(null);
@@ -115,7 +122,10 @@ public class ApplicationServiceImpl implements ApplicationService {
         final Integer updatedBy = Optional.ofNullable(application.getUpdatedBy()).orElse(-1);
         final Date updatedDate = Optional.ofNullable(application.getUpdatedDate()).orElse(null);
         final Integer createdBy = Optional.ofNullable(application.getCreatedBy()).orElse(null);
-        final Date createdDate = Optional.ofNullable(application.getCreatedDate()).orElse(null);
+        final LocalDateTime createdDate = Optional.ofNullable(application.getCreatedDate())
+                .map(d -> d.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime())
+                .map(ld -> ld.minus(4, ChronoUnit.HOURS))
+                .orElse(null);
         final ApplicationContactType applicationContactType = Optional.ofNullable(application.getApplicationContactType()).orElse(null);
         final ApplicationSource applicationSource = Optional.ofNullable(application.getApplicationSource()).orElse(null);
         final ApplicationResult applicationResult = Optional.ofNullable(application.getApplicationResult()).orElse(null);
@@ -177,9 +187,62 @@ public class ApplicationServiceImpl implements ApplicationService {
     }
 
     @Override
-    public void bulkUpload(MultipartFile file, UserPrincipal userPrincipal, String type) {
-        final BulkUploadFactory bulkUploadFactory = new BulkUploadFactory(applicationJpa,jpaOfficeRepo,jpaApplicationNote,applicationSourceJpaDao);
-        final ApplicationBulkUpload applicationBulkUpload = bulkUploadFactory.createBulkUploadType(type);
-        applicationBulkUpload.bulkUpload(file,userPrincipal);
+    public ResponseEntity<Object> bulkUpload(MultipartFile file, UserPrincipal userPrincipal, String type, Office office) {
+        final HashMap<String, Object> responseBody = new HashMap<>();
+        final String originalFilename = file.getOriginalFilename();
+        responseBody.put("originalFilename",originalFilename);
+
+        try {
+            final BulkUploadFactory bulkUploadFactory = new BulkUploadFactory(applicationJpa,jpaOfficeRepo,jpaApplicationNote,applicationSourceJpaDao);
+            final ApplicationBulkUpload applicationBulkUpload = bulkUploadFactory.createBulkUploadType(type);
+
+            responseBody.putAll(applicationBulkUpload.bulkUpload(file,userPrincipal, office));
+        }catch (Exception e){
+            log.error("Error in bulk upload: ",e);
+            responseBody.put("error",e.getMessage());
+            return ResponseEntity.badRequest().body(responseBody);
+        };
+
+        if(responseBody.keySet().stream().filter(k -> k.contains("error")).findFirst().isPresent()){
+            return ResponseEntity.badRequest().body(responseBody);
+        }
+
+        return ResponseEntity.ok(responseBody);
+    }
+
+    @Override
+    public List<ApplicationDtoByOffice> getApplicationByOffice(Integer officeId) {
+        final List<Object[]> allApplicationsByOfficeId = applicationJpa.getAllApplicationsByOfficeId(officeId);
+        final List<ApplicationDtoByOffice> dtos = allApplicationsByOfficeId.stream()
+                .map(a -> {
+                    final Integer id = (Integer) Optional.ofNullable(a[0]).orElse(0);
+                    final String firstName = (String) Optional.ofNullable(a[1]).orElse("");
+                    final String lastName = (String) Optional.ofNullable(a[2]).orElse("");
+                    final String phoneNumber = (String) Optional.ofNullable(a[3]).orElse("");
+                    final String email = (String) Optional.ofNullable(a[4]).orElse("");
+                    final Date dateReceived = (Date) a[5];
+                    final Date callBackDate = (Date) a[6];
+                    final Date createdDate = (Date) a[7];
+                    final String source = (String) Optional.ofNullable(a[8]).orElse("");
+                    final String name = (String) Optional.ofNullable(a[9]).orElse("");
+
+                    final ApplicationDtoByOffice dto = ApplicationDtoByOffice.builder()
+                            .id(id)
+                            .firstName(firstName)
+                            .lastName(lastName)
+                            .phoneNumber(phoneNumber)
+                            .email(email)
+                            .dateReceived(dateReceived)
+                            .callBackDate(callBackDate)
+                            .createdDate(createdDate)
+                            .source(source)
+                            .name(name)
+                            .build();
+
+                    return dto;
+                })
+                .collect(Collectors.toList());
+
+        return dtos;
     }
 }

@@ -25,6 +25,10 @@
     <!--    sweetAlert-->
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 
+    <!--	bootstrap-select-->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.18/dist/css/bootstrap-select.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.18/dist/js/bootstrap-select.min.js"></script>
+
     <link rel="stylesheet" href="/recruitment/application/styles/style.css">
     <link rel="stylesheet" href="/common/style.css">
     <script src="/recruitment/application/js/application.js"></script>
@@ -34,12 +38,13 @@
         <main>
             <div class="text-center">
                 <h2>Applications</h2>
-                <div class="spinner-border" role="status">
+                <div id="initialLoad" class="spinner-border" role="status">
                     <span class="sr-only">Loading...</span>
                 </div>
             </div>
             <a class="btn btn-success add-app-btn" href="/recruitment/application/new-application.html" role="button">Add Application</a>
             <a class="btn btn-primary add-app-btn" href="/recruitment/application/bulk-applications.html" role="button">Bulk Upload Applications</a>
+            <button id="officeButton" class="btn btn-warning add-app-btn" role="button">Choose Office</button>
             <table id="application-table" class="display">
                 <thead>
                 <tr>
@@ -51,7 +56,6 @@
                     <th>Date Received</th>
                     <th>Call Back Date</th>
                     <th>Source</th>
-                    <th>Result</th>
                     <th>Office</th>
                     <th>Created Date</th>
                     <th>Actions</th>
@@ -59,6 +63,38 @@
                 </thead>
             </table>
         </main>
+    </div>
+
+    <!--        Choose Office MODAL-->
+    <div class="modal fade" id="officeModal" tabindex="-1" role="dialog" aria-labelledby="officeModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="text-center">
+                    <div class="spinner-border" role="status">
+                        <span class="sr-only">Loading...</span>
+                    </div>
+                </div>
+                <div class="modal-header">
+                    <h5 class="modal-title" >Choose Office to display applications</h5>
+                </div>
+                <div class="modal-body">
+                    <form id="officeForm" class="needs-validation" novalidate>
+                        <div class="form-group col-md-3 col-lg-9">
+                            <label>Choose Office</label>
+                            <select id="officeSelect" name="office" data-live-search="true" required>
+                                <option value="">Choose an office</option>
+                            </select>
+                            <div class="invalid-feedback">
+                                Must Choose office!
+                            </div>
+                        </div>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button id="officeFormSubmit" class="btn btn-primary" value="send" type="submit">Display Applications</button>
+
+                    </form>
+                </div>
+            </div>
+        </div>
     </div>
 
 </body>

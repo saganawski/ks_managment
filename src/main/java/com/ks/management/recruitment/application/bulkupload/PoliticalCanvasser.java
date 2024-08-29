@@ -2,7 +2,9 @@ package com.ks.management.recruitment.application.bulkupload;
 
 import com.ks.management.office.Office;
 import com.ks.management.office.dao.JpaOfficeRepo;
-import com.ks.management.recruitment.application.*;
+import com.ks.management.recruitment.application.Application;
+import com.ks.management.recruitment.application.ApplicationNote;
+import com.ks.management.recruitment.application.ApplicationSource;
 import com.ks.management.recruitment.application.dao.ApplicationJpa;
 import com.ks.management.recruitment.application.dao.ApplicationSourceJpaDao;
 import com.ks.management.recruitment.application.dao.JpaApplicationNote;
@@ -14,6 +16,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 
@@ -32,7 +35,9 @@ public class PoliticalCanvasser implements ApplicationBulkUpload {
     }
 
     @Override
-    public void bulkUpload(MultipartFile file, UserPrincipal userPrincipal) {
+    public HashMap<String, Object> bulkUpload(MultipartFile file, UserPrincipal userPrincipal, Office office) {
+        final HashMap<String, Object> responseBody = new HashMap<>();
+
         final Integer userId = userPrincipal.getUserId();
 
         List<String> applications = readFileReturnListOfStringApplications(file);
@@ -43,18 +48,11 @@ public class PoliticalCanvasser implements ApplicationBulkUpload {
 
             final PoliticalCanvasserApplicationBulkUploadCSV applicationBulkUpload = new PoliticalCanvasserApplicationBulkUploadCSV(sourceApplication);
 
-            final String sourceJobLocation = Optional.ofNullable(applicationBulkUpload.getJobLocation())
-                    .map(l -> l.split(","))
-                    .map(s -> s[0])
-                    .orElse("");
-
-            Office office = getOfficeFromJobLocation(sourceJobLocation);
-
             final Application savedApplication = createApplication(applicationBulkUpload, userId, office);
 
             addNoteToApplication(applicationBulkUpload, userId, savedApplication);
         });
-
+        return responseBody;
     }
 
     private void addNoteToApplication(PoliticalCanvasserApplicationBulkUploadCSV applicationBulkUpload, Integer userId, Application savedApplication) {

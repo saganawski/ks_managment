@@ -29,19 +29,18 @@
                     Bulk Upload Applications
                 </div>
                 <div class="card-body">
-                    <h5 id="choose-type-title">Must Select Bulk Upload Application type</h5>
-                    <div class="dropdown">
-                        <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            Upload Type
-                        </button>
-                        <div class="dropdown-menu">
-                            <a href="#" class="dropdown-item" data-value="DoorDoor">Door Door</a>
-                            <a href="#" class="dropdown-item" data-value="PetitionCirculator">Petition Circulator</a>
-                            <a href="#" class="dropdown-item" data-value="PoliticalCanvasser" >Political Canvasser</a>
-                        </div>
-                    </div>
+                    <h5 id="choose-type-title">Must Select Office and use standard csv file</h5>
 
-                    <form id="bulk-form" class="needs-validation hidden" novalidate>
+                    <form id="bulk-form" class="needs-validation" novalidate>
+                        <div class="form-group col-sm-12 col-md-3 col-lg-3 ">
+                            <label>Office</label>
+                            <select id="office" name="office" class="custom-select" required>
+                                <option value="" selected>Choose Office </option>
+                            </select>
+                            <div class="invalid-feedback">
+                                Field is Required!
+                            </div>
+                        </div>
                         <div class="form-group mt-3">
                             <label for="file">Select a CSV file</label>
                             <input id="fileInput" type="file" name="file" class="form-control-file" id="file" accept=".csv" required>

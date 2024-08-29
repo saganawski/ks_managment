@@ -44,6 +44,7 @@ $(document).ready(function(){
             //Add pagination to the next button
             document.querySelector("#calendar > div.fc-header-toolbar.fc-toolbar.fc-toolbar-ltr > div:nth-child(3) > div > button.fc-next-button.fc-button.fc-button-primary").addEventListener('click',function(){
                 if(!jQuery.isEmptyObject(vm.office)){
+                    $("#initialLoad").addClass("spinner-border");
                     startOfMonth = fullCalendar.getDate();
                     let year = startOfMonth.getFullYear();
                     let month = startOfMonth.getMonth();
@@ -69,6 +70,7 @@ $(document).ready(function(){
             //ADD pagination to the previous button
             document.querySelector("#calendar > div.fc-header-toolbar.fc-toolbar.fc-toolbar-ltr > div:nth-child(3) > div > button.fc-prev-button.fc-button.fc-button-primary > span").addEventListener('click',function(){
                 if(!jQuery.isEmptyObject(vm.office)){
+                    $("#initialLoad").addClass("spinner-border");
                     startOfMonth = fullCalendar.getDate();
                     startOfMonth.setMonth(startOfMonth.getMonth() -1);
                     
@@ -274,6 +276,9 @@ $(document).ready(function(){
     $('#officeFormSubmit').on('click', function(event){
         event.preventDefault();
         let validated = validationCheck();
+
+         $('#officeModal').modal('hide');
+         $("#initialLoad").addClass("spinner-border");
         if(validated){
             let office = JSON.parse($('#officeSelect').val());
             vm.office = office;
@@ -334,9 +339,6 @@ $(document).ready(function(){
     }
 
     function setEvents(employeeSchedules){
-        $("#initialLoad").addClass("spinner-border");
-        $('#officeModal').modal('hide');
-
         fullCalendar.removeAllEvents();
         let events = [];
 
@@ -359,7 +361,7 @@ $(document).ready(function(){
         }
 
         fullCalendar.addEventSource(events);
-        $("div").removeClass("spinner-border");
+        $("#initialLoad").removeClass("spinner-border");
     }
 
     function setColorByStatus(employeeScheduleStatus){

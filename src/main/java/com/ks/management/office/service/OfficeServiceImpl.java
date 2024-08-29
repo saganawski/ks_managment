@@ -1,6 +1,7 @@
 package com.ks.management.office.service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import com.ks.management.location.Location;
@@ -23,6 +24,7 @@ public class OfficeServiceImpl implements OfficeService {
 	@Override
 	public List<Office> getOffices() {
 		return jpaOfficeRepo.findAll().stream()
+				.filter(o -> o.getCompleted() != null)
 				.filter(o -> !o.getCompleted())
 				.collect(Collectors.toList());
 	}
@@ -32,6 +34,8 @@ public class OfficeServiceImpl implements OfficeService {
 		final Integer userId = userPrincipal.getUserId();
 		office.setCreatedBy(userId);
 		office.setUpdatedBy(userId);
+		final Boolean isCompleted = Optional.ofNullable(office.getCompleted()).orElse(false);
+		office.setCompleted(isCompleted);// default to false on creation
 
 		final Location location = office.getLocation();
 		location.setUpdatedBy(userId);
