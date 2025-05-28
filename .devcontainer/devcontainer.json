@@ -1,0 +1,10 @@
+{
+  "name": "Kholehouse Strat Dev Container",
+  "dockerComposeFile": "docker-compose.yml",
+  "service": "app",
+  "workspaceFolder": "/workspace",
+  "runServices": ["db", "app"],
+  "forwardPorts": [8080],
+  "postCreateCommand": "./mvnw -B test",
+  "shutdownAction": "stopCompose"
+}
