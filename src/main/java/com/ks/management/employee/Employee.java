@@ -93,9 +93,9 @@ public class Employee {
 		offices.add(office);
 	}
 
-	public void removeALlOffices(){
-		this.offices = new ArrayList<>();
-	}
+        public void removeAllOffices(){
+                this.offices = new ArrayList<>();
+        }
 
 	@JsonIgnore
 	@OneToMany(mappedBy = "employee",fetch = FetchType.LAZY,cascade = CascadeType.ALL)
