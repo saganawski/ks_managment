@@ -33,6 +33,7 @@ public class LoggingInterceptor implements HandlerInterceptor {
 
         final long startTime = (long) request.getAttribute("startTime");
         final long endTime = System.currentTimeMillis();
+
         final long duration = endTime - startTime;
         if(duration > 1000){
             logger.warn("Request to path: {}, took an excessive duration of: {} ", request.getRequestURI(),  duration);
