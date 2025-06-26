@@ -17,10 +17,27 @@ public class LoggingInterceptor implements HandlerInterceptor {
         if(request.getRequestURI().equals("/health-check")){
             return true;
         }
-        final String username = request.getUserPrincipal().getName();
+
+        String username = "anonymous";
+        if(request.getUserPrincipal() != null){
+            username = request.getUserPrincipal().getName();
+        }
+
+        final String method = request.getMethod();
+        final String queryString = request.getQueryString();
+        final String remoteAddr = request.getRemoteAddr();
+
         final long startTime = System.currentTimeMillis();
         request.setAttribute("startTime", startTime);
-        logger.info("Request from User: {} to path: {}", username, request.getRequestURI());
+
+        logger.info("User: {}, Method: {}, Path: {}{}{}, RemoteAddr: {}",
+                username,
+                method,
+                request.getRequestURI(),
+                queryString != null ? "?" : "",
+                queryString != null ? queryString : "",
+                remoteAddr);
+
         return true;
     }
 
