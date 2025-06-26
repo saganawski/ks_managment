@@ -14,8 +14,17 @@ public class WebConfig implements WebMvcConfigurer {
     }
 
     @Override
-    public  void addInterceptors(InterceptorRegistry registry){
-        registry.addInterceptor(loggingInterceptor);
+    public void addInterceptors(InterceptorRegistry registry) {
+        registry.addInterceptor(loggingInterceptor)
+                //TODO: exclusions don't seem to be working. There is some paths we don't need to log.
+                .excludePathPatterns(
+                        "/css/**",
+                        "/js/**",
+                        "/images/**",
+                        "/webjars/**",
+                        "/static/**"
+                );
+
     }
 }
 
